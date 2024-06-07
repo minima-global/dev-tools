@@ -1,4 +1,5 @@
 {
+  "name": "mds-root",
   "private": true,
   "scripts": {
     "build": "turbo build",
@@ -6,12 +7,17 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "workspaces": [
+    "tests/*",
+    "packages/*"
+  ],
+  "dependencies": {},
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.15.6",
-  "name": "with-vite"
+  "packageManager": "pnpm@8.15.6"
 }

@@ -1,0 +1,36 @@
+{
+  "name": "@/minima/mds",
+  "version": "0.1.0",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.mts"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "pnpm run build -- --watch",
+    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "latest"
+  },
+  "devDependencies": {
+    "tsup": "^8.1.0"
+  }
+}
