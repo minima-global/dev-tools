@@ -11,7 +11,9 @@
     "tests/*",
     "packages/*"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "prettier-plugin-organize-imports": "^3.2.4"
+  },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",

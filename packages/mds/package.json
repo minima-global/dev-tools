@@ -18,7 +18,7 @@
     }
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "pnpm run build -- --watch",
