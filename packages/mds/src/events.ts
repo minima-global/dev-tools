@@ -8,21 +8,22 @@
 import { MDS } from "./mds"
 
 /**
- * Event types that can be sent with the cmd function
+ * Event union type that can be sent with the cmd function
  */
 export type Event =
   | { command: "balance"; payload?: BalanceParams } // 🟢
   | { command: "checkaddress"; payload: CheckAddressParams } // 🟢
   | { command: "coincheck"; payload: CoinCheckParams } // 🟢
-  | { command: "coinimport"; payload: CoinImportParams }
+  | { command: "coinimport"; payload: CoinImportParams } // 🟢
   | { command: "coinexport"; payload: CoinExportParams } // 🟢
-  | { command: "cointrack"; payload: CoinTrackParams }
+  | { command: "cointrack"; payload: CoinTrackParams } // 🔴
   | { command: "consolidate"; payload: ConsolidateParams }
   | { command: "hashText"; payload?: HashTextParams } // 🟢
   | { command: "block"; payload?: null } // 🟢
   | { command: "getaddress"; payload?: null } // 🟢
-  | { command: "history"; payload?: HistoryParams }
+  | { command: "history"; payload?: HistoryParams } // 🔴
   | { command: "tokencreate"; payload: TokenCreateParams } // 🟢
+  | { command: "status"; payload?: null } // 🟢
 
 /**
  * Parameters for the different events
@@ -72,7 +73,9 @@ export interface GenralRes {
   hashtest: HashTest
   coincheck: CoinCheck
   coinexport: CoinExport
+  coinimport: CoinImport
   tokencreate: TokenCreate
+  status: Status
 }
 
 type DefaultRes = {
@@ -116,19 +119,6 @@ type HashTest = DefaultResObj<{
   speed: string
 }>
 
-type History = DefaultResObj<{
-  txpows: TxPow[]
-  //details: Details[]
-  size: string
-}>
-
-// Big ass object incoming
-type TxPow = {
-  txpowid: string
-  isblock: boolean
-  istransaction: true
-}
-
 type CoinCheck = DefaultResObj<
   {
     proofblock: number
@@ -156,7 +146,9 @@ type CoinExport = DefaultResObj<{
 }>
 
 //TODO: Check return type
-type CoinImport = DefaultResObj<{}>
+type CoinImport = DefaultResObj<{
+  response: string
+}>
 
 type TokenCreate = DefaultResObj<
   {
@@ -185,13 +177,86 @@ type Token = {
   tokenid: string
 }
 
-MDS.cmd(
-  "tokencreate",
-  {
-    name: "test",
-    amount: "1000",
-  },
-  (data) => {
-    data.response.outputs[0].tokenid
-  }
-)
+type Status = DefaultResObj<{
+  version: string
+  uptime: string
+  locked: boolean
+  length: number
+  weight: string
+  minima: string
+  coins: string
+  data: string
+  memory: Memory
+  chain: Chain
+  txpow: TxPow
+  network: Network
+}>
+
+type Memory = {
+  ram: string
+  disk: string
+  files: Files
+}
+
+type Files = {
+  txpowdb: string
+  archivedb: string
+  cascade: string
+  chaintree: string
+  wallet: string
+  userdb: string
+  p2pdb: string
+}
+
+type Chain = {
+  block: string
+  time: string
+  hash: string
+  speed: string
+  difficulty: string
+  size: number
+  length: number
+  branches: number
+  weight: string
+  cascade: Cascade
+}
+
+type Cascade = {
+  start: string
+  length: number
+  weight: string
+}
+
+type TxPow = {
+  mempool: number
+  ramdb: number
+  txpowdb: number
+  archivedb: number
+}
+
+type Network = {
+  host: string
+  hostset: string
+  port: number
+  connecting: number
+  connected: number
+  rpc: Rpc
+  p2p: string
+  traffic: Traffic
+}
+
+type Rpc = {
+  enabled: boolean
+  port: number
+}
+
+type Traffic = {
+  from: string
+  totalread: string
+  totalwrite: string
+  //breakdown: Breakdown
+  read: string
+  write: string
+}
+
+MDS.cmd("status", (data) => {})
