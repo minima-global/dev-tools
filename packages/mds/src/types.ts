@@ -1,5 +1,5 @@
-import { Event, SendEventParams } from "./cmd"
-
+import { SendEventParams } from "./cmd"
+import { Event } from "./events"
 /**
  * Types for the MDS Object
  */

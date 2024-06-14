@@ -80,8 +80,8 @@ export const MDS: MDSObj = {
 
     // Check if payload is defined and call httpPostAsync accordingly
     let commandString: string = command
-    if (payload !== undefined) {
-      const payloadString = Object.entries(payload!)
+    if (payload !== undefined && payload !== null) {
+      const payloadString = Object.entries(payload)
         .map(([key, value]) => `${key}:${value}`)
         .join(" ")
       commandString += ` ${payloadString}`
@@ -424,7 +424,12 @@ export function httpPostAsync<T, O, U>(
 
         //Send it to the callback function..
         if (callback) {
-          callback(JSON.parse(xmlHttp.responseText))
+          try {
+            const responseJson = JSON.parse(xmlHttp.responseText)
+            callback(responseJson)
+          } catch (error) {
+            console.error("Failed to parse response as JSON", error)
+          }
         }
       } else {
         //Some error..
@@ -433,7 +438,9 @@ export function httpPostAsync<T, O, U>(
     }
   }
   xmlHttp.open("POST", finalurl, true) // true for asynchronous
-  xmlHttp.overrideMimeType("text/plain; charset=UTF-8")
+  if (xmlHttp.overrideMimeType) {
+    xmlHttp.overrideMimeType("text/plain; charset=UTF-8")
+  }
   xmlHttp.send(encodeURIComponent(params as string))
   //xmlHttp.onerror = function () {
   //  console.log("** An error occurred during the transaction");
@@ -458,7 +465,12 @@ export function httpPostAsyncPoll(theUrl: any, params: any, callback: any) {
 
         //Send it to the callback function..
         if (callback) {
-          callback(JSON.parse(xmlHttp.responseText))
+          try {
+            const responseJson = JSON.parse(xmlHttp.responseText)
+            callback(responseJson)
+          } catch (error) {
+            console.error("Failed to parse response as JSON", error)
+          }
         }
       } else {
         //Some error..
@@ -473,7 +485,9 @@ export function httpPostAsyncPoll(theUrl: any, params: any, callback: any) {
     }, 10000)
   })
   xmlHttp.open("POST", theUrl, true) // true for asynchronous
-  xmlHttp.overrideMimeType("text/plain; charset=UTF-8")
+  if (xmlHttp.overrideMimeType) {
+    xmlHttp.overrideMimeType("text/plain; charset=UTF-8")
+  }
   xmlHttp.send(encodeURIComponent(params))
 }
 

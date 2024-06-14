@@ -1,61 +1,35 @@
-type BalanceParams = {
-  address?: string
-  tokenid?: string
-  confirmations?: string
-}
-type CheckAddressParams = { address: string }
-type CoinCheckParams = { data: string }
-type CoinCheckParmas = { data: string }
-type CoinImportParams = { coinid: string; track?: "true" | "false" }
-type CoinExportParams = { coinid: string }
-type CoinTrackParams = { enable: "true" | "false"; coinid: string }
+import { Event, GenralRes } from "./events"
 
-export type Event =
-  | { command: "balance"; payload?: BalanceParams }
-  | { command: "checkaddress"; payload: CheckAddressParams }
-  | { command: "coincheck"; payload: CoinCheckParams }
-  | { command: "coincheck"; payload: CoinCheckParmas }
-  | { command: "coinimport"; payload: CoinImportParams }
-  | { command: "coinexport"; payload: CoinExportParams }
-  | { command: "cointrack"; payload: CoinTrackParams }
-  | { command: "block" }
-
-type DefaultRes = {
-  command: string
-  pending: boolean
-  status: boolean
-  error?: string
-}
-
-type DefaultResObj<T extends Object> = DefaultRes & {
-  response: T
-}
-
-type BalanceRes = DefaultResObj<
-  {
-    token: string
-    tokenid: string
-    confirmed: string
-    unconfirmed: string
-    sendable: string
-    coins: string
-    total: string
-  }[]
->
-
-interface GenralRes {
-  balance: BalanceRes
-}
-
+/**
+ * Extract the response type of a command
+ *
+ */
 type CMDResponse<C extends Event["command"]> = C extends keyof GenralRes
   ? GenralRes[C]
   : never
 
-type ExtractPayload<T extends Event["command"]> =
-  Extract<Event, { command: T }> extends { payload: infer P } ? P : never
+/**
+ * Extract the payload type of a command
+ *
+ */
+type ExtractPayload<T extends Event["command"]> = Extract<
+  Event,
+  { command: T }
+>["payload"]
 
+/**
+ * Check if the payload is optional
+ *
+ */
 type IsPayloadOptional<T extends Event["command"]> =
   undefined extends ExtractPayload<T> ? true : false
+
+/**
+ * Main function type to send an event
+ * - If the payload is optional, the second parameter is optional
+ * - If the payload is required, the second parameter is required
+ * - The third parameter is optional callback function change maybe?
+ */
 
 export type SendEventParams<T extends Event["command"]> =
   IsPayloadOptional<T> extends true

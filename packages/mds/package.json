@@ -23,15 +23,19 @@
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "pnpm run build -- --watch",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
-  "author": "",
+  "author": "Minima Global",
   "license": "MIT",
   "dependencies": {
+    "happy-dom": "^14.12.0",
     "typescript": "latest"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^1.6.0",
+    "msw": "^2.3.1",
     "tsup": "^8.1.0",
     "vitest": "^1.6.0"
   }
