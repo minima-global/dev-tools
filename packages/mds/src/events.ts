@@ -16,14 +16,19 @@ export type Event =
   | { command: "coincheck"; payload: CoinCheckParams } // 🟢
   | { command: "coinimport"; payload: CoinImportParams } // 🟢
   | { command: "coinexport"; payload: CoinExportParams } // 🟢
-  | { command: "cointrack"; payload: CoinTrackParams } // 🔴
-  | { command: "consolidate"; payload: ConsolidateParams }
-  | { command: "hashText"; payload?: HashTextParams } // 🟢
+  | { command: "cointrack"; payload: CoinTrackParams } // 🟢
+  | { command: "consolidate"; payload: ConsolidateParams } // 🔴 no response type yet
+  | { command: "hashTest"; payload?: HashTestParams } // 🟢
   | { command: "block"; payload?: null } // 🟢
   | { command: "getaddress"; payload?: null } // 🟢
-  | { command: "history"; payload?: HistoryParams } // 🔴
+  | { command: "history"; payload?: HistoryParams } // 🔴 no response type yet
   | { command: "tokencreate"; payload: TokenCreateParams } // 🟢
   | { command: "status"; payload?: null } // 🟢
+  | { command: "keys"; payload?: KeysParams } // 🟢
+  | { command: "newaddress"; payload?: null } // 🟢
+  | { command: "printmmr"; payload?: null } // 🟢
+  | { command: "printtree"; payload?: PrintTreeParams } // 🟢
+  | { command: "tokenvalidate"; payload?: TokenValidateParams } // 🔴 no response type yet
 
 /**
  * Parameters for the different events
@@ -49,7 +54,7 @@ type ConsolidateParams = {
   debug?: "true" | "false"
   dryrun?: "true" | "false"
 }
-type HashTextParams = { amount?: string }
+type HashTestParams = { amount?: string }
 type HistoryParams = { max?: string }
 type TokenCreateParams = {
   name: string // can also be a json object
@@ -62,6 +67,28 @@ type TokenCreateParams = {
   burn?: string
 }
 
+type KeysParams = {
+  /**
+   * list : List your existing public keys. The default.
+   * checkkeys : Checks if your Public and Private keys are correct.
+   * new : Create a new key pair.
+   */
+  action?: "list" | "checkkeys" | "new"
+  /**
+   * Search for a specific public key.
+   */
+  publickey?: string
+}
+
+type PrintTreeParams = {
+  depth?: string
+  cascade?: "true" | "false"
+}
+
+type TokenValidateParams = {
+  tokenid: string
+}
+
 /**
  * Response types for the different events
  */
@@ -72,10 +99,17 @@ export interface GenralRes {
   checkaddress: CheckAddress
   hashtest: HashTest
   coincheck: CoinCheck
-  coinexport: CoinExport
-  coinimport: CoinImport
+  coinexport: SimpleCoinResponse
+  coinimport: SimpleCoinResponse
+  cointrack: SimpleCoinResponse
   tokencreate: TokenCreate
   status: Status
+  getaddress: GetAddress
+  keys: Keys
+  newaddress: NewAddress
+  printmmr: PrintMmr
+  printtree: PrintTree
+  consolidate: Colnsolidate
 }
 
 type DefaultRes = {
@@ -141,14 +175,7 @@ type Coin = {
   created: string
 }
 
-type CoinExport = DefaultResObj<{
-  response: string
-}>
-
-//TODO: Check return type
-type CoinImport = DefaultResObj<{
-  response: string
-}>
+type SimpleCoinResponse = DefaultResObj<string>
 
 type TokenCreate = DefaultResObj<
   {
@@ -164,6 +191,158 @@ type TokenCreate = DefaultResObj<
     transactionid: string
   }
 >
+
+type GetAddress = DefaultResObj<{
+  script: string
+  address: string
+  miniaddress: string
+  simple: boolean
+  default: boolean
+  publickey: string
+  track: boolean
+}>
+
+type Keys = DefaultResObj<{
+  keys: {
+    size: number
+    depth: number
+    uses: number
+    maxuses: number
+    modifier: string
+    publickey: string
+  }[]
+  total: number
+  maxuses: number
+}>
+
+type PrintMmr = DefaultResObj<{
+  block: string
+  entrynumber: number
+  size: number
+  entries: {
+    row: number
+    entry: string
+    data: {
+      data: string
+      value: string
+    }
+  }[]
+  root: {
+    data: string
+    value: string
+  }
+}>
+
+type PrintTree = DefaultResObj<{
+  chain: string
+}>
+
+type NewAddress = DefaultResObj<{
+  script: string
+  address: string
+  miniaddress: string
+  simple: boolean
+  default: boolean
+  publickey: string
+  track: boolean
+}>
+
+type Colnsolidate = DefaultResObj<{
+  txpowid: string
+  isblock: boolean
+  istransaction: boolean
+  superblock: number
+  size: number
+  burn: number
+  header: Header
+  hasbody: boolean
+  body: Body
+}>
+
+type Header = {
+  chainid: string
+  block: string
+  blockdiff: string
+  cascadelevels: number
+  superparents: {
+    difficulty: string
+    count: number
+    parent: string
+  }[]
+  magic: {
+    currentmaxtxpowsize: string
+    currentmaxkissvmops: string
+    currentmaxtxn: string
+    currentmintxpowwork: string
+    desiredmaxtxpowsize: string
+    desiredmaxkissvmops: string
+    desiredmaxtxn: string
+    desiredmintxpowwork: string
+  }
+  mmr: string
+  total: string
+  customhash: string
+  txnbodyhash: string
+  nonce: string
+  timemilli: string
+  date: string
+}
+
+type Body = {
+  prng: string
+  txndiff: string
+  txn: {
+    inputs: Inputs[]
+    outputs: Inputs[]
+    state: string[]
+    linkhash: string
+    transactionid: string
+  }
+  witness: {
+    signatures: {
+      signatures: Signiture[]
+    }[]
+    mmrproofs: {
+      coin: Coin
+    }[]
+  }
+  burntxn: null
+  burnwitness: null
+  txnlist: null
+}
+
+type Signiture = {
+  publicKey: string
+  rootkey: string
+  proof: {
+    blocktime: string
+    proof: Proof[]
+    prooflenght: string
+  }
+  signature: string
+}
+
+type Proof = {
+  left: boolean
+  data: {
+    data: string
+    value: string
+  }
+}
+
+type Inputs = {
+  coinid: string
+  amount: string
+  address: string
+  miniaddress: string
+  tokenid: string
+  token: Token | null
+  storestate: boolean
+  state: string[]
+  spent: boolean
+  mmrentry: string
+  created: string
+}
 
 type Token = {
   name: string | Record<string, unknown>
@@ -259,4 +438,10 @@ type Traffic = {
   write: string
 }
 
-MDS.cmd("status", (data) => {})
+MDS.cmd("consolidate", { tokenid: "" }, (data) => {
+  data.response.body.witness.signatures.map((sig) => {
+    sig.signatures.map((signature) => {
+      signature
+    })
+  })
+})
