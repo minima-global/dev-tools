@@ -1,5 +1,4 @@
-import { SendEventParams } from "./cmd"
-import { Event } from "./events"
+import { Commands, SendEventParams } from "./commands/commands"
 /**
  * Types for the MDS Object
  */
@@ -83,7 +82,9 @@ export interface MDSObj {
    * console.log(data)
    * })
    */
-  cmd: <Type extends Event["command"]>(...args: SendEventParams<Type>) => void
+  cmd: <Type extends Commands["command"]>(
+    ...args: SendEventParams<Type>
+  ) => void
   /**
    * Run a SQL command
    * @param command The SQL command to run

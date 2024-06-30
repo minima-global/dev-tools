@@ -1,19 +1,30 @@
-import { Event, GenralRes } from "./events"
+import { MDS } from "../mds"
+import { BackupCommands } from "./backup/params"
+import { BackupRes } from "./backup/response"
+import { Events } from "./general/params"
+import { GenralRes } from "./general/response"
+
+type DefaultRes = {
+  command: string
+  pending: boolean
+  status: boolean
+  error?: string
+}
 
 /**
  * Extract the response type of a command
  *
  */
-type CMDResponse<C extends Event["command"]> = C extends keyof GenralRes
-  ? GenralRes[C]
+type CMDResponse<C extends Commands["command"]> = C extends keyof Response
+  ? Response[C]
   : never
 
 /**
  * Extract the payload type of a command
  *
  */
-type ExtractPayload<T extends Event["command"]> = Extract<
-  Event,
+type ExtractPayload<T extends Commands["command"]> = Extract<
+  Commands,
   { command: T }
 >["payload"]
 
@@ -21,7 +32,7 @@ type ExtractPayload<T extends Event["command"]> = Extract<
  * Check if the payload is optional
  *
  */
-type IsPayloadOptional<T extends Event["command"]> =
+type IsPayloadOptional<T extends Commands["command"]> =
   undefined extends ExtractPayload<T> ? true : false
 
 /**
@@ -31,7 +42,7 @@ type IsPayloadOptional<T extends Event["command"]> =
  * - The third parameter is optional callback function change maybe?
  */
 
-export type SendEventParams<T extends Event["command"]> =
+export type SendEventParams<T extends Commands["command"]> =
   IsPayloadOptional<T> extends true
     ?
         | [
@@ -45,3 +56,11 @@ export type SendEventParams<T extends Event["command"]> =
         param: ExtractPayload<T>,
         callback?: (data: CMDResponse<T>) => void,
       ]
+
+export type DefaultResObj<T extends Object> = DefaultRes & { response: T }
+
+export type Commands = BackupCommands | Events
+
+export interface Response extends GenralRes, BackupRes {}
+
+MDS.cmd("backup", { file: "" })

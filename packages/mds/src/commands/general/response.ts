@@ -1,95 +1,4 @@
-/**
- * @file events.ts
- * @description This file contains the types for the events
- * that can be sent with the cmd function and the response types
- * for the different events that can be accessed in the callback function
- */
-
-/**
- * Event union type that can be sent with the cmd function
- */
-export type Event =
-  | { command: "balance"; payload?: BalanceParams } // 🟢
-  | { command: "checkaddress"; payload: CheckAddressParams } // 🟢
-  | { command: "coincheck"; payload: CoinCheckParams } // 🟢
-  | { command: "coinimport"; payload: CoinImportParams } // 🟢
-  | { command: "coinexport"; payload: CoinExportParams } // 🟢
-  | { command: "cointrack"; payload: CoinTrackParams } // 🟢
-  | { command: "consolidate"; payload: ConsolidateParams } // 🟢
-  | { command: "hashTest"; payload?: HashTestParams } // 🟢
-  | { command: "block"; payload?: null } // 🟢
-  | { command: "getaddress"; payload?: null } // 🟢
-  | { command: "history"; payload?: HistoryParams } // 🔴 no response type yet
-  | { command: "tokencreate"; payload: TokenCreateParams } // 🟢
-  | { command: "status"; payload?: null } // 🟢
-  | { command: "keys"; payload?: KeysParams } // 🟢
-  | { command: "newaddress"; payload?: null } // 🟢
-  | { command: "printmmr"; payload?: null } // 🟢
-  | { command: "printtree"; payload?: PrintTreeParams } // 🟢
-  | { command: "tokenvalidate"; payload?: TokenValidateParams } // 🔴 no response type yet
-
-/**
- * Parameters for the different events
- * these are the payloads that can be sent with the events
- */
-
-type BalanceParams = {
-  address?: string
-  tokenid?: string
-  confirmations?: string
-}
-type CheckAddressParams = { address: string }
-type CoinCheckParams = { data: string }
-type CoinImportParams = { coinid: string; track?: "true" | "false" }
-type CoinExportParams = { coinid: string }
-type CoinTrackParams = { enable: "true" | "false"; coinid: string }
-type ConsolidateParams = {
-  tokenid: string
-  coinage?: string
-  maxcoins?: string
-  maxsigs?: string
-  burn?: string
-  debug?: "true" | "false"
-  dryrun?: "true" | "false"
-}
-type HashTestParams = { amount?: string }
-type HistoryParams = { max?: string }
-type TokenCreateParams = {
-  name: string // can also be a json object
-  amount: string
-  decimals?: string
-  script?: string
-  state?: string
-  signtoken?: string
-  webvalidate?: string
-  burn?: string
-}
-
-type KeysParams = {
-  /**
-   * list : List your existing public keys. The default.
-   * checkkeys : Checks if your Public and Private keys are correct.
-   * new : Create a new key pair.
-   */
-  action?: "list" | "checkkeys" | "new"
-  /**
-   * Search for a specific public key.
-   */
-  publickey?: string
-}
-
-type PrintTreeParams = {
-  depth?: string
-  cascade?: "true" | "false"
-}
-
-type TokenValidateParams = {
-  tokenid: string
-}
-
-/**
- * Response types for the different events
- */
+import { DefaultResObj } from "../commands"
 
 export interface GenralRes {
   balance: Balance
@@ -111,15 +20,7 @@ export interface GenralRes {
   tokenvalidate: TokenValidate
 }
 
-type DefaultRes = {
-  command: string
-  pending: boolean
-  status: boolean
-  error?: string
-}
-type DefaultResObj<T extends Object> = DefaultRes & { response: T }
-
-type Balance = DefaultResObj<
+export type Balance = DefaultResObj<
   {
     token: string
     tokenid: string
@@ -131,14 +32,14 @@ type Balance = DefaultResObj<
   }[]
 >
 
-type Block = DefaultResObj<{
+export type Block = DefaultResObj<{
   block: string
   date: string
   hash: string
   timemilli: string
 }>
 
-type CheckAddress = DefaultResObj<{
+export type CheckAddress = DefaultResObj<{
   "0x": string
   Mx: string
   original: string
@@ -146,13 +47,13 @@ type CheckAddress = DefaultResObj<{
   simple: boolean
 }>
 
-type HashTest = DefaultResObj<{
+export type HashTest = DefaultResObj<{
   hashes: string
   millitime: string
   speed: string
 }>
 
-type CoinCheck = DefaultResObj<
+export type CoinCheck = DefaultResObj<
   {
     proofblock: number
     coin: Coin
@@ -174,9 +75,9 @@ type Coin = {
   created: string
 }
 
-type SimpleCoinResponse = DefaultResObj<string>
+export type SimpleCoinResponse = DefaultResObj<string>
 
-type TokenCreate = DefaultResObj<
+export type TokenCreate = DefaultResObj<
   {
     inputs: [Coin]
     outputs: [
@@ -191,7 +92,7 @@ type TokenCreate = DefaultResObj<
   }
 >
 
-type GetAddress = DefaultResObj<{
+export type GetAddress = DefaultResObj<{
   script: string
   address: string
   miniaddress: string
@@ -201,7 +102,7 @@ type GetAddress = DefaultResObj<{
   track: boolean
 }>
 
-type Keys = DefaultResObj<{
+export type Keys = DefaultResObj<{
   keys: {
     size: number
     depth: number
@@ -214,7 +115,7 @@ type Keys = DefaultResObj<{
   maxuses: number
 }>
 
-type PrintMmr = DefaultResObj<{
+export type PrintMmr = DefaultResObj<{
   block: string
   entrynumber: number
   size: number
@@ -232,11 +133,11 @@ type PrintMmr = DefaultResObj<{
   }
 }>
 
-type PrintTree = DefaultResObj<{
+export type PrintTree = DefaultResObj<{
   chain: string
 }>
 
-type NewAddress = DefaultResObj<{
+export type NewAddress = DefaultResObj<{
   script: string
   address: string
   miniaddress: string
@@ -246,7 +147,7 @@ type NewAddress = DefaultResObj<{
   track: boolean
 }>
 
-type TokenValidate = DefaultResObj<{
+export type TokenValidate = DefaultResObj<{
   signature: {
     signed: boolean
   }
@@ -255,7 +156,7 @@ type TokenValidate = DefaultResObj<{
   }
 }>
 
-type Colnsolidate = DefaultResObj<{
+export type Colnsolidate = DefaultResObj<{
   txpowid: string
   isblock: boolean
   istransaction: boolean
