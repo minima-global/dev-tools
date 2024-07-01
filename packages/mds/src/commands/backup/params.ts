@@ -1,6 +1,3 @@
-/**
- *  Minima Backup Commands
- */
 export type BackupCommands =
   | { command: "backup"; payload: BackupParams } // TODO: Add response type
   | { command: "archive"; payload: ArchiveParams } // TODO: Add response type

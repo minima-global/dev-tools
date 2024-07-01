@@ -1,4 +1,4 @@
-import { Keys, MDS } from "@/minima/mds"
+import { MDS, type History } from "@/minima/mds"
 import { useEffect, useState } from "react"
 import "./App.css"
 import minimalogo from "./assets/minima_logo.png"
@@ -8,7 +8,7 @@ import reactLogo from "./assets/react.svg"
 //"MxG087EBE3Y7TATY0GTNB2AFZCNA4777V954FNPJJ9BMHJHAC8ARCQ0EP21FUAW"
 
 function App() {
-  const [response, setResponse] = useState<Keys>()
+  const [response, setResponse] = useState<History>()
 
   useEffect(() => {
     MDS.init(({ event }) => {
@@ -19,7 +19,7 @@ function App() {
   }, [])
 
   function createToken() {
-    MDS.cmd("keys", { action: "list" }, (data) => {
+    MDS.cmd("history", (data) => {
       setResponse(data)
       console.log(data)
     })
@@ -31,7 +31,6 @@ function App() {
         <a href="https://vitejs.dev" target="_blank">
           <img src={minimalogo} className="logo" alt="Vite logo" />
         </a>
-        <span> X </span>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
@@ -45,8 +44,12 @@ function App() {
           {response && !response.error ? (
             <div>
               <>
-                {response.response.keys.map((k) => (
-                  <p>{k.maxuses}</p>
+                {response.response.txpows.map((item) => (
+                  <p>
+                    {item.body.txn.outputs.map((txn) => (
+                      <p>{txn.amount}</p>
+                    ))}
+                  </p>
                 ))}
               </>
             </div>

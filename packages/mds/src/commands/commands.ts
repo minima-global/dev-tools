@@ -1,7 +1,7 @@
 import { MDS } from "../mds"
 import { BackupCommands } from "./backup/params"
 import { BackupRes } from "./backup/response"
-import { Events } from "./general/params"
+import { GeneralCommands } from "./general/params"
 import { GenralRes } from "./general/response"
 
 type DefaultRes = {
@@ -10,6 +10,12 @@ type DefaultRes = {
   status: boolean
   error?: string
 }
+
+export type DefaultResObj<T extends Object> = DefaultRes & { response: T }
+
+export type Commands = BackupCommands | GeneralCommands
+
+export interface Response extends GenralRes, BackupRes {}
 
 /**
  * Extract the response type of a command
@@ -56,11 +62,5 @@ export type SendEventParams<T extends Commands["command"]> =
         param: ExtractPayload<T>,
         callback?: (data: CMDResponse<T>) => void,
       ]
-
-export type DefaultResObj<T extends Object> = DefaultRes & { response: T }
-
-export type Commands = BackupCommands | Events
-
-export interface Response extends GenralRes, BackupRes {}
 
 MDS.cmd("backup", { file: "" })

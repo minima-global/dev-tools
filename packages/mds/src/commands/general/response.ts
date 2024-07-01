@@ -18,6 +18,7 @@ export interface GenralRes {
   printtree: PrintTree
   consolidate: Colnsolidate
   tokenvalidate: TokenValidate
+  history: History
 }
 
 export type Balance = DefaultResObj<
@@ -276,7 +277,7 @@ type Status = DefaultResObj<{
   data: string
   memory: Memory
   chain: Chain
-  txpow: TxPow
+  txpow: StatusTxPow
   network: Network
 }>
 
@@ -315,7 +316,7 @@ type Cascade = {
   weight: string
 }
 
-type TxPow = {
+type StatusTxPow = {
   mempool: number
   ramdb: number
   txpowdb: number
@@ -345,4 +346,28 @@ type Traffic = {
   //breakdown: Breakdown
   read: string
   write: string
+}
+
+export type History = DefaultResObj<{
+  txpows: HistoryTxpow[]
+  details: Details
+  size: number
+}>
+
+type HistoryTxpow = {
+  txpowid: string
+  isblock: boolean
+  istransaction: boolean
+  superblock: number
+  size: number
+  burn: number
+  header: Header
+  hasbody: boolean
+  body: Body
+}
+
+type Details = {
+  inputs: Record<string, any> // adjust based on actual content
+  outputs: Record<string, any> // adjust based on actual content
+  difference: Record<string, any> // adjust based on actual content
 }
