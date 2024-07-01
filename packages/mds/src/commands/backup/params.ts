@@ -1,8 +1,15 @@
+/**
+ *  Minima Backup Commands
+ */
 export type BackupCommands =
+  | { command: "backup"; payload: BackupParams } // TODO: Add response type
   | { command: "archive"; payload: ArchiveParams } // TODO: Add response type
   | { command: "mysql"; payload: MYSqlParams } // TODO: Add response type
   | { command: "mysqlcoins"; payload: MySqlCoinsParams } // TODO: Add response type
-  | { command: "backup"; payload: BackupParams } // TODO: Add response type
+  | { command: "reset"; payload: ResetParams } // TODO: Add response type
+  | { command: "restore"; payload: RestoreParams } // TODO: Add response type
+  | { command: "restoresync"; payload: RestoreSyncParams } // TODO: Add response type
+  | { command: "vault"; payload: ValutParams } // TODO: Add response type
 
 type ArchiveParams = {
   /**
@@ -263,4 +270,132 @@ type MySqlCoinsParams = {
    * @example 50
    */
   limit?: number
+}
+
+type ResetParams = {
+  /**
+   * The action to perform for resetting the node.
+   * - `chainsync`: Re-sync all blocks from the archive file to get back onto the correct chain. No seed phrase required, private keys remain unchanged.
+   * - `seedsync`: Wipe the wallet and regenerate keys from the seed phrase. Coins will be restored.
+   * - `restore`: Restore a backup and re-sync the entire chain from the archive file.
+   */
+  action: "chainsync" | "seedsync" | "restore"
+
+  /**
+   * The archive file (.dat or .gzip) to use for the reset action. It should be a recent export from an archive node.
+   * @example "/path/to/archivefile.dat"
+   */
+  archivefile: string
+
+  /**
+   * The filename or local path of the backup to restore. This is optional and is used with the `restore` action.
+   * @example "/path/to/backupfile.bak"
+   */
+  file?: string
+
+  /**
+   * The password for the backup to be restored. This is optional and is used with the `restore` action.
+   * @example "backupPassword123"
+   */
+  password?: string
+
+  /**
+   * The 24-word seed phrase in double quotes, used to import a seed phrase and sync the entire chain. Required for the `seedsync` action.
+   * This will wipe the wallet of the node.
+   * @example "word1 word2 word3 ... word24"
+   */
+  phrase?: string
+
+  /**
+   * The number of keys to create during a seed re-sync. The default is 64. This is optional and is used with the `seedsync` action.
+   * @example 64
+   */
+  keys?: number
+
+  /**
+   * The maximum number of times the keys have been used. Required to be higher each time you re-sync with the seed phrase, as Minima Signatures are stateful.
+   * The default is 1000, and the maximum is 262144 for normal keys. This is optional and is used with the `seedsync` action.
+   * @example 1000
+   */
+  keyuses?: number
+}
+
+type RestoreParams = {
+  /**
+   * The filename or local path of the backup to restore.
+   * This field is required and should specify the full path to the backup file.
+   * @example "/path/to/backupfile.bak"
+   */
+  file: string
+
+  /**
+   * The password for the backup to be restored.
+   * This is optional and used to unlock the backup file if it is password protected.
+   * @example "backupPassword123"
+   */
+  password?: string
+}
+
+type RestoreSyncParams = {
+  /**
+   * The filename or local path of the backup to restore.
+   * This field is required and should specify the full path to the backup file.
+   * @example "/path/to/backupfile.bak"
+   */
+  file: string
+
+  /**
+   * The password for the backup to be restored.
+   * This is optional and used to unlock the backup file if it is password protected.
+   * @example "backupPassword123"
+   */
+  password?: string
+
+  /**
+   * The IP address and port of the archive node to sync from, in the format "ip:port".
+   * This field is optional and defaults to syncing from a local or default node.
+   * @example "192.168.1.100:8080"
+   */
+  host?: string
+
+  /**
+   * Increment the number of key uses per key. This is optional and is not setting a value directly.
+   * Every time you perform a restore sync, this value should be incremented due to the stateful nature of Minima signatures.
+   * @example 100
+   */
+  keyuses?: number
+}
+
+type ValutParams = {
+  /**
+   * The action to perform in the vault.
+   * DO NOT SHARE YOUR SEED PHRASE WITH ANYONE.
+   * BE CAREFUL. ENSURE YOU HAVE A BACKUP AND SECURE RECORD OF YOUR PASSPHRASE
+   * BEFORE LOCKING.
+   * - `seed`: Show your seed phrase. This is the default action.
+   * - `wipekeys`: Wipe your private keys but keep the public keys.
+   * - `restorekeys`: Restore your private keys.
+   * - `passwordlock`: Lock your node by password encrypting private keys.
+   * - `passwordunlock`: Unlock your node by reinstating your private keys.
+   */
+  action?:
+    | "seed"
+    | "wipekeys"
+    | "restorekeys"
+    | "passwordlock"
+    | "passwordunlock"
+
+  /**
+   * Your seed phrase used to lock your node. This will delete your private keys.
+   * Providing this is optional and required only for certain actions.
+   * @example "word1 word2 word3 ... word24"
+   */
+  seed?: string
+
+  /**
+   * Your passphrase used to restore or unlock your node. This will reinstate your private keys.
+   * Providing this is optional and required only for certain actions.
+   * @example "yourPassphrase"
+   */
+  phrase?: string
 }
