@@ -3,6 +3,7 @@ import { BackupCommands } from "./backup/params"
 import { BackupRes } from "./backup/response"
 import { GeneralCommands } from "./general/params"
 import { GenralRes } from "./general/response"
+import { MiniDappSystemCommands } from "./minidapp-system/params"
 
 type DefaultRes = {
   command: string
@@ -13,7 +14,7 @@ type DefaultRes = {
 
 export type DefaultResObj<T extends Object> = DefaultRes & { response: T }
 
-export type Commands = BackupCommands | GeneralCommands
+export type Commands = BackupCommands | GeneralCommands | MiniDappSystemCommands
 
 export interface Response extends GenralRes, BackupRes {}
 
