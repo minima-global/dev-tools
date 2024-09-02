@@ -3,7 +3,9 @@ import { BackupCommands } from "./backup/params"
 import { BackupRes } from "./backup/response"
 import { GeneralCommands } from "./general/params"
 import { GenralRes } from "./general/response"
+import { MaximaCommands } from "./maxima/params"
 import { MiniDappSystemCommands } from "./minidapp-system/params"
+import { NetworkCommands } from "./network/params"
 
 type DefaultRes = {
   command: string
@@ -14,7 +16,12 @@ type DefaultRes = {
 
 export type DefaultResObj<T extends Object> = DefaultRes & { response: T }
 
-export type Commands = BackupCommands | GeneralCommands | MiniDappSystemCommands
+export type Commands =
+  | BackupCommands
+  | GeneralCommands
+  | MiniDappSystemCommands
+  | NetworkCommands
+  | MaximaCommands
 
 export interface Response extends GenralRes, BackupRes {}
 
