@@ -1,23 +1,14 @@
 import {  MDSResObj } from "../../types"
-import { BalanceParams } from "./params"
-
-
-
-
-
 export module Balance {
-
   export type GetPayload<S> = S extends {
     payload: any
   }
     ? S["payload"] extends { tokendetails: string }
       ? BalanceWithTokenDetails
-      : S["payload"] extends { address: string }
-        ? Balance
-        : never
+      : Balance
     : Balance
 
-type RawBalance = {
+export type RawBalance = {
   token: string
   tokenid: string
   confirmed: string
@@ -27,7 +18,7 @@ type RawBalance = {
   total: string
 }
 
-type RawBalanceWithDetails = RawBalance & {
+export type RawBalanceWithDetails = RawBalance & {
   details: {
     decimals?: string
     script?: string
@@ -36,15 +27,16 @@ type RawBalanceWithDetails = RawBalance & {
     created?: string
   }
 }
- type Balance = MDSResObj<
- RawBalance[]
->
-
-type BalanceWithTokenDetails = MDSResObj<
-  RawBalanceWithDetails[]
->
-
 }
+
+export type Balance = MDSResObj<
+Balance.RawBalance[]
+>
+
+export type BalanceWithTokenDetails = MDSResObj<
+ Balance.RawBalanceWithDetails[]
+>
+
 
 export type Block = MDSResObj<{
   block: string

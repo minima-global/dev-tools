@@ -29,7 +29,7 @@ type DefaultRes = {
   error?: string
 }
 
-export type MDSResObj<T> = DefaultRes & T
+export type MDSResObj<T> = DefaultRes & {response: T}
 
 type FileAccessParams = (
   opt: string,

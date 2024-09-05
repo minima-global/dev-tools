@@ -12,12 +12,18 @@ export interface GeneralCommands {
 
   block: (callback: (data: Block) => void) => void
 
-  balance: <T extends { payload: BalanceParams }>(args?: T, callback?: (data: Balance.GetPayload<T>) => void) => void
+  balance: {
+    (callback: (data: Balance.GetPayload<{payload: BalanceParams}>) => void): void;
+
+    <T extends { payload: BalanceParams }>(args: T, callback?: (data: Balance.GetPayload<T>) => void): void;
+  }
 
 }
 
 
 
-MDS.cmd.balance({payload: {tokendetails: "true"}}, (data) => {
-  console.log(data.map((d) => d))
+MDS.cmd.balance({payload : {
+  tokendetails: "true"
+}},(data) => {
+
 })

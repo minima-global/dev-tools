@@ -14,9 +14,14 @@ function App() {
    MDS.init(({ event }) => {
       if (event === "inited") {
         console.log("INITED!!!")
-        MDS.cmd.block((data) => {
+        MDS.cmd.balance({
+          payload: {
+            address:"MxG0801QU8W784N2QYEK172Z3ETY14Z06S71TDGFPU9W2FE6FJGV5R8BRR8MMPD",
+            confirmations: 3
+          }
+        },(data) => {
           console.log("Block DATA")
-          setBalance(data.response.block)
+          console.log(data)
         })
       }
     })

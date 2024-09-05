@@ -2,6 +2,7 @@
  * The MDS TS Library for building MiniDapps
  * by Minima Global
  */
+
 import { MDSObj } from "./types"
 var MDS_MAIN_CALLBACK: any
 var API_CALLS: any[] = []
@@ -63,10 +64,26 @@ export const MDS: MDSObj = {
     httpPostAsync("notifycancel", "*")
   },
   cmd: {
-    balance: (args, callback) => {
+    balance: (argsOrCallback?: any, callback?: any) => {
 
-      httpPostAsync("balance", args?.payload, callback);
-    }, 
+      let command = "balance";
+      let payload = argsOrCallback?.payload;
+      let commandString: string = command
+
+      if (payload !== undefined && payload !== null) {
+        const payloadString = Object.entries(payload)
+          .map(([key, value]) => `${key}:${value}`)
+          .join(" ")
+        commandString += ` ${payloadString}`
+      }
+      
+      if (typeof argsOrCallback === 'function') {
+        httpPostAsync("cmd", commandString, argsOrCallback);
+      } else {
+        httpPostAsync("cmd", commandString, callback);
+      }
+      
+    },
     block: (callback) => {
       // Block can be hard coded since no params
       httpPostAsync("cmd", "block", callback);
