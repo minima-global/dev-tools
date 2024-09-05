@@ -1,24 +1,9 @@
-export type GeneralCommands =
-  | { command: "balance"; payload?: BalanceParams }
-  | { command: "checkaddress"; payload: CheckAddressParams }
-  | { command: "coincheck"; payload: CoinCheckParams }
-  | { command: "coinimport"; payload: CoinImportParams }
-  | { command: "coinexport"; payload: CoinExportParams }
-  | { command: "cointrack"; payload: CoinTrackParams }
-  | { command: "consolidate"; payload: ConsolidateParams }
-  | { command: "hashTest"; payload?: HashTestParams }
-  | { command: "block"; payload?: null }
-  | { command: "getaddress"; payload?: null }
-  | { command: "history"; payload?: HistoryParams }
-  | { command: "tokencreate"; payload: TokenCreateParams }
-  | { command: "status"; payload?: null }
-  | { command: "keys"; payload?: KeysParams }
-  | { command: "newaddress"; payload?: null }
-  | { command: "printmmr"; payload?: null }
-  | { command: "printtree"; payload?: PrintTreeParams }
-  | { command: "tokenvalidate"; payload?: TokenValidateParams }
+/**
+ * @description
+ * General commands parameters
+ */
 
-type BalanceParams = {
+export type BalanceParams = {
   /**
    * The address for which to show the balance.
    * This field is optional. If not provided, the total balance for all addresses will be shown.
@@ -43,8 +28,11 @@ type BalanceParams = {
    * @example 6  // Higher confidence
    */
   confirmations?: number
-}
-type CheckAddressParams = {
+
+  tokendetails?: "true"
+}  
+
+export type CheckAddressParams = {
   /**
    * The address to check. The address can be in 0x or Mx format.
    * This field is required and must be a valid address format.
@@ -53,7 +41,7 @@ type CheckAddressParams = {
    */
   address: string
 }
-type CoinCheckParams = {
+export type CoinCheckParams = {
   /**
    * The data of a coin, typically obtained using the 'coinexport' command.
    * This field is required and should be a valid coin data string.
@@ -62,7 +50,7 @@ type CoinCheckParams = {
   data: string
 }
 
-type CoinImportParams = {
+export type CoinImportParams = {
   /**
    * The data of a coin, typically obtained using the 'coinexport' command.
    * This field is required and must contain valid coin data that includes the MMR proof.
@@ -78,7 +66,7 @@ type CoinImportParams = {
    */
   track?: "true" | "false"
 }
-type CoinExportParams = {
+export type CoinExportParams = {
   /**
    * The ID of the coin to export. This ID can be found using the 'coins'
    * command.
@@ -87,7 +75,7 @@ type CoinExportParams = {
    */
   coinid: string
 }
-type CoinTrackParams = {
+export type CoinTrackParams = {
   /**
    * Specify whether to enable or disable tracking for the coin.
    * If set to true, the coin will be added to your relevant coins list for

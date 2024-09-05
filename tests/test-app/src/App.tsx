@@ -1,29 +1,28 @@
-import { MDS, type History } from "@/minima/mds"
+import { MDS } from "@/minima/mds"
 import { useEffect, useState } from "react"
 import "./App.css"
 import minimalogo from "./assets/minima_logo.png"
 import reactLogo from "./assets/react.svg"
 
-//const address =
-//"MxG087EBE3Y7TATY0GTNB2AFZCNA4777V954FNPJJ9BMHJHAC8ARCQ0EP21FUAW"
+
 
 function App() {
-  const [response, setResponse] = useState<History>()
+
+  const [balance, setBalance] = useState("")
 
   useEffect(() => {
-    MDS.init(({ event }) => {
+   MDS.init(({ event }) => {
       if (event === "inited") {
-        console.log("MDS inited")
+        console.log("INITED!!!")
+        MDS.cmd.block((data) => {
+          console.log("Block DATA")
+          setBalance(data.response.block)
+        })
       }
     })
   }, [])
 
-  function createToken() {
-    MDS.cmd("history", (data) => {
-      setResponse(data)
-      console.log(data)
-    })
-  }
+
 
   return (
     <>
@@ -37,32 +36,9 @@ function App() {
       </div>
       <h1>Minima + React</h1>
       <div className="card">
-        <h2>Block</h2>
-        <>
-          <button onClick={createToken}>Create Token</button>
-          <h3>Response</h3>
-          {response && !response.error ? (
-            <div>
-              <>
-                {response.response.txpows.map((item) => (
-                  <p>
-                    {item.body.txn.outputs.map((txn) => (
-                      <p>{txn.amount}</p>
-                    ))}
-                  </p>
-                ))}
-              </>
-            </div>
-          ) : (
-            <div>
-              {response && response.error ? (
-                <p>{response.error}</p>
-              ) : (
-                <p>Waiting for response...</p>
-              )}
-            </div>
-          )}
-        </>
+        <h2>Block Test</h2>
+        {balance}
+          
       </div>
     </>
   )

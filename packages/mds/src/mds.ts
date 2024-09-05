@@ -62,32 +62,16 @@ export const MDS: MDSObj = {
   notifycancel: () => {
     httpPostAsync("notifycancel", "*")
   },
-  cmd: (...args) => {
-    let command, payload, callback
+  cmd: {
+    balance: (args, callback) => {
 
-    if (typeof args[1] === "function") {
-      // No payload, second argument is actually the callback
-      ;[command, callback] = args
-      payload = undefined
-    } else {
-      // Payload is provided
-      ;[command, payload, callback] = args
+      httpPostAsync("balance", args?.payload, callback);
+    }, 
+    block: (callback) => {
+      // Block can be hard coded since no params
+      httpPostAsync("cmd", "block", callback);
     }
 
-    console.log("command", command)
-    console.log("payload", payload)
-    console.log("callback", callback)
-
-    // Check if payload is defined and call httpPostAsync accordingly
-    let commandString: string = command
-    if (payload !== undefined && payload !== null) {
-      const payloadString = Object.entries(payload)
-        .map(([key, value]) => `${key}:${value}`)
-        .join(" ")
-      commandString += ` ${payloadString}`
-    }
-
-    httpPostAsync("cmd", commandString, callback as any)
   },
   sql: (command, callback) => {
     httpPostAsync("sql", command, callback)

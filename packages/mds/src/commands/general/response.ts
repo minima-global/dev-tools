@@ -1,46 +1,59 @@
-import { DefaultResObj } from "../commands"
+import {  MDSResObj } from "../../types"
+import { BalanceParams } from "./params"
 
-export interface GenralRes {
-  balance: Balance
-  block: Block
-  checkaddress: CheckAddress
-  hashtest: HashTest
-  coincheck: CoinCheck
-  coinexport: SimpleCoinResponse
-  coinimport: SimpleCoinResponse
-  cointrack: SimpleCoinResponse
-  tokencreate: TokenCreate
-  status: Status
-  getaddress: GetAddress
-  keys: Keys
-  newaddress: NewAddress
-  printmmr: PrintMmr
-  printtree: PrintTree
-  consolidate: Colnsolidate
-  tokenvalidate: TokenValidate
-  history: History
+
+
+
+
+export module Balance {
+
+  export type GetPayload<S> = S extends {
+    payload: any
+  }
+    ? S["payload"] extends { tokendetails: string }
+      ? BalanceWithTokenDetails
+      : S["payload"] extends { address: string }
+        ? Balance
+        : never
+    : Balance
+
+type RawBalance = {
+  token: string
+  tokenid: string
+  confirmed: string
+  unconfirmed: string
+  sendable: string
+  coins: string
+  total: string
 }
 
-export type Balance = DefaultResObj<
-  {
-    token: string
-    tokenid: string
-    confirmed: string
-    unconfirmed: string
-    sendable: string
-    coins: string
-    total: string
-  }[]
+type RawBalanceWithDetails = RawBalance & {
+  details: {
+    decimals?: string
+    script?: string
+    totalamount?: string
+    scale?: string
+    created?: string
+  }
+}
+ type Balance = MDSResObj<
+ RawBalance[]
 >
 
-export type Block = DefaultResObj<{
+type BalanceWithTokenDetails = MDSResObj<
+  RawBalanceWithDetails[]
+>
+
+}
+
+export type Block = MDSResObj<{
   block: string
   date: string
   hash: string
   timemilli: string
 }>
 
-export type CheckAddress = DefaultResObj<{
+export type CheckAddress = MDSResObj<{
   "0x": string
   Mx: string
   original: string
@@ -48,13 +61,13 @@ export type CheckAddress = DefaultResObj<{
   simple: boolean
 }>
 
-export type HashTest = DefaultResObj<{
+export type HashTest = MDSResObj<{
   hashes: string
   millitime: string
   speed: string
 }>
 
-export type CoinCheck = DefaultResObj<
+export type CoinCheck = MDSResObj<
   {
     proofblock: number
     coin: Coin
@@ -76,9 +89,9 @@ type Coin = {
   created: string
 }
 
-export type SimpleCoinResponse = DefaultResObj<string>
+export type SimpleCoinResponse = MDSResObj<string>
 
-export type TokenCreate = DefaultResObj<
+export type TokenCreate = MDSResObj<
   {
     inputs: [Coin]
     outputs: [
@@ -93,7 +106,7 @@ export type TokenCreate = DefaultResObj<
   }
 >
 
-export type GetAddress = DefaultResObj<{
+export type GetAddress = MDSResObj<{
   script: string
   address: string
   miniaddress: string
@@ -103,7 +116,7 @@ export type GetAddress = DefaultResObj<{
   track: boolean
 }>
 
-export type Keys = DefaultResObj<{
+export type Keys = MDSResObj<{
   keys: {
     size: number
     depth: number
@@ -116,7 +129,7 @@ export type Keys = DefaultResObj<{
   maxuses: number
 }>
 
-export type PrintMmr = DefaultResObj<{
+export type PrintMmr = MDSResObj<{
   block: string
   entrynumber: number
   size: number
@@ -134,11 +147,11 @@ export type PrintMmr = DefaultResObj<{
   }
 }>
 
-export type PrintTree = DefaultResObj<{
+export type PrintTree = MDSResObj<{
   chain: string
 }>
 
-export type NewAddress = DefaultResObj<{
+export type NewAddress = MDSResObj<{
   script: string
   address: string
   miniaddress: string
@@ -148,7 +161,7 @@ export type NewAddress = DefaultResObj<{
   track: boolean
 }>
 
-export type TokenValidate = DefaultResObj<{
+export type TokenValidate = MDSResObj<{
   signature: {
     signed: boolean
   }
@@ -157,7 +170,7 @@ export type TokenValidate = DefaultResObj<{
   }
 }>
 
-export type Colnsolidate = DefaultResObj<{
+  export type Colnsolidate = MDSResObj<{
   txpowid: string
   isblock: boolean
   istransaction: boolean
@@ -266,7 +279,7 @@ type Token = {
   tokenid: string
 }
 
-type Status = DefaultResObj<{
+type Status = MDSResObj<{
   version: string
   uptime: string
   locked: boolean
@@ -348,7 +361,7 @@ type Traffic = {
   write: string
 }
 
-export type History = DefaultResObj<{
+export type History = MDSResObj<{
   txpows: HistoryTxpow[]
   details: Details
   size: number

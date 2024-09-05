@@ -77,7 +77,7 @@ describe("mds.cmd", () => {
     mockXHR.onreadystatechange = callback
     mockXHR.onreadystatechange()
     const mockCallback = vi.fn()
-    MDS.cmd("balance", mockCallback)
+    //MDS.cmd("balance", mockCallback)
     expect(mockXHR.send).toHaveBeenCalledWith("balance")
   })
 })

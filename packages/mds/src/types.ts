@@ -1,4 +1,4 @@
-import { Commands, SendEventParams } from "./commands/commands"
+import { GeneralCommands } from "./commands/commands"
 /**
  * Types for the MDS Object
  */
@@ -21,6 +21,15 @@ type BaseEvent<T extends MinimaEvents> = { event: T }
 export type EventCallback<T extends BaseEvent<MinimaEvents>> = (msg: T) => void
 
 export type MDS_MAIN_CALLBACK = EventCallback<BaseEvent<MinimaEvents>> | null
+
+type DefaultRes = {
+  command: string
+  pending: boolean
+  status: boolean
+  error?: string
+}
+
+export type MDSResObj<T> = DefaultRes & T
 
 type FileAccessParams = (
   opt: string,
@@ -82,9 +91,7 @@ export interface MDSObj {
    * console.log(data)
    * })
    */
-  cmd: <Type extends Commands["command"]>(
-    ...args: SendEventParams<Type>
-  ) => void
+  cmd: GeneralCommands
   /**
    * Run a SQL command
    * @param command The SQL command to run
