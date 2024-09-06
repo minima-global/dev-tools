@@ -64,10 +64,62 @@ export const MDS: MDSObj = {
     httpPostAsync("notifycancel", "*")
   },
   cmd: {
-    balance: (argsOrCallback?: any, callback?: any) => {
+    balance: (...args) => {
+      let command = "balance"
+      let commandString: string = command
 
-      let command = "balance";
-      let payload = argsOrCallback?.payload;
+      let callback: any
+      let payload: any
+
+      console.log("args")
+      console.log(args)
+
+      if (
+        args.length === 2 &&
+        typeof args[1] === "function" &&
+        typeof args[0] === "object"
+      ) {
+        ;[payload, callback] = args
+      } else if (args.length === 1 && typeof args[0] === "function") {
+        ;[callback] = args
+      } else if (args.length === 1 && typeof args[0] === "object") {
+        payload = args[0]
+      } else {
+        callback = args[0]
+      }
+
+      if (typeof payload === "object" && payload.params) {
+        const payloadString = Object.entries(payload.params)
+          .map(([key, value]) => `${key}:${value}`)
+          .join(" ")
+        commandString += ` ${payloadString}`
+      }
+
+      return new Promise((resolve) => {
+        httpPostAsync("cmd", commandString, (data: any) => {
+          resolve(data)
+          if (callback && typeof callback === "function") {
+            callback(data)
+          }
+        })
+      })
+    },
+
+    block: (callback) => {
+      return new Promise((resolve) => {
+        httpPostAsync("cmd", "block", (data: any) => {
+          resolve(data)
+          if (callback) {
+            callback(data)
+          }
+        })
+      })
+    },
+
+    checkaddress: (args, callback) => {
+      const command = "checkaddress"
+      const payload = args
+
       let commandString: string = command
 
       if (payload !== undefined && payload !== null) {
@@ -76,19 +128,9 @@ export const MDS: MDSObj = {
           .join(" ")
         commandString += ` ${payloadString}`
       }
-      
-      if (typeof argsOrCallback === 'function') {
-        httpPostAsync("cmd", commandString, argsOrCallback);
-      } else {
-        httpPostAsync("cmd", commandString, callback);
-      }
-      
-    },
-    block: (callback) => {
-      // Block can be hard coded since no params
-      httpPostAsync("cmd", "block", callback);
-    }
 
+      httpPostAsync("cmd", commandString, callback)
+    },
   },
   sql: (command, callback) => {
     httpPostAsync("sql", command, callback)

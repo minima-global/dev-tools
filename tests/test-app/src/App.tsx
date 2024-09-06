@@ -4,30 +4,33 @@ import "./App.css"
 import minimalogo from "./assets/minima_logo.png"
 import reactLogo from "./assets/react.svg"
 
-
-
 function App() {
-
   const [balance, setBalance] = useState("")
 
   useEffect(() => {
-   MDS.init(({ event }) => {
+    MDS.init(({ event }) => {
       if (event === "inited") {
         console.log("INITED!!!")
-        MDS.cmd.balance({
-          payload: {
-            address:"MxG0801QU8W784N2QYEK172Z3ETY14Z06S71TDGFPU9W2FE6FJGV5R8BRR8MMPD",
-            confirmations: 3
-          }
-        },(data) => {
-          console.log("Block DATA")
+        const test = async () => {
+          const data = await MDS.cmd.balance(
+            {
+              params: {
+                address:
+                  "MxG0808A0Y4UZDPCGYHQMA82W81PC12B6QY2FZC003RNJEBCDNSRN7DKQ45B66Z",
+              },
+            },
+            (data) => {
+              console.log("data from callback")
+              console.log(data)
+            }
+          )
+          console.log("data from promise")
           console.log(data)
-        })
+        }
+        test()
       }
     })
   }, [])
-
-
 
   return (
     <>
@@ -43,7 +46,6 @@ function App() {
       <div className="card">
         <h2>Block Test</h2>
         {balance}
-          
       </div>
     </>
   )

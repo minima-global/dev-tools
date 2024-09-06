@@ -1,42 +1,37 @@
-import {  MDSResObj } from "../../types"
+import { MDSResObj } from "../../types"
 export module Balance {
-  export type GetPayload<S> = S extends {
-    payload: any
+  export type ReturnType<S> = S extends {
+    params: any
   }
-    ? S["payload"] extends { tokendetails: string }
+    ? S["params"] extends { tokendetails: string }
       ? BalanceWithTokenDetails
       : Balance
     : Balance
 
-export type RawBalance = {
-  token: string
-  tokenid: string
-  confirmed: string
-  unconfirmed: string
-  sendable: string
-  coins: string
-  total: string
-}
+  export type RawBalance = {
+    token: string
+    tokenid: string
+    confirmed: string
+    unconfirmed: string
+    sendable: string
+    coins: string
+    total: string
+  }
 
-export type RawBalanceWithDetails = RawBalance & {
-  details: {
-    decimals?: string
-    script?: string
-    totalamount?: string
-    scale?: string
-    created?: string
+  export type RawBalanceWithDetails = RawBalance & {
+    details: {
+      decimals?: string
+      script?: string
+      totalamount?: string
+      scale?: string
+      created?: string
+    }
   }
 }
-}
 
-export type Balance = MDSResObj<
-Balance.RawBalance[]
->
+export type Balance = MDSResObj<Balance.RawBalance[]>
 
-export type BalanceWithTokenDetails = MDSResObj<
- Balance.RawBalanceWithDetails[]
->
-
+export type BalanceWithTokenDetails = MDSResObj<Balance.RawBalanceWithDetails[]>
 
 export type Block = MDSResObj<{
   block: string
@@ -162,7 +157,7 @@ export type TokenValidate = MDSResObj<{
   }
 }>
 
-  export type Colnsolidate = MDSResObj<{
+export type Colnsolidate = MDSResObj<{
   txpowid: string
   isblock: boolean
   istransaction: boolean

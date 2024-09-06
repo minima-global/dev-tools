@@ -3,34 +3,36 @@
  * General commands parameters
  */
 
-export type BalanceParams = {
-  /**
-   * The address for which to show the balance.
-   * This field is optional. If not provided, the total balance for all addresses will be shown.
-   * Accepts both 0x and Mx format addresses.
-   * @example "0x1234567890abcdef"
-   * @example "Mx1234567890abcdef"
-   */
-  address?: string
-  /**
-   * The token ID for which to show the balance.
-   * This field is optional. If not provided, the balance for all tokens will be shown.
-   * The token ID for Minima is 0x00.
-   * @example "0x00"  // For Minima
-   * @example "0x1234567890abcdef"  // For a specific token
-   */
-  tokenid?: string
-  /**
-   * The number of block confirmations required before a coin is considered confirmed in your balance.
-   * This field is optional and defaults to 3.
-   * Setting a higher value increases the confidence in the balance.
-   * @example 3  // Default value
-   * @example 6  // Higher confidence
-   */
-  confirmations?: number
+export type BalanceParams =
+  | {
+      /**
+       * The address for which to show the balance.
+       * This field is optional. If not provided, the total balance for all addresses will be shown.
+       * Accepts both 0x and Mx format addresses.
+       * @example "0x1234567890abcdef"
+       * @example "Mx1234567890abcdef"
+       */
+      address?: string
+      /**
+       * The token ID for which to show the balance.
+       * This field is optional. If not provided, the balance for all tokens will be shown.
+       * The token ID for Minima is 0x00.
+       * @example "0x00"  // For Minima
+       * @example "0x1234567890abcdef"  // For a specific token
+       */
+      tokenid?: string
+      /**
+       * The number of block confirmations required before a coin is considered confirmed in your balance.
+       * This field is optional and defaults to 3.
+       * Setting a higher value increases the confidence in the balance.
+       * @example 3  // Default value
+       * @example 6  // Higher confidence
+       */
+      confirmations?: number
 
-  tokendetails?: "true"
-}  
+      tokendetails?: "true"
+    }
+  | undefined
 
 export type CheckAddressParams = {
   /**

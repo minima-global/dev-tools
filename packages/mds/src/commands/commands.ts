@@ -1,29 +1,30 @@
 import { MDS } from "../mds"
-import { BalanceParams } from "./general/params"
-import { Balance, Block } from "./general/response"
+import { BalanceParams, CheckAddressParams } from "./general/params"
+import { Balance, Block, CheckAddress } from "./general/response"
 
 /**
  * General Command Functions
  */
-/**
- * declare function balance <T extends {payload: BalanceParams } >(args: T, callback?: (data: BalanceGetPayload<T>) => void) : BalanceGetPayload<T>
- */
+
+type BalanceCallback<T extends { params: BalanceParams } | undefined> = (
+  data: Balance.ReturnType<T>
+) => void
+
+type BalanceFunction = <T extends { params: BalanceParams } | undefined>(
+  ...args: T extends undefined
+    ? [BalanceCallback<T>?]
+    : [T, BalanceCallback<T>?]
+) => Promise<Balance.ReturnType<T>>
+
+MDS.cmd.balance()
+
 export interface GeneralCommands {
+  block: (callback?: (data: Block) => void) => Promise<Block>
 
-  block: (callback: (data: Block) => void) => void
+  balance: BalanceFunction
 
-  balance: {
-    (callback: (data: Balance.GetPayload<{payload: BalanceParams}>) => void): void;
-
-    <T extends { payload: BalanceParams }>(args: T, callback?: (data: Balance.GetPayload<T>) => void): void;
-  }
-
+  checkaddress: <T extends { params: CheckAddressParams }>(
+    args: T,
+    callback?: (data: CheckAddress) => void
+  ) => void
 }
-
-
-
-MDS.cmd.balance({payload : {
-  tokendetails: "true"
-}},(data) => {
-
-})
