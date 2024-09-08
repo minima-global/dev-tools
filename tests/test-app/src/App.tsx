@@ -5,28 +5,13 @@ import minimalogo from "./assets/minima_logo.png"
 import reactLogo from "./assets/react.svg"
 
 function App() {
-  const [balance, setBalance] = useState("")
+  const [balance, _] = useState("")
 
   useEffect(() => {
     MDS.init(({ event }) => {
       if (event === "inited") {
         console.log("INITED!!!")
-        const test = async () => {
-          const data = await MDS.cmd.balance(
-            {
-              params: {
-                address:
-                  "MxG0808A0Y4UZDPCGYHQMA82W81PC12B6QY2FZC003RNJEBCDNSRN7DKQ45B66Z",
-              },
-            },
-            (data) => {
-              console.log("data from callback")
-              console.log(data)
-            }
-          )
-          console.log("data from promise")
-          console.log(data)
-        }
+        const test = async () => {}
         test()
       }
     })

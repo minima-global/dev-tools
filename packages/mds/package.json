@@ -1,8 +1,8 @@
 {
-  "name": "@/minima/mds",
+  "name": "minima-mds",
   "version": "0.1.0",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.mts",
   "files": [
     "dist/**"
@@ -21,10 +21,14 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "pnpm run build -- --watch",
-    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
-    "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
+    "dev": "vitest",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
+    "ci": "pnpm run build && pnpm run check-format && pnpm run check-exports && pnpm run lint && pnpm run test",
+    "local-release": "changeset version && changeset publish"
   },
   "keywords": [],
   "author": "Minima Global",
@@ -34,6 +38,8 @@
     "typescript": "latest"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.16.1",
+    "@changesets/cli": "^2.27.8",
     "@vitest/coverage-v8": "^1.6.0",
     "msw": "^2.3.1",
     "tsup": "^8.1.0",
