@@ -1,4 +1,4 @@
-# minima-mds
+# @minima-global/mds
 
 ## 0.6.0
 
