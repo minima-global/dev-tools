@@ -75,15 +75,15 @@ importers:
 
   tests/test-app:
     dependencies:
+      '@minima-global/mds':
+        specifier: workspace:*
+        version: link:../../packages/mds
       '@vitejs/plugin-legacy':
         specifier: ^5.4.1
         version: 5.4.1(terser@5.31.3)(vite@5.3.3)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
-      minima-mds:
-        specifier: workspace:*
-        version: link:../../packages/mds
       react:
         specifier: ^18.2.0
         version: 18.3.1
