@@ -14,7 +14,7 @@ The Minima MDS (MiniDapp System) Library is a TypeScript implementation of the M
 ## Installation
 
 ```bash
-npm install minima-mds
+npm install @minima-global/mds
 ```
 
 ## Usage

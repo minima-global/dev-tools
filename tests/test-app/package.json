@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "minima-mds": "workspace:*",
+    "@minima-global/mds": "workspace:*",
     "@vitejs/plugin-legacy": "^5.4.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
