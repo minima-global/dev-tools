@@ -1,5 +1,16 @@
 # minima-mds
 
+## 0.6.0
+
+### Minor Changes
+
+- Added more mds.cmd types
+- Updated npm description and links
+
+### Patch Changes
+
+- More command functions and added README
+
 ## 0.5.0
 
 ### Minor Changes

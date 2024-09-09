@@ -1,5 +1,14 @@
 # test-app
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - minima-mds@0.6.0
+
 ## 0.0.5
 
 ### Patch Changes
