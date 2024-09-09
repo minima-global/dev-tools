@@ -12,6 +12,9 @@
     },
     "zip": {},
     "test": {},
-    "coverage": {}
+    "coverage": {},
+    "ci": {},
+    "check-format": {},
+    "check-exports": {}
   }
 }

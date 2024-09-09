@@ -1,9 +1,21 @@
+import { MDS } from '../mds';
 import {
   BalanceParams,
   CheckAddressParams,
   CoinCheckParams,
+  CoinImportParams,
+  CoinTrackParams,
+  HashTestParams,
 } from './general/params';
-import { Balance, Block, CheckAddress, CoinCheck } from './general/response';
+import {
+  Balance,
+  Block,
+  CheckAddress,
+  CoinCheck,
+  CoinTrack,
+  GetAddress,
+  HashTest,
+} from './general/response';
 
 /**
  * General Command Functions
@@ -58,9 +70,36 @@ export module GeneralCommands {
     callback?: (data: CoinCheck) => void,
   ) => Promise<CoinCheck>;
 
-  export type GetAddress = (
+  /**
+   * Function for the getaddress command.
+   * @param callback - The callback function for the getaddress command.
+   * @returns A promise that resolves to the data returned from the getaddress command.
+   */
+  export type GetAddressFunc = (
     callback?: (data: GetAddress) => void,
   ) => Promise<GetAddress>;
+
+  /**
+   * Function for the hash test command.
+   * @param args - The arguments for the hash test command.
+   * @param callback - The callback function for the hash test command.
+   * @returns A promise that resolves to the data returned from the hash test command.
+   */
+  type HashTestCallback = (data: HashTest) => void;
+
+  export type HashTestFunc = <T extends { params: HashTestParams } | undefined>(
+    ...args: T extends undefined ? [HashTestCallback?] : [T, HashTestCallback?]
+  ) => Promise<HashTest>;
+
+  /**
+   * Function for the hash command.
+   * @param callback - The callback function for the hash command.
+   * @returns A promise that resolves to the data returned from the hash command.
+   */
+  export type CoinTrackFunc = <T extends { params: CoinTrackParams }>(
+    args: T,
+    callback?: (data: CoinTrack) => void,
+  ) => Promise<CoinTrack>;
 }
 
 export interface GeneralCommands {
@@ -72,5 +111,9 @@ export interface GeneralCommands {
 
   coincheck: GeneralCommands.CoinCheckFunc;
 
-  getaddress: GeneralCommands.GetAddress;
+  getaddress: GeneralCommands.GetAddressFunc;
+
+  hashtest: GeneralCommands.HashTestFunc;
+
+  cointrack: GeneralCommands.CoinTrackFunc;
 }

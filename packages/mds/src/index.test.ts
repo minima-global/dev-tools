@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { MDS, httpPostAsync } from './index';
+import { httpPostAsync, MDS } from './index';
 const mockXHR = {
   open: vi.fn(),
   send: vi.fn(),

@@ -1,4 +1,4 @@
-import { MDS } from "@/minima/mds"
+import { MDS } from "minima-mds"
 import { useEffect, useState } from "react"
 import "./App.css"
 import minimalogo from "./assets/minima_logo.png"
@@ -11,8 +11,17 @@ function App() {
     MDS.init(({ event }) => {
       if (event === "inited") {
         console.log("INITED!!!")
-        const test = async () => {}
-        test()
+        MDS.cmd.checkaddress(
+          {
+            params: {
+              address:
+                "MxG0830GK0H88GUBQJQAR3UMHNS2SDFMZK6559Y6F6SN3UANHABMD67N3J86U48",
+            },
+          },
+          (data) => {
+            console.log(data)
+          }
+        )
       }
     })
   }, [])

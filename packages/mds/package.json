@@ -2,6 +2,7 @@
   "name": "minima-mds",
   "version": "0.5.0",
   "description": "Official MDS Typescript Library for Minima. Used for creating minidapps that interact with the Minima Blockchain.",
+  "private": false,
   "keywords": [
     "minima",
     "typescript",
@@ -27,7 +28,11 @@
     "dist/**"
   ],
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": {
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.mts"
+    }
   },
   "typesVersions": {
     "*": {
@@ -40,15 +45,15 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "format": "prettier --write .",
-    "check-format": "prettier --check .",
+    "format": "prettier --write \"./src/**/**.ts\" --write",
+    "check-format": "prettier \"./src/**/**.ts\" --check",
     "dev": "vitest",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "ci": "pnpm run build && pnpm run check-exports && pnpm run test",
+    "ci": "turbo build check-format check-exports test",
     "local-release": "changeset version && changeset publish",
-    "prepublishOnly": "npm run ci"
+    "prepublishOnly": "turbo run ci"
   },
   "dependencies": {
     "happy-dom": "^14.12.0",
@@ -58,6 +63,7 @@
     "@arethetypeswrong/cli": "^0.16.1",
     "@changesets/cli": "^2.27.8",
     "@vitest/coverage-v8": "^1.6.0",
+    "@repo/typescript-config": "workspace:*",
     "msw": "^2.3.1",
     "tsup": "^8.1.0",
     "vitest": "^1.6.0"

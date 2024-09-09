@@ -40,7 +40,7 @@ export type Block = MDSResObj<{
   date: string;
   hash: string;
   timemilli: string;
-}>;
+}>; // 🟢
 
 export type CheckAddress = MDSResObj<{
   '0x': string;
@@ -48,20 +48,22 @@ export type CheckAddress = MDSResObj<{
   original: string;
   relevant: boolean;
   simple: boolean;
-}>;
+}>; // 🟢
 
 export type HashTest = MDSResObj<{
   hashes: string;
   millitime: string;
   speed: string;
-}>;
+}>; // 🟢
 
 export type CoinCheck = MDSResObj<
   {
     proofblock: number;
     coin: Coin;
   } & { valid: boolean }
->;
+>; // 🟢
+
+export type CoinTrack = MDSResObj<string>; // 🟢
 
 // TODO : Check types
 type Coin = {

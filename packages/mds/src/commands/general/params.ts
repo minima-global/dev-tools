@@ -92,7 +92,7 @@ export type CoinTrackParams = {
    */
   coinid: string;
 };
-type ConsolidateParams = {
+export type ConsolidateParams = {
   /**
    * The tokenid for Minima or custom token to consolidate coins for.
    * Minima is represented by 0x00.
@@ -135,21 +135,21 @@ type ConsolidateParams = {
    */
   dryrun?: 'true' | 'false';
 };
-type HashTestParams = {
+export type HashTestParams = {
   /**
    * Number of hashes to execute. Defaults to 1 million if not provided.
    * @default 1000000
    */
   amount?: string;
-};
-type HistoryParams = {
+}; // 🟢
+export type HistoryParams = {
   /**
    * Maximum number of TxPoW to retrieve.
    * If not provided, retrieves all relevant TxPoW.
    */
   max?: string;
 };
-type TokenCreateParams = {
+export type TokenCreateParams = {
   /**
    * The name of the token.
    * Can be a string or JSON object.
@@ -191,7 +191,7 @@ type TokenCreateParams = {
   burn?: string;
 };
 
-type KeysParams = {
+export type KeysParams = {
   /**
    * list : List your existing public keys. The default.
    * checkkeys : Checks if your Public and Private keys are correct.
@@ -204,7 +204,7 @@ type KeysParams = {
   publickey?: string;
 };
 
-type PrintTreeParams = {
+export type PrintTreeParams = {
   /**
    * Number of blocks back from the tip to show in the txpow tree.
    * Default depth is 32 blocks.
@@ -218,7 +218,7 @@ type PrintTreeParams = {
   cascade?: 'true' | 'false';
 };
 
-type TokenValidateParams = {
+export type TokenValidateParams = {
   /**
    * The tokenid of the custom token/NFT to validate.
    */

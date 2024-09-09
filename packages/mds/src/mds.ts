@@ -2,8 +2,9 @@
  * The MDS TS Library for building MiniDapps
  * by Minima Global
  */
+import { commandHandler } from './helpers';
+import { type MDSObj } from './index';
 
-import { MDSObj } from './types';
 var MDS_MAIN_CALLBACK: any;
 var API_CALLS: any[] = [];
 
@@ -127,18 +128,8 @@ export const MDS: MDSObj = {
       });
     },
 
-    checkaddress: (args, callback) => {
-      const command = 'checkaddress';
-      const payload = args;
-
-      let commandString: string = command;
-
-      if (payload !== undefined && payload !== null) {
-        const payloadString = Object.entries(payload)
-          .map(([key, value]) => `${key}:${value}`)
-          .join(' ');
-        commandString += ` ${payloadString}`;
-      }
+    checkaddress: (...args) => {
+      const { commandString, callback } = commandHandler('checkaddress', args);
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);
@@ -148,18 +139,31 @@ export const MDS: MDSObj = {
         });
       });
     },
-    coincheck: (args, callback) => {
-      const command = 'coincheck';
-      const payload = args;
+    coincheck: (...args) => {
+      const { commandString, callback } = commandHandler('coincheck', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    cointrack: (...args) => {
+      const { commandString, callback } = commandHandler('cointrack', args);
 
-      let commandString: string = command;
-
-      if (payload !== undefined && payload !== null) {
-        const payloadString = Object.entries(payload)
-          .map(([key, value]) => `${key}:${value}`)
-          .join(' ');
-        commandString += ` ${payloadString}`;
-      }
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    hashtest: (...args) => {
+      const { commandString, callback } = commandHandler('hashtest', args);
 
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
@@ -171,9 +175,11 @@ export const MDS: MDSObj = {
       });
     },
   },
+
   sql: (command, callback) => {
     httpPostAsync('sql', command, callback);
   },
+
   dapplink: (dappname, callback) => {
     httpPostAsync('dapplink', dappname, function (result: any) {
       var linkdata: any = {};
@@ -346,9 +352,9 @@ export const MDS: MDSObj = {
       var tmp: string[] = [];
       var items = window.location.search.substr(1).split('&');
       for (var index = 0; index < items.length; index++) {
-        tmp = items[index].split('=');
+        tmp = items[index]?.split('=') ?? [];
         if (tmp[0] === parameterName) {
-          result = decodeURIComponent(tmp[1]);
+          result = decodeURIComponent(tmp[1] ?? '');
         }
       }
       return result;
@@ -390,7 +396,7 @@ export const MDS: MDSObj = {
   },
 };
 
-export function MDSPostMessage(json: any) {
+function MDSPostMessage(json: any) {
   if (MDS_MAIN_CALLBACK) {
     //Is this an API response call..
     if (json.event == 'MDSAPI') {
@@ -434,7 +440,7 @@ export function MDSPostMessage(json: any) {
 
 var PollCounter = 0;
 var PollSeries = 0;
-export function PollListener() {
+function PollListener() {
   //The POLL host
   var pollhost = MDS.mainhost + 'poll?' + 'uid=' + MDS.minidappuid;
   var polldata = 'series=' + PollSeries + '&counter=' + PollCounter;
@@ -461,7 +467,7 @@ export function PollListener() {
   });
 }
 
-export function postMDSFail<T, O, U>(command: T, params: O, status: U) {
+function postMDSFail<T, O, U>(command: T, params: O, status: U) {
   //Some error..
   if (MDS.logging) {
     MDS.log('** An error occurred during an MDS command!');
@@ -529,7 +535,7 @@ export function httpPostAsync<T, O, U>(
   //};
 }
 
-export function httpPostAsyncPoll(theUrl: any, params: any, callback: any) {
+function httpPostAsyncPoll(theUrl: string, params: string, callback: any) {
   //Do we log it..
   if (MDS.logging) {
     MDS.log('POST_POLL_RPC:' + theUrl + ' PARAMS:' + params);
@@ -573,11 +579,7 @@ export function httpPostAsyncPoll(theUrl: any, params: any, callback: any) {
   xmlHttp.send(encodeURIComponent(params));
 }
 
-export function _recurseUploadMDS(
-  thefullfile: any,
-  chunk: any,
-  callback?: any,
-) {
+function _recurseUploadMDS(thefullfile: any, chunk: any, callback?: any) {
   //Get some details
   var filename = thefullfile.name;
   var filesize = thefullfile.size;
