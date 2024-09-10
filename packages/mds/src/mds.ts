@@ -66,35 +66,7 @@ export const MDS: MDSObj = {
   },
   cmd: {
     balance: (...args) => {
-      let command = 'balance';
-      let commandString: string = command;
-
-      let callback: any;
-      let payload: any;
-
-      console.log('args');
-      console.log(args);
-
-      if (
-        args.length === 2 &&
-        typeof args[1] === 'function' &&
-        typeof args[0] === 'object'
-      ) {
-        [payload, callback] = args;
-      } else if (args.length === 1 && typeof args[0] === 'function') {
-        [callback] = args;
-      } else if (args.length === 1 && typeof args[0] === 'object') {
-        payload = args[0];
-      } else {
-        callback = args[0];
-      }
-
-      if (typeof payload === 'object' && payload.params) {
-        const payloadString = Object.entries(payload.params)
-          .map(([key, value]) => `${key}:${value}`)
-          .join(' ');
-        commandString += ` ${payloadString}`;
-      }
+      const { commandString, callback } = commandHandler('balance', args);
 
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
@@ -165,6 +137,164 @@ export const MDS: MDSObj = {
     hashtest: (...args) => {
       const { commandString, callback } = commandHandler('hashtest', args);
 
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    send: (...args) => {
+      const { commandString, callback } = commandHandler('send', args);
+
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    checkmode: (...args) => {
+      const { commandString, callback } = commandHandler('checkmode', args);
+
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    checkpending: (...args) => {
+      const { commandString, callback } = commandHandler('checkpending', args);
+
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    checkrestore: (...args) => {
+      const { commandString, callback } = commandHandler('checkrestore', args);
+
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    mds: (...args) => {
+      const { commandString, callback } = commandHandler('mds', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    burn: (...args) => {
+      const { commandString, callback } = commandHandler('burn', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    log: (...args) => {
+      const { commandString, callback } = commandHandler('log', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txnbasics: (...args) => {
+      const { commandString, callback } = commandHandler('txnbasics', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txncheck: (...args) => {
+      const { commandString, callback } = commandHandler('txncheck', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txnclear: (...args) => {
+      const { commandString, callback } = commandHandler('txnclear', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txnexport: (...args) => {
+      const { commandString, callback } = commandHandler('txnexport', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txndelete: (...args) => {
+      const { commandString, callback } = commandHandler('txndelete', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txncreate: (...args) => {
+      const { commandString, callback } = commandHandler('txncreate', args);
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);

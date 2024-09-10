@@ -1,0 +1,69 @@
+import { MDSResObj } from '../../types';
+
+export type BurnResponse = MDSResObj<{
+  '1block': Burn;
+  '10block': Burn;
+  '50block': Burn;
+}>;
+
+export type Burn = {
+  txns: number;
+  max: number;
+  med: number;
+  avg: number;
+  min: number;
+};
+
+export type LogResponse = MDSResObj<{
+  scripts: boolean;
+  mining: boolean;
+  maxima: boolean;
+  networking: boolean;
+  blocks: boolean;
+  ibd: boolean;
+  peerschecker: boolean;
+}>;
+
+export type TxnResponse = MDSResObj<{
+  id: string;
+  transaction: Transaction;
+  witness: Witness;
+  outputcoindata: any[];
+}>;
+
+export interface Transaction {
+  inputs: any[];
+  outputs: any[];
+  state: any[];
+  linkhash: string;
+  transactionid: string;
+}
+export interface Witness {
+  signatures: any[];
+  mmrproofs: any[];
+  scripts: any[];
+}
+
+export type TxnCheckResponse = MDSResObj<{
+  tokens: number;
+  inputs: number;
+  outputs: number;
+  burn: string;
+  validamounts: boolean;
+  signatures: number;
+  valid: Valid;
+}>;
+
+export type Valid = {
+  basic: boolean;
+  signatures: boolean;
+  mmrproofs: boolean;
+  scripts: boolean;
+};
+
+export type TxnDeleteResponse = MDSResObj<string>;
+
+export type TxnExportResponse = MDSResObj<{
+  file: string;
+  size: string;
+}>;

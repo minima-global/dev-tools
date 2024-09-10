@@ -7,24 +7,26 @@ import reactLogo from "./assets/react.svg"
 function App() {
   const [balance, _] = useState("")
 
+  const Node2Address =
+    "MxG082YK24JSUNDU6MJKSZCYAZU90R3E5CS2A8691WCGSBYBHEGKSE3NC781B8N"
+
   useEffect(() => {
     MDS.init(({ event }) => {
       if (event === "inited") {
         console.log("INITED!!!")
-        MDS.cmd.checkaddress(
-          {
-            params: {
-              address:
-                "MxG0830GK0H88GUBQJQAR3UMHNS2SDFMZK6559Y6F6SN3UANHABMD67N3J86U48",
-            },
-          },
-          (data) => {
-            console.log(data)
-          }
-        )
       }
     })
   }, [])
+
+  const send = async () => {
+    const data = await MDS.cmd.send({
+      params: {
+        address: Node2Address,
+        amount: "100",
+      },
+    })
+    console.log("DATA", data)
+  }
 
   return (
     <>
@@ -40,6 +42,8 @@ function App() {
       <div className="card">
         <h2>Block Test</h2>
         {balance}
+
+        <button onClick={send}>Send</button>
       </div>
     </>
   )
