@@ -41,21 +41,51 @@ export type TxnExportParams = {
   /**
    * The file name/path to export the transaction to.
    */
-  file: string;
+  file?: string;
 };
 
 // TODO: Check and test this and add response type
-export type TxnImportParams = {
+
+export type TxnImportParams =
+  | {
+      data: string;
+      id?: string;
+    }
+  | {
+      file: string;
+      id?: string;
+    };
+
+export type TxnInputParams = {
   /**
-   * (Optional) Choose an ID for the transaction you are importing.
+   * The id of the transaction to add an input to.
    */
   id: string;
+
   /**
-   * (Optional) File name/path to the previously exported .txn file.
+   * (Optional) true or false, true will add an unspecified, floating ELTOO coin as an input. If true, also specify address, amount, tokenid. If false, specify a coinid or coindata.
    */
-  file: string;
+  floating?: 'true' | 'false';
+
   /**
-   * (Optional) HEX data of the previously exported transaction.
+   * (Optional) true or false, true will add the scripts and MMR proof for the coin.
    */
-  data: string;
+  scriptmmr?: 'true' | 'false';
+  /**
+   * (Optional) The coinid of the coin to add as an input.
+   */
+
+  coinid?: string;
+};
+
+export type TxnDefaultParams1 = {
+  id: string;
+  scriptmmr?: 'true' | 'false';
+  coinid?: string;
+};
+
+export type TxnDefaultParams2 = {
+  id: string;
+  scriptmmr?: 'true' | 'false';
+  coindata?: string;
 };

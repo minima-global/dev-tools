@@ -63,7 +63,32 @@ export type Valid = {
 
 export type TxnDeleteResponse = MDSResObj<string>;
 
+export type ExportReturnType<S> = S extends {
+  params: any;
+}
+  ? S['params'] extends { file: string }
+    ? TxnExportResponse
+    : TxnExportDataResponse
+  : never;
+
+export type TxnExportDataResponse = MDSResObj<{
+  data: string;
+}>;
+
 export type TxnExportResponse = MDSResObj<{
   file: string;
   size: string;
+}>;
+
+export type TxnInputResponse = MDSResObj<{
+  coinid: string;
+  amount: string;
+  address: string;
+  miniaddress: string;
+  tokenid: string;
+  token: string | null;
+  storestate: boolean;
+  state: string[];
+  spent: boolean;
+  mmrentry: string;
 }>;

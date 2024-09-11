@@ -25,21 +25,27 @@ import type {
   MDSParamsActionUninstall,
   MDSParamsActionUpdate,
 } from './mds/params';
-import {
+import type {
   CheckModeResponse,
   CheckPendingResponse,
   CheckRestoreResponse,
   MDSCommand,
 } from './mds/response';
-import { SendParams } from './send/params';
-import { SendResponse } from './send/response';
-import { LogParams, TxnExportParams, TxnParams } from './transactions/params';
-import {
+import type { SendParams } from './send/params';
+import type { SendResponse } from './send/response';
+import type {
+  LogParams,
+  TxnExportParams,
+  TxnImportParams,
+  TxnParams,
+} from './transactions/params';
+import type {
   BurnResponse,
+  ExportReturnType,
   LogResponse,
   TxnCheckResponse,
   TxnDeleteResponse,
-  TxnExportResponse,
+  TxnInputResponse,
   TxnResponse,
 } from './transactions/response';
 
@@ -53,7 +59,7 @@ export module GeneralCommands {
    */
   type BalanceCallback<T extends { params: BalanceParams } | undefined> = (
     data: Balance.ReturnType<T>,
-  ) => void;
+  ) => Promise<Balance.ReturnType<T>>;
 
   /**
    * Function for the balance command.
@@ -151,7 +157,7 @@ export module MDSCommands {
    * @returns A promise that resolves to the data returned from the mds command.
    */
 
-  //TODO: Add return type for accept and deny
+  //TODO: Change this its disgusting
   export type MDSFunc = <T extends { params: MDSParams }>(
     ...args: T extends { params: { action: 'install' } }
       ? [
@@ -328,8 +334,52 @@ export module TransactionCommands {
 
   export type TxnExportFunc = <T extends { params: TxnExportParams }>(
     args: T,
-    callback?: (data: TxnExportResponse) => void,
-  ) => Promise<TxnExportResponse>;
+    callback?: (data: ExportReturnType<T>) => void,
+  ) => Promise<ExportReturnType<T>>;
+
+  // TODO: Make only file or data be accepted
+  export type TxnImportFunc = <T extends { params: TxnImportParams }>(
+    args: T,
+    callback?: (data: TxnResponse) => void,
+  ) => Promise<TxnResponse>;
+
+  // Function overload for txninput command
+  export type TxnInputFunc = {
+    (
+      args: {
+        params: {
+          id: string;
+          floating: 'true';
+          address: string;
+          amount: string;
+          tokenid: string;
+          scriptmmr?: string; // Optional
+        };
+      },
+      callback?: (data: TxnInputResponse) => void,
+    ): Promise<TxnInputResponse>;
+
+    (
+      args: {
+        params: {
+          id: string;
+          coindata: string;
+          scriptmmr?: 'true' | 'false';
+        };
+      },
+      callback?: (data: TxnInputResponse) => void,
+    ): Promise<TxnInputResponse>;
+    (
+      args: {
+        params: {
+          id: string;
+          coinid: string;
+          scriptmmr?: 'true' | 'false';
+        };
+      },
+      callback?: (data: TxnInputResponse) => void,
+    ): Promise<TxnInputResponse>;
+  };
 }
 
 export interface TransactionCommands {
@@ -341,4 +391,16 @@ export interface TransactionCommands {
   txncheck: TransactionCommands.TxnCheckFunc;
   txndelete: TransactionCommands.TxnDeleteFunc;
   txnexport: TransactionCommands.TxnExportFunc;
+  txnimport: TransactionCommands.TxnImportFunc;
+  txninput: TransactionCommands.TxnInputFunc;
 }
+
+MDS.cmd.txninput({
+  params: {
+    id: '123',
+    floating: 'true',
+    address: '123',
+    amount: '123',
+    tokenid: '123',
+  },
+});

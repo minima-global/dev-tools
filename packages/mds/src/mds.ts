@@ -304,6 +304,29 @@ export const MDS: MDSObj = {
         });
       });
     },
+    txninput: (...args) => {
+      const { commandString, callback } = commandHandler('txninput', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txnimport: (...args) => {
+      const { commandString, callback } = commandHandler('txnimport', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {
