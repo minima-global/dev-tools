@@ -1,8 +1,10 @@
 {
   "name": "@minima-global/mds",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "description": "Official MDS Typescript Library for Minima. Used for creating minidapps that interact with the Minima Blockchain.",
-  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "minima",
     "typescript",
@@ -52,7 +54,6 @@
     "coverage": "vitest run --coverage",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "ci": "turbo build check-format check-exports test",
-    "local-release": "changeset version && changeset publish",
     "prepublishOnly": "turbo run ci"
   },
   "dependencies": {
@@ -61,7 +62,6 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.16.1",
-    "@changesets/cli": "^2.27.8",
     "@vitest/coverage-v8": "^1.6.0",
     "@repo/typescript-config": "workspace:*",
     "msw": "^2.3.1",

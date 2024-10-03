@@ -1,47 +1,13 @@
 # test-app
 
-## 0.0.6
+## 0.0.7
 
 ### Patch Changes
 
 - Updated dependencies
 - Updated dependencies
-- Updated dependencies
-  - minima-mds@0.6.0
-
-## 0.0.5
-
-### Patch Changes
-
+- Updated dependencies [503ca22]
 - Updated dependencies
 - Updated dependencies
-  - minima-mds@0.5.0
-
-## 0.0.4
-
-### Patch Changes
-
 - Updated dependencies
-- Updated dependencies
-  - minima-mds@0.5.0
-
-## 0.0.3
-
-### Patch Changes
-
-- Updated dependencies
-  - minima-mds@0.4.0
-
-## 0.0.2
-
-### Patch Changes
-
-- Updated dependencies
-  - minima-mds@0.3.0
-
-## 0.0.1
-
-### Patch Changes
-
-- Updated dependencies
-  - minima-mds@0.2.0
+  - @minima-global/mds@0.8.0
