@@ -1,6 +1,6 @@
 {
   "name": "@minima-global/mds",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Official MDS Typescript Library for Minima. Used for creating minidapps that interact with the Minima Blockchain.",
   "publishConfig": {
     "access": "public"
