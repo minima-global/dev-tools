@@ -1,5 +1,17 @@
 # test-app
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [e49dbe8]
+- Updated dependencies [e49dbe8]
+- Updated dependencies [c3bc088]
+- Updated dependencies [e49dbe8]
+- Updated dependencies [e49dbe8]
+- Updated dependencies [e49dbe8]
+  - @minima-global/mds@0.11.0
+
 ## 0.0.9
 
 ### Patch Changes
