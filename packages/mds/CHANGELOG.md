@@ -1,5 +1,18 @@
 # @minima-global/mds
 
+## 0.10.0
+
+### Minor Changes
+
+- Added more mds.cmd types
+- Updated npm description and links
+- More types
+
+### Patch Changes
+
+- More command functions and added README
+- updated package name
+
 ## 0.9.0
 
 ### Minor Changes
