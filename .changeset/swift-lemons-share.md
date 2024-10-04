@@ -1,5 +1,5 @@
 ---
-'minima-mds': minor
+"@minima-global/mds": minor
 ---
 
 Updated npm description and links

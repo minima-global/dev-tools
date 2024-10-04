@@ -11,9 +11,10 @@ function App() {
     "MxG082YK24JSUNDU6MJKSZCYAZU90R3E5CS2A8691WCGSBYBHEGKSE3NC781B8N"
 
   useEffect(() => {
-    MDS.init(({ event }) => {
+    MDS.init(async ({ event }) => {
       if (event === "inited") {
-        console.log("INITED!!!")
+        const res = await MDS.cmd.balance()
+        console.log("RES", res)
       }
     })
   }, [])

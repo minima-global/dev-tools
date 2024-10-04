@@ -89,3 +89,15 @@ export type TxnDefaultParams2 = {
   scriptmmr?: 'true' | 'false';
   coindata?: string;
 };
+
+export type TxnListParams = {
+  id: string;
+};
+
+export type TxnOutputParams = {
+  id: string;
+  amount: string;
+  address: string;
+  tokenid?: string;
+  storestate?: 'true' | 'false';
+};

@@ -3,6 +3,7 @@ import {
   MDSCommands,
   TransactionCommands,
 } from './commands/commands';
+
 /**
  * Types for the MDS Object
  */
@@ -101,7 +102,7 @@ export interface MDSObj {
    * @param command The SQL command to run
    * @param callback The callback function to be called with the data
    */
-  sql: (command: string, callback: (data: string) => void) => void;
+  sql: (command: string, callback?: (data: string) => any) => Promise<any>;
   /**
    * Get a link to a different Dapp. READ dapps can only get  * READ DAPPS. WRITE can get all dapps.
    */

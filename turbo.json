@@ -15,6 +15,7 @@
     "coverage": {},
     "ci": {},
     "check-format": {},
-    "check-exports": {}
+    "check-exports": {},
+    "format": {}
   }
 }

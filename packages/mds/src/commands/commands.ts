@@ -1,11 +1,11 @@
-import { MDS } from '../mds';
 import type {
   BalanceParams,
   CheckAddressParams,
   CoinCheckParams,
   CoinTrackParams,
+  ConsolidateParams,
   HashTestParams,
-} from './general/params';
+} from './general/params.js';
 import type {
   Balance,
   Block,
@@ -14,7 +14,8 @@ import type {
   CoinTrack,
   GetAddress,
   HashTest,
-} from './general/response';
+  NewAddress,
+} from './general/response.js';
 import type {
   CheckPendingParams,
   MDSParams,
@@ -24,21 +25,23 @@ import type {
   MDSParamsActionPermission,
   MDSParamsActionUninstall,
   MDSParamsActionUpdate,
-} from './mds/params';
+} from './mds/params.js';
 import type {
   CheckModeResponse,
   CheckPendingResponse,
   CheckRestoreResponse,
   MDSCommand,
-} from './mds/response';
-import type { SendParams } from './send/params';
-import type { SendResponse } from './send/response';
+} from './mds/response.js';
+import type { SendParams } from './send/params.js';
+import type { SendResponse } from './send/response.js';
 import type {
   LogParams,
   TxnExportParams,
   TxnImportParams,
+  TxnListParams,
+  TxnOutputParams,
   TxnParams,
-} from './transactions/params';
+} from './transactions/params.js';
 import type {
   BurnResponse,
   ExportReturnType,
@@ -47,7 +50,7 @@ import type {
   TxnDeleteResponse,
   TxnInputResponse,
   TxnResponse,
-} from './transactions/response';
+} from './transactions/response.js';
 
 /**
  * General Command Functions
@@ -132,6 +135,24 @@ export module GeneralCommands {
     args: T,
     callback?: (data: CoinTrack) => void,
   ) => Promise<CoinTrack>;
+
+  /**
+   * Function for the newaddress command.
+   * @param callback - The callback function for the newaddress command.
+   * @returns A promise that resolves to the data returned from the newaddress command.
+   */
+  export type NewAddressFunc = (
+    callback?: (data: NewAddress) => void,
+  ) => Promise<NewAddress>;
+
+  /**
+   * Function for the consolidate command.
+   * @param callback - The callback function for the consolidate command.
+   * @returns A promise that resolves to the data returned from the consolidate command.
+   */
+  export type ConsolidateFunc = <T extends { params: ConsolidateParams }>(
+    args: T,
+  ) => Promise<SendResponse>;
 }
 
 export module SendCommands {
@@ -274,6 +295,20 @@ export interface GeneralCommands {
    * @returns A promise that resolves to the data returned from the send command.
    */
   send: SendCommands.SendFunc;
+
+  /**
+   * Function for the newaddress command.
+   * @param callback - The callback function for the newaddress command.
+   * @returns A promise that resolves to the data returned from the newaddress command.
+   */
+  newaddress: GeneralCommands.NewAddressFunc;
+
+  /**
+   * Function for the consolidate command.
+   * @param callback - The callback function for the consolidate command.
+   * @returns A promise that resolves to the data returned from the consolidate command.
+   */
+  consolidate: GeneralCommands.ConsolidateFunc;
 }
 
 export interface MDSCommands {
@@ -380,6 +415,16 @@ export module TransactionCommands {
       callback?: (data: TxnInputResponse) => void,
     ): Promise<TxnInputResponse>;
   };
+
+  export type TxnList = <T extends { params: TxnListParams }>(
+    args: T,
+    callback?: (data: TxnResponse) => void,
+  ) => Promise<TxnResponse>;
+
+  export type TxnOutputFunc = <T extends { params: TxnOutputParams }>(
+    args: T,
+    callback?: (data: TxnResponse) => void,
+  ) => Promise<TxnResponse>;
 }
 
 export interface TransactionCommands {
@@ -393,14 +438,6 @@ export interface TransactionCommands {
   txnexport: TransactionCommands.TxnExportFunc;
   txnimport: TransactionCommands.TxnImportFunc;
   txninput: TransactionCommands.TxnInputFunc;
+  txnlist: TransactionCommands.TxnList;
+  //TODO: Add txnscript command
 }
-
-MDS.cmd.txninput({
-  params: {
-    id: '123',
-    floating: 'true',
-    address: '123',
-    amount: '123',
-    tokenid: '123',
-  },
-});

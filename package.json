@@ -1,11 +1,14 @@
 {
   "name": "mds-root",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "turbo  format",
+    "check-format": "turbo check-format",
+    "local-release": "changeset version && changeset publish",
     "ci": "turbo ci"
   },
   "workspaces": [
@@ -18,6 +21,7 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@changesets/cli": "^2.27.8",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "turbo": "latest"

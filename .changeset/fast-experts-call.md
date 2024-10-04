@@ -1,5 +1,5 @@
 ---
-'minima-mds': minor
+"@minima-global/mds": minor
 ---
 
 Added more mds.cmd types

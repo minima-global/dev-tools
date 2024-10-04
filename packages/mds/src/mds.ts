@@ -2,6 +2,7 @@
  * The MDS TS Library for building MiniDapps
  * by Minima Global
  */
+
 import { commandHandler } from './helpers';
 import { type MDSObj } from './index';
 
@@ -111,6 +112,31 @@ export const MDS: MDSObj = {
         });
       });
     },
+
+    newaddress: (...args) => {
+      const { commandString, callback } = commandHandler('newaddress', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    consolidate: (...args) => {
+      const { commandString, callback } = commandHandler('consolidate', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
     coincheck: (...args) => {
       const { commandString, callback } = commandHandler('coincheck', args);
       return new Promise((resolve) => {
@@ -327,10 +353,28 @@ export const MDS: MDSObj = {
         });
       });
     },
+    txnlist: (...args) => {
+      const { commandString, callback } = commandHandler('txnlist', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {
-    httpPostAsync('sql', command, callback);
+    return new Promise((resolve) => {
+      httpPostAsync('sql', command, (data: any) => {
+        resolve(data);
+        if (callback) {
+          callback(data);
+        }
+      });
+    });
   },
 
   dapplink: (dappname, callback) => {
