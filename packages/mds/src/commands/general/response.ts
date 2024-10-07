@@ -29,6 +29,55 @@ export module Balance {
   };
 }
 
+export module Keys {
+  export type ReturnType<S> = S extends {
+    params: any;
+  }
+    ? S['params'] extends { action: 'checkkeys' }
+      ? KeysCheck
+      : S['params'] extends { action: 'new' }
+        ? KeysNew
+        : S['params'] extends { action: 'genkey' }
+          ? KeysGenKey
+          : Keys
+    : Keys;
+
+  export type Keys = MDSResObj<{
+    keys: Key[];
+    total: number;
+    maxuses: number;
+  }>;
+
+  export type KeysCheck = MDSResObj<{
+    allkeys: number;
+    correct: number;
+    wrong: number;
+  }>;
+
+  export type KeysNew = MDSResObj<{
+    keys: Key[];
+  }>;
+
+  export type KeysGenKey = MDSResObj<{
+    phrase: string;
+    privatekey: string;
+    modifier: string;
+    publickey: string;
+    script: string;
+    address: string;
+    miniaddress: string;
+  }>;
+
+  type Key = {
+    size: number;
+    depth: number;
+    uses: number;
+    maxuses: number;
+    modifier: string;
+    publickey: string;
+  };
+}
+
 export type Balance = MDSResObj<Balance.RawBalance[]>;
 
 export type BalanceWithTokenDetails = MDSResObj<
@@ -105,19 +154,6 @@ export type GetAddress = MDSResObj<{
   default: boolean;
   publickey: string;
   track: boolean;
-}>;
-
-export type Keys = MDSResObj<{
-  keys: {
-    size: number;
-    depth: number;
-    uses: number;
-    maxuses: number;
-    modifier: string;
-    publickey: string;
-  }[];
-  total: number;
-  maxuses: number;
 }>;
 
 export type PrintMmr = MDSResObj<{

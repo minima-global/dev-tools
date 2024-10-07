@@ -101,6 +101,18 @@ export const MDS: MDSObj = {
       });
     },
 
+    keys: (...args) => {
+      const { commandString, callback } = commandHandler('keys', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
     checkaddress: (...args) => {
       const { commandString, callback } = commandHandler('checkaddress', args);
       return new Promise((resolve) => {

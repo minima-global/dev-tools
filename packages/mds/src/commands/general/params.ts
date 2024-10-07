@@ -191,18 +191,25 @@ export type TokenCreateParams = {
   burn?: string;
 };
 
-export type KeysParams = {
-  /**
-   * list : List your existing public keys. The default.
-   * checkkeys : Checks if your Public and Private keys are correct.
-   * new : Create a new key pair.
-   */
-  action?: 'list' | 'checkkeys' | 'new';
-  /**
-   * Search for a specific public key.
-   */
-  publickey?: string;
-};
+export type KeysParams =
+  | {
+      /**
+       * list : List your existing public keys. The default.
+       * checkkeys : Checks if your Public and Private keys are correct.
+       * new : Create a new key pair.
+       */
+      action?: 'list' | 'checkkeys' | 'new' | 'genkey';
+      /**
+       * Search for a specific public key.
+       */
+      publickey?: string;
+
+      /**
+       * The phrase to use for the key pair.
+       */
+      phrase?: string;
+    }
+  | undefined;
 
 export type PrintTreeParams = {
   /**

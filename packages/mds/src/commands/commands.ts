@@ -1,3 +1,4 @@
+import { MDS } from '../mds.js';
 import type {
   BalanceParams,
   CheckAddressParams,
@@ -5,6 +6,7 @@ import type {
   CoinTrackParams,
   ConsolidateParams,
   HashTestParams,
+  KeysParams,
 } from './general/params.js';
 import type {
   Balance,
@@ -14,6 +16,7 @@ import type {
   CoinTrack,
   GetAddress,
   HashTest,
+  Keys,
   NewAddress,
 } from './general/response.js';
 import type {
@@ -153,6 +156,20 @@ export module GeneralCommands {
   export type ConsolidateFunc = <T extends { params: ConsolidateParams }>(
     args: T,
   ) => Promise<SendResponse>;
+
+  export type KeysFunc = <T extends { params: KeysParams }>(
+    ...args: T extends { params: { action: 'genkey' } }
+      ? [
+          Omit<T, 'params'> & {
+            params: {
+              action: 'genkey';
+              phrase: string;
+            };
+          },
+          (data: Keys.ReturnType<T>) => void,
+        ]
+      : [T, (data: Keys.ReturnType<T>) => void]
+  ) => Promise<Keys.ReturnType<T>>;
 }
 
 export module SendCommands {
@@ -309,6 +326,13 @@ export interface GeneralCommands {
    * @returns A promise that resolves to the data returned from the consolidate command.
    */
   consolidate: GeneralCommands.ConsolidateFunc;
+
+  /**
+   * Function for the keys command.
+   * @param callback - The callback function for the keys command.
+   * @returns A promise that resolves to the data returned from the keys command.
+   */
+  keys: GeneralCommands.KeysFunc;
 }
 
 export interface MDSCommands {
