@@ -1,5 +1,20 @@
 # @minima-global/mds
 
+## 0.12.0
+
+### Minor Changes
+
+- 274397d: Added more mds.cmd types
+- 274397d: Updated npm description and links
+- 274397d: More types
+
+### Patch Changes
+
+- 274397d: More command functions and added README
+- 13ee92f: added keys command
+- 274397d: made sql callbackk optional and added consolidate function
+- 274397d: updated package name
+
 ## 0.11.0
 
 ### Minor Changes
