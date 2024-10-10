@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.12.1
+
+### Patch Changes
+
+- fa167cc: added scripts command
+
 ## 0.12.0
 
 ### Minor Changes
