@@ -1,4 +1,3 @@
-import { MDS } from '../mds.js';
 import type {
   BalanceParams,
   CheckAddressParams,
@@ -35,6 +34,8 @@ import type {
   CheckRestoreResponse,
   MDSCommand,
 } from './mds/response.js';
+import { ScriptsParams } from './scripts/params.js';
+import { ScriptsCommand } from './scripts/response.js';
 import type { SendParams } from './send/params.js';
 import type { SendResponse } from './send/response.js';
 import type {
@@ -464,4 +465,18 @@ export interface TransactionCommands {
   txninput: TransactionCommands.TxnInputFunc;
   txnlist: TransactionCommands.TxnList;
   //TODO: Add txnscript command
+}
+
+export module ScriptsCommands {
+  type ScriptsCallback<T> = (data: ScriptsCommand.ReturnType<T>) => void;
+
+  export type ScriptsFunc = <T extends { params: ScriptsParams } | undefined>(
+    ...args: T extends undefined
+      ? [ScriptsCallback<T>?]
+      : [T, ScriptsCallback<T>?]
+  ) => Promise<ScriptsCommand.ReturnType<T>>;
+}
+
+export interface ScriptsCommands {
+  scripts: ScriptsCommands.ScriptsFunc;
 }

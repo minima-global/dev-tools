@@ -376,6 +376,18 @@ export const MDS: MDSObj = {
         });
       });
     },
+
+    scripts: (...args) => {
+      const { commandString, callback } = commandHandler('scripts', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {

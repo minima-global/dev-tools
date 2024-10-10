@@ -1,6 +1,7 @@
 import {
   GeneralCommands,
   MDSCommands,
+  ScriptsCommands,
   TransactionCommands,
 } from './commands/commands';
 
@@ -96,7 +97,7 @@ export interface MDSObj {
    * console.log(data)
    * })
    */
-  cmd: GeneralCommands & MDSCommands & TransactionCommands;
+  cmd: GeneralCommands & MDSCommands & TransactionCommands & ScriptsCommands;
   /**
    * Run a SQL command
    * @param command The SQL command to run
