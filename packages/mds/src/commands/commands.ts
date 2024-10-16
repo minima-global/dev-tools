@@ -1,3 +1,4 @@
+import { MDS } from '../mds.js';
 import type {
   BalanceParams,
   CheckAddressParams,
@@ -61,14 +62,6 @@ import type {
  */
 export module GeneralCommands {
   /**
-   * Callback function for the balance command.
-   * @param data - The data returned from the balance command.
-   */
-  type BalanceCallback<T extends { params: BalanceParams } | undefined> = (
-    data: Balance.ReturnType<T>,
-  ) => Promise<Balance.ReturnType<T>>;
-
-  /**
    * Function for the balance command.
    * @param args - The arguments for the balance command.
    * @param callback - The callback function for the balance command.
@@ -76,8 +69,8 @@ export module GeneralCommands {
    */
   export type BalanceFunc = <T extends { params: BalanceParams } | undefined>(
     ...args: T extends undefined
-      ? [BalanceCallback<T>?]
-      : [T, BalanceCallback<T>?]
+      ? [(data: Balance.ReturnType<T>) => void]
+      : [T, (data: Balance.ReturnType<T>) => void]
   ) => Promise<Balance.ReturnType<T>>;
 
   /**
@@ -197,61 +190,69 @@ export module MDSCommands {
    */
 
   //TODO: Change this its disgusting
+
+  type MDSAction =
+    | 'install'
+    | 'update'
+    | 'uninstall'
+    | 'accept'
+    | 'deny'
+    | 'permission'
+    | 'pending';
+
+  type MDSParamsForAction<A extends MDSAction> = A extends 'install'
+    ? MDSParamsActionInstall
+    : A extends 'update'
+      ? MDSParamsActionUpdate
+      : A extends 'uninstall'
+        ? MDSParamsActionUninstall
+        : A extends 'accept' | 'deny'
+          ? MDSParamsActionAcceptOrDeny
+          : A extends 'permission'
+            ? MDSParamsActionPermission
+            : A extends 'pending'
+              ? MDSParamsActionPending
+              : never;
+
   export type MDSFunc = <T extends { params: MDSParams }>(
-    ...args: T extends { params: { action: 'install' } }
-      ? [
-          Omit<T, 'params'> & {
-            params: MDSParamsActionInstall;
-          },
-          MDSCallback<T>?,
-        ]
-      : T extends { params: { action: 'update' } }
-        ? [
-            Omit<T, 'params'> & {
-              params: MDSParamsActionUpdate;
-            },
-            MDSCallback<T>?,
-          ]
-        : T extends { params: { action: 'uninstall' } }
-          ? [
-              Omit<T, 'params'> & {
-                params: MDSParamsActionUninstall;
-              },
-              MDSCallback<T>?,
-            ]
-          : T extends { params: { action: 'accept' | 'deny' } }
-            ? [
-                Omit<T, 'params'> & {
-                  params: MDSParamsActionAcceptOrDeny;
-                },
-                MDSCallback<T>?,
-              ]
-            : T extends { params: { action: 'permission' } }
-              ? [
-                  Omit<T, 'params'> & {
-                    params: MDSParamsActionPermission;
-                  },
-                  MDSCallback<T>?,
-                ]
-              : T extends { params: { action: 'pending' } }
-                ? [
-                    Omit<T, 'params'> & {
-                      params: MDSParamsActionPending;
-                    },
-                    MDSCallback<T>?,
-                  ]
-                : [T?, MDSCallback<T>?]
+    ...args: MDSFuncArgs<T>
   ) => Promise<MDSCommand.ReturnType<T>>;
 
+  type MDSFuncArgs<T extends { params: MDSParams } | undefined> = T extends {
+    params: { action: MDSAction };
+  }
+    ? [
+        Omit<T, 'params'> & {
+          params: MDSParamsForAction<T['params']['action']>;
+        },
+        MDSCallback<T>?,
+      ]
+    : [MDSCallback<T>?];
+
+  /**
+   * Function for the checkmode command.
+   * @param callback - The callback function for the checkmode command.
+   * @returns A promise that resolves to the data returned from the checkmode command.
+   */
   export type CheckModeFunc = (
     callback?: (data: CheckModeResponse) => void,
   ) => Promise<CheckModeResponse>;
 
+  /**
+   * Function for the checkpending command.
+   * @param callback - The callback function for the checkpending command.
+   * @returns A promise that resolves to the data returned from the checkpending command.
+   */
   export type CheckPendingFunc = <T extends { params: CheckPendingParams }>(
     args: T,
     callback?: (data: CheckPendingResponse) => void,
   ) => Promise<CheckPendingResponse>;
 
+  /**
+   * Function for the checkrestore command.
+   * @param callback - The callback function for the checkrestore command.
+   * @returns A promise that resolves to the data returned from the checkrestore command.
+   */
   export type CheckRestoreFunc = (
     callback?: (data: CheckRestoreResponse) => void,
   ) => Promise<CheckRestoreResponse>;

@@ -13,8 +13,9 @@ function App() {
   useEffect(() => {
     MDS.init(async ({ event }) => {
       if (event === "inited") {
-        const res = await MDS.cmd.balance()
-        console.log("RES", res)
+        MDS.cmd.balance((data) => {
+          console.log("DATA", data)
+        })
       }
     })
   }, [])

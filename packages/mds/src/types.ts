@@ -4,29 +4,61 @@ import {
   ScriptsCommands,
   TransactionCommands,
 } from './commands/commands';
+import { Header } from './commands/send/response';
+import { MDS } from './mds';
 
 /**
  * Types for the MDS Object
  */
 type MinimaEvents =
   | 'inited'
-  | 'NEWBALANCE'
+  | 'NEWBALANCE' // TODO: Add this event
   | 'NEWBLOCK'
   | 'MINING'
   | 'MINIMALOG'
-  | 'MAXIMA'
-  | 'MINING'
-  | 'MINIMALOG'
-  | 'MAXIMA'
+  | 'MAXIMA' // TODO: Add this event
   | 'MDS_TIMER_1HOUR'
   | 'MDS_TIMER_10SECONDS'
-  | 'MDS_SHUTDOWN';
+  | 'MDS_SHUTDOWN'; // TODO: Add this event
 
-type BaseEvent<T extends MinimaEvents> = { event: T };
+type BaseEvent<T extends MinimaEvents, D = unknown> = {
+  event: T;
+  data: D;
+};
 
-export type EventCallback<T extends BaseEvent<MinimaEvents>> = (msg: T) => void;
+type NewBlockEvent = BaseEvent<'NEWBLOCK', NEWBLOCKRES>;
 
-export type MDS_MAIN_CALLBACK = EventCallback<BaseEvent<MinimaEvents>> | null;
+type TimerEvent10Seconds = BaseEvent<'MDS_TIMER_10SECONDS', TIMERES>;
+
+type TimerEvent1Hour = BaseEvent<'MDS_TIMER_1HOUR', TIMERES>;
+
+type MiningEvent = BaseEvent<'MINING', MININGRES>;
+
+type MinimalogEvent = BaseEvent<'MINIMALOG', MINIMALOGRES>;
+
+type OtherEvent = BaseEvent<
+  Exclude<
+    MinimaEvents,
+    | 'NEWBLOCK'
+    | 'MDS_TIMER_10SECONDS'
+    | 'MDS_TIMER_1HOUR'
+    | 'MINING'
+    | 'MINIMALOG'
+  >,
+  any
+>;
+
+type MinimaEvent =
+  | NewBlockEvent
+  | TimerEvent10Seconds
+  | TimerEvent1Hour
+  | MiningEvent
+  | MinimalogEvent
+  | OtherEvent;
+
+export type EventCallback = (msg: MinimaEvent) => void;
+
+export type MDS_MAIN_CALLBACK = EventCallback | null;
 
 type DefaultRes = {
   command: string;
@@ -34,6 +66,41 @@ type DefaultRes = {
   status: boolean;
   error?: string;
 };
+
+type DefaultEventRes = {
+  event: string;
+};
+
+type NEWBLOCKRES = DefaultResObj<{
+  txpow: RAW_NEWBLOCKRES;
+}>;
+
+type TIMERES = DefaultResObj<{
+  timemilli: string;
+}>;
+
+type MININGRES = DefaultResObj<{
+  txpow: RAW_NEWBLOCKRES;
+  mining: boolean;
+}>;
+
+type MINIMALOGRES = DefaultResObj<{
+  message: string;
+}>;
+
+type RAW_NEWBLOCKRES = {
+  txpowid: string;
+  isblock: boolean;
+  istransaction: boolean;
+  superblock: number;
+  size: number;
+  burn: number;
+  header: Header;
+  hasbody: boolean;
+  body: Body;
+};
+
+type DefaultResObj<T> = DefaultEventRes & { data: T };
 
 export type MDSResObj<T> = DefaultRes & { response: T };
 
@@ -73,7 +140,7 @@ export interface MDSObj {
    * Initialize the MDS object
    * @param callback The callback function to be called when an event is triggered with the event object
    */
-  init: (callback: (event: BaseEvent<MinimaEvents>) => void) => void;
+  init: (callback: EventCallback) => void;
   /**
    * Log a message to the console
    * @param data The message to log
@@ -248,3 +315,20 @@ export interface MDSObj {
     base64ToArrayBuffer: (base64: string) => ArrayBuffer;
   };
 }
+
+// Example usage (you can remove this if you don't want it in the types file)
+MDS.init(({ data, event }) => {
+  if (event === 'NEWBLOCK') {
+    console.log(data.data.txpow);
+  } else if (event === 'MDS_TIMER_10SECONDS') {
+    console.log(data.data.timemilli);
+  } else if (event === 'MDS_TIMER_1HOUR') {
+    console.log(data.data.timemilli);
+  } else if (event === 'MINING') {
+    console.log(data.data.mining);
+  } else if (event === 'MINIMALOG') {
+    console.log(data.data.message);
+  } else {
+    console.log(data);
+  }
+});
