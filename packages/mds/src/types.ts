@@ -1,11 +1,12 @@
-import {
+import type {
   GeneralCommands,
   MDSCommands,
   ScriptsCommands,
+  SearchCommands,
   TransactionCommands,
-} from './commands/commands';
-import { Header } from './commands/send/response';
-import { MDS } from './mds';
+} from './commands/commands.js';
+import type { Header } from './commands/send/response.js';
+import { MDS } from './mds.js';
 
 /**
  * Types for the MDS Object
@@ -164,7 +165,11 @@ export interface MDSObj {
    * console.log(data)
    * })
    */
-  cmd: GeneralCommands & MDSCommands & TransactionCommands & ScriptsCommands;
+  cmd: GeneralCommands &
+    MDSCommands &
+    TransactionCommands &
+    ScriptsCommands &
+    SearchCommands;
   /**
    * Run a SQL command
    * @param command The SQL command to run
@@ -315,20 +320,3 @@ export interface MDSObj {
     base64ToArrayBuffer: (base64: string) => ArrayBuffer;
   };
 }
-
-// Example usage (you can remove this if you don't want it in the types file)
-MDS.init(({ data, event }) => {
-  if (event === 'NEWBLOCK') {
-    console.log(data.data.txpow);
-  } else if (event === 'MDS_TIMER_10SECONDS') {
-    console.log(data.data.timemilli);
-  } else if (event === 'MDS_TIMER_1HOUR') {
-    console.log(data.data.timemilli);
-  } else if (event === 'MINING') {
-    console.log(data.data.mining);
-  } else if (event === 'MINIMALOG') {
-    console.log(data.data.message);
-  } else {
-    console.log(data);
-  }
-});

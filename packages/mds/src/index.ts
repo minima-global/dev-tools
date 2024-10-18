@@ -7,3 +7,7 @@ export * from './commands/scripts/params.js';
 export * from './mds.js';
 export * from './types.js';
 export * from './helpers.js';
+export * from './commands/search/response.js';
+export * from './commands/search/params.js';
+export * from './commands/transactions/params.js';
+export * from './commands/transactions/response.js';

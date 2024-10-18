@@ -1,5 +1,5 @@
-import { MDSResObj } from '../../types';
-import { SendResponse } from '../send/response';
+import type { MDSResObj } from '../../types.js';
+import type { SendResponse } from '../send/response.js';
 
 export module MDSCommand {
   export type ReturnType<S> = S extends {

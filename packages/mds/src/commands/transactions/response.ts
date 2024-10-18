@@ -1,4 +1,5 @@
-import { MDSResObj } from '../../types';
+import type { MDSResObj } from '../../types.js';
+import type { Witness } from '../send/response.js';
 
 export type BurnResponse = MDSResObj<{
   '1block': Burn;
@@ -31,18 +32,13 @@ export type TxnResponse = MDSResObj<{
   outputcoindata: any[];
 }>;
 
-export interface Transaction {
+export type Transaction = {
   inputs: any[];
   outputs: any[];
   state: any[];
   linkhash: string;
   transactionid: string;
-}
-export interface Witness {
-  signatures: any[];
-  mmrproofs: any[];
-  scripts: any[];
-}
+};
 
 export type TxnCheckResponse = MDSResObj<{
   tokens: number;

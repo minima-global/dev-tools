@@ -8,6 +8,7 @@ import type {
   HashTestParams,
   KeysParams,
 } from './general/params.js';
+
 import type {
   Balance,
   Block,
@@ -35,8 +36,10 @@ import type {
   CheckRestoreResponse,
   MDSCommand,
 } from './mds/response.js';
-import { ScriptsParams } from './scripts/params.js';
-import { ScriptsCommand } from './scripts/response.js';
+import type { ScriptsParams } from './scripts/params.js';
+import type { ScriptsCommand } from './scripts/response.js';
+import type { CoinsParams } from './search/params.js';
+import type { CoinsResponse } from './search/response.js';
 import type { SendParams } from './send/params.js';
 import type { SendResponse } from './send/response.js';
 import type {
@@ -67,10 +70,12 @@ export module GeneralCommands {
    * @param callback - The callback function for the balance command.
    * @returns A promise that resolves to the data returned from the balance command.
    */
+  type BalanceCallback<T> = (data: Balance.ReturnType<T>) => void;
+
   export type BalanceFunc = <T extends { params: BalanceParams } | undefined>(
     ...args: T extends undefined
-      ? [(data: Balance.ReturnType<T>) => void]
-      : [T, (data: Balance.ReturnType<T>) => void]
+      ? [BalanceCallback<T>?]
+      : [T, BalanceCallback<T>?]
   ) => Promise<Balance.ReturnType<T>>;
 
   /**
@@ -480,4 +485,20 @@ export module ScriptsCommands {
 
 export interface ScriptsCommands {
   scripts: ScriptsCommands.ScriptsFunc;
+}
+
+export module SearchCommands {
+  type CoinsCallback = (data: CoinsResponse) => void;
+
+  export type CoinsFunc = {
+    (callback?: CoinsCallback): Promise<CoinsResponse>;
+    (
+      args: { params: CoinsParams },
+      callback?: CoinsCallback,
+    ): Promise<CoinsResponse>;
+  };
+}
+
+export interface SearchCommands {
+  coins: SearchCommands.CoinsFunc;
 }

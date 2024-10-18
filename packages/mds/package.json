@@ -13,6 +13,7 @@
     "minima-blockchain",
     "web3"
   ],
+  "type": "module",
   "homepage": "https://github.com/minima-global/dev-tools",
   "bugs": {
     "url": "https://github.com/minima-global/dev-tools/issues"
@@ -25,28 +26,20 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.mts",
-  "files": [
-    "dist/**"
-  ],
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.mts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      ".": [
-        "./dist/index.d.mts"
-      ]
-    }
-  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsc",
     "format": "prettier --write \"./src/**/**.ts\" --write",
     "check-format": "prettier \"./src/**/**.ts\" --check",
     "dev": "vitest",
@@ -57,15 +50,14 @@
     "prepublishOnly": "turbo run ci"
   },
   "dependencies": {
-    "happy-dom": "^14.12.0",
-    "typescript": "latest"
+    "happy-dom": "^14.12.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.16.1",
     "@vitest/coverage-v8": "^1.6.0",
     "@repo/typescript-config": "workspace:*",
     "msw": "^2.3.1",
-    "tsup": "^8.1.0",
+    "typescript": "^5.0.0",
     "vitest": "^1.6.0"
   }
 }

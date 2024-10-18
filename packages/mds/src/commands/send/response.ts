@@ -1,4 +1,5 @@
-import { MDSResObj } from '../../types';
+import type { MDSResObj } from '../../types.js';
+import type { Coin } from '../general/response.js';
 
 export type SendResponse = MDSResObj<{
   txpowid: string;
@@ -127,20 +128,6 @@ export interface Data {
 export interface Mmrproof {
   coin: Coin;
   proof: Proof3;
-}
-
-export interface Coin {
-  coinid: string;
-  amount: string;
-  address: string;
-  miniaddress: string;
-  tokenid: string;
-  token: any;
-  storestate: boolean;
-  state: any[];
-  spent: boolean;
-  mmrentry: string;
-  created: string;
 }
 
 export interface Proof3 {

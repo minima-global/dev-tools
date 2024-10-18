@@ -1,4 +1,4 @@
-import { MDSResObj } from '../../types';
+import type { MDSResObj } from '../../types.js';
 
 export module ScriptsCommand {
   export type ReturnType<S> = S extends {

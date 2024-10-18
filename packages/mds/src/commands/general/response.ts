@@ -1,4 +1,4 @@
-import { MDSResObj } from '../../types';
+import type { MDSResObj } from '../../types.js';
 export module Balance {
   export type ReturnType<S> = S extends {
     params: any;
@@ -115,7 +115,7 @@ export type CoinCheck = MDSResObj<
 export type CoinTrack = MDSResObj<string>; // 🟢
 
 // TODO : Check types
-type Coin = {
+export type Coin = {
   coinid: string;
   amount: string;
   address: string;
@@ -127,6 +127,7 @@ type Coin = {
   spent: boolean;
   mmrentry: string;
   created: string;
+  age: string;
 };
 
 export type SimpleCoinResponse = MDSResObj<string>;
@@ -295,7 +296,15 @@ type Inputs = {
 };
 
 type Token = {
-  name: string | Record<string, unknown>;
+  name:
+    | string
+    | {
+        name: string;
+        url: string;
+        description: string;
+        ticker: string;
+        webvalidate: string;
+      };
   coinid: string;
   total: string;
   decimals: number;

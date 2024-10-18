@@ -3,8 +3,8 @@
  * by Minima Global
  */
 
-import { commandHandler } from './helpers';
-import { type MDSObj } from './index';
+import { commandHandler } from './helpers.js';
+import type { MDSObj } from './index.js';
 
 var MDS_MAIN_CALLBACK: any;
 var API_CALLS: any[] = [];
@@ -127,6 +127,18 @@ export const MDS: MDSObj = {
 
     newaddress: (...args) => {
       const { commandString, callback } = commandHandler('newaddress', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    coins: (...args) => {
+      const { commandString, callback } = commandHandler('coins', args);
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);
