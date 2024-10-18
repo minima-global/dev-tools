@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.12.2
+
+### Patch Changes
+
+- e431675: added coins function
+
 ## 0.12.1
 
 ### Patch Changes

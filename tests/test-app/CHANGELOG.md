@@ -1,5 +1,12 @@
 # test-app
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [e431675]
+  - @minima-global/mds@0.12.2
+
 ## 0.0.12
 
 ### Patch Changes
