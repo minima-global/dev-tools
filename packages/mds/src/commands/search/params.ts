@@ -9,3 +9,9 @@ export type CoinsParams = {
   coinage?: number;
   order?: 'asc' | 'desc';
 };
+
+export type TokenParams = {
+  tokenid?: string;
+  action?: 'import' | 'export';
+  data?: string;
+};

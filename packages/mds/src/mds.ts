@@ -148,6 +148,17 @@ export const MDS: MDSObj = {
         });
       });
     },
+    tokens: (...args) => {
+      const { commandString, callback } = commandHandler('tokens', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
 
     consolidate: (...args) => {
       const { commandString, callback } = commandHandler('consolidate', args);

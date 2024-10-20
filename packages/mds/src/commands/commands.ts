@@ -38,8 +38,8 @@ import type {
 } from './mds/response.js';
 import type { ScriptsParams } from './scripts/params.js';
 import type { ScriptsCommand } from './scripts/response.js';
-import type { CoinsParams } from './search/params.js';
-import type { CoinsResponse } from './search/response.js';
+import type { CoinsParams, TokenParams } from './search/params.js';
+import type { CoinsResponse, Tokens } from './search/response.js';
 import type { SendParams } from './send/params.js';
 import type { SendResponse } from './send/response.js';
 import type {
@@ -497,8 +497,19 @@ export module SearchCommands {
       callback?: CoinsCallback,
     ): Promise<CoinsResponse>;
   };
+
+  type TokensCallback<T> = (data: Tokens.ReturnType<T>) => void;
+
+  export type TokensFunc = <T extends { params: TokenParams }>(
+    ...args: T['params']['action'] extends 'import'
+      ? [T & { params: { data: string } }, TokensCallback<T>?]
+      : T['params']['action'] extends 'export'
+        ? [T & { params: { tokenid: string } }, TokensCallback<T>?]
+        : [T, TokensCallback<T>?]
+  ) => Promise<Tokens.ReturnType<T>>;
 }
 
 export interface SearchCommands {
   coins: SearchCommands.CoinsFunc;
+  tokens: SearchCommands.TokensFunc;
 }

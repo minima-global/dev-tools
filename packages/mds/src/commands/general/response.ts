@@ -295,7 +295,7 @@ type Inputs = {
   created: string;
 };
 
-type Token = {
+export type Token = {
   name:
     | string
     | {
