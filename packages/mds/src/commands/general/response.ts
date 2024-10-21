@@ -8,8 +8,20 @@ export module Balance {
       : Balance
     : Balance;
 
+  export type Balance = MDSResObj<RawBalance[]>;
+
+  export type BalanceWithTokenDetails = MDSResObj<RawBalanceWithDetails[]>;
+
   export type RawBalance = {
-    token: string;
+    token:
+      | string
+      | {
+          name: string;
+          url: string;
+          description: string;
+          ticker: string;
+          webvalidate: string;
+        };
     tokenid: string;
     confirmed: string;
     unconfirmed: string;
@@ -77,12 +89,6 @@ export module Keys {
     publickey: string;
   };
 }
-
-export type Balance = MDSResObj<Balance.RawBalance[]>;
-
-export type BalanceWithTokenDetails = MDSResObj<
-  Balance.RawBalanceWithDetails[]
->;
 
 export type Block = MDSResObj<{
   block: string;

@@ -1,4 +1,3 @@
-import { MDS } from '../mds.js';
 import type {
   BalanceParams,
   CheckAddressParams,
@@ -8,7 +7,6 @@ import type {
   HashTestParams,
   KeysParams,
 } from './general/params.js';
-
 import type {
   Balance,
   Block,
