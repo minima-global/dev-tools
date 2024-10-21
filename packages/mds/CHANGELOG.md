@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.12.3
+
+### Patch Changes
+
+- e62325f: added token command and tweaked token return type
+
 ## 0.12.2
 
 ### Patch Changes
