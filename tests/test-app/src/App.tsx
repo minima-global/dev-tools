@@ -11,12 +11,12 @@ function App() {
     "MxG082YK24JSUNDU6MJKSZCYAZU90R3E5CS2A8691WCGSBYBHEGKSE3NC781B8N"
 
   async function getBalance() {
-    const res = await MDS.cmd.tokens({
+    const res = await MDS.cmd.coins({
       params: {
-        tokenid: "0x00",
+        tokenid:
+          "0x380FE0BCA875DB18083AA9114A2D87904872A872742E6911699DFB20B9D68029",
       },
     })
-
     console.log(res)
   }
 

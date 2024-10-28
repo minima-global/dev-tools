@@ -4,49 +4,48 @@
  * @param args - The arguments to be passed to the command.
  * @returns An object containing the command string and callback.
  */
+export function commandHandler(command: string, args: any[]) {
+  let commandString: string = command;
+  let callback: any;
+  let payload: any;
 
-import { httpPostAsync } from './mds.js';
-
-export function commandHandler<T, U>(command: string) {
-  return (...args: any[]): Promise<U> => {
-    const callback =
-      typeof args[args.length - 1] === 'function' ? args.pop() : undefined;
-    const payload =
-      args[0] && typeof args[0] === 'object' ? args[0] : undefined;
-    let commandString = command;
-
-    if (payload) {
-      const params = new URLSearchParams(payload).toString();
-      commandString += ` ${params}`;
-    } else if (args.length > 0) {
-      commandString += ` ${args.join(' ')}`;
+  // Handle different argument patterns
+  if (args.length > 0) {
+    // If last argument is a function, it's a callback
+    if (typeof args[args.length - 1] === 'function') {
+      callback = args.pop();
+      if (args.length > 0) {
+        payload = args[0];
+      }
+    } else {
+      // No callback, just parameters
+      payload = args[0];
     }
+  }
 
-    commandString = commandString.trim();
+  // Build command string with parameters
+  if (payload) {
+    if (typeof payload === 'string') {
+      // Handle direct string parameters
+      commandString += ` ${payload}`;
+    } else if (typeof payload === 'object') {
+      // Handle object parameters
+      if (payload.params) {
+        const payloadString = Object.entries(payload.params)
+          .map(([key, value]) => `${key}:${value}`)
+          .join(' ');
+        commandString += ` ${payloadString}`;
+      } else {
+        // Handle direct object parameters
+        const payloadString = Object.entries(payload)
+          .map(([key, value]) => `${key}:${value}`)
+          .join(' ');
+        commandString += ` ${payloadString}`;
+      }
+    }
+  }
 
-    return new Promise((resolve, reject) => {
-      httpPostAsync(
-        'cmd',
-        commandString,
-        (data: U) => {
-          if (
-            data &&
-            typeof data === 'object' &&
-            'status' in data &&
-            !data.status
-          ) {
-            reject(data);
-          } else {
-            resolve(data);
-            if (callback) {
-              callback(data);
-            }
-          }
-        },
-        payload,
-      );
-    });
-  };
+  return { commandString, callback };
 }
 
 export type Prettify<T> = {

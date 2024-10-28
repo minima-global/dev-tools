@@ -10,8 +10,10 @@ export module Tokens {
     ? S['params'] extends { action: 'export' }
       ? TokenExportResponse
       : S['params'] extends { action: 'import' }
-        ? TokenImportResponse
-        : TokensResponse
+        ? TokenResponseSingle
+        : S['params'] extends { tokenid: string }
+          ? TokenResponseSingle
+          : TokensResponse
     : TokensResponse;
   export type TokensResponse = MDSResObj<Token[]>;
 
@@ -20,5 +22,5 @@ export module Tokens {
     data: string;
   }>;
 
-  export type TokenImportResponse = MDSResObj<Token>;
+  export type TokenResponseSingle = MDSResObj<Token>;
 }

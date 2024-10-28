@@ -1,4 +1,3 @@
-import { MDS } from '../mds.js';
 import type {
   BalanceParams,
   CheckAddressParams,
