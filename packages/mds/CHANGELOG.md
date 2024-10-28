@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.13.1
+
+### Patch Changes
+
+- 0c86778: Async await fixes for cmd function
+
 ## 0.13.0
 
 ### Minor Changes
