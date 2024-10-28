@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.13.0
+
+### Minor Changes
+
+- dcf74f9: Fixed params not being posted correctly upon using async await
+
 ## 0.12.3
 
 ### Patch Changes
