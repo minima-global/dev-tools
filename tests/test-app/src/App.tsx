@@ -10,12 +10,20 @@ function App() {
   const Node2Address =
     "MxG082YK24JSUNDU6MJKSZCYAZU90R3E5CS2A8691WCGSBYBHEGKSE3NC781B8N"
 
+  async function getBalance() {
+    const res = await MDS.cmd.tokens({
+      params: {
+        tokenid: "0x00",
+      },
+    })
+
+    console.log(res)
+  }
+
   useEffect(() => {
     MDS.init(async ({ event }) => {
       if (event === "inited") {
-        MDS.cmd.balance((data) => {
-          console.log("DATA", data)
-        })
+        getBalance()
       }
     })
   }, [])

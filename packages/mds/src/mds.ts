@@ -66,351 +66,35 @@ export const MDS: MDSObj = {
     httpPostAsync('notifycancel', '*');
   },
   cmd: {
-    balance: (...args) => {
-      const { commandString, callback } = commandHandler('balance', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback && typeof callback === 'function') {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    block: (callback) => {
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', 'block', (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    getaddress: (callback) => {
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', 'getaddress', (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    keys: (...args) => {
-      const { commandString, callback } = commandHandler('keys', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    checkaddress: (...args) => {
-      const { commandString, callback } = commandHandler('checkaddress', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    newaddress: (...args) => {
-      const { commandString, callback } = commandHandler('newaddress', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    coins: (...args) => {
-      const { commandString, callback } = commandHandler('coins', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    tokens: (...args) => {
-      const { commandString, callback } = commandHandler('tokens', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    consolidate: (...args) => {
-      const { commandString, callback } = commandHandler('consolidate', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    coincheck: (...args) => {
-      const { commandString, callback } = commandHandler('coincheck', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    cointrack: (...args) => {
-      const { commandString, callback } = commandHandler('cointrack', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    hashtest: (...args) => {
-      const { commandString, callback } = commandHandler('hashtest', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    send: (...args) => {
-      const { commandString, callback } = commandHandler('send', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    checkmode: (...args) => {
-      const { commandString, callback } = commandHandler('checkmode', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    checkpending: (...args) => {
-      const { commandString, callback } = commandHandler('checkpending', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    checkrestore: (...args) => {
-      const { commandString, callback } = commandHandler('checkrestore', args);
-
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    mds: (...args) => {
-      const { commandString, callback } = commandHandler('mds', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    burn: (...args) => {
-      const { commandString, callback } = commandHandler('burn', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    log: (...args) => {
-      const { commandString, callback } = commandHandler('log', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txnbasics: (...args) => {
-      const { commandString, callback } = commandHandler('txnbasics', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txncheck: (...args) => {
-      const { commandString, callback } = commandHandler('txncheck', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txnclear: (...args) => {
-      const { commandString, callback } = commandHandler('txnclear', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txnexport: (...args) => {
-      const { commandString, callback } = commandHandler('txnexport', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txndelete: (...args) => {
-      const { commandString, callback } = commandHandler('txndelete', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txncreate: (...args) => {
-      const { commandString, callback } = commandHandler('txncreate', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    txninput: (...args) => {
-      const { commandString, callback } = commandHandler('txninput', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    txnimport: (...args) => {
-      const { commandString, callback } = commandHandler('txnimport', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-    txnlist: (...args) => {
-      const { commandString, callback } = commandHandler('txnlist', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
-
-    scripts: (...args) => {
-      const { commandString, callback } = commandHandler('scripts', args);
-      return new Promise((resolve) => {
-        httpPostAsync('cmd', commandString, (data: any) => {
-          resolve(data);
-          if (callback) {
-            callback(data);
-          }
-        });
-      });
-    },
+    balance: commandHandler('balance'),
+    block: commandHandler('block'),
+    getaddress: commandHandler('getaddress'),
+    keys: commandHandler('keys'),
+    checkaddress: commandHandler('checkaddress'),
+    newaddress: commandHandler('newaddress'),
+    coins: commandHandler('coins'),
+    tokens: commandHandler('tokens'),
+    consolidate: commandHandler('consolidate'),
+    coincheck: commandHandler('coincheck'),
+    cointrack: commandHandler('cointrack'),
+    hashtest: commandHandler('hashtest'),
+    send: commandHandler('send'),
+    checkmode: commandHandler('checkmode'),
+    checkpending: commandHandler('checkpending'),
+    checkrestore: commandHandler('checkrestore'),
+    mds: commandHandler('mds'),
+    burn: commandHandler('burn'),
+    log: commandHandler('log'),
+    txnbasics: commandHandler('txnbasics'),
+    txncheck: commandHandler('txncheck'),
+    txnclear: commandHandler('txnclear'),
+    txnexport: commandHandler('txnexport'),
+    txndelete: commandHandler('txndelete'),
+    txncreate: commandHandler('txncreate'),
+    txninput: commandHandler('txninput'),
+    txnimport: commandHandler('txnimport'),
+    txnlist: commandHandler('txnlist'),
+    scripts: commandHandler('scripts'),
   },
 
   sql: (command, callback) => {
@@ -735,6 +419,7 @@ export function httpPostAsync<T, O, U>(
   theUrl: T,
   params: O,
   callback?: (msg: U) => void,
+  payload?: any,
 ) {
   //Add the MiniDAPP UID..
   var finalurl = MDS.mainhost + theUrl + '?uid=' + MDS.minidappuid;
@@ -758,7 +443,11 @@ export function httpPostAsync<T, O, U>(
         if (callback) {
           try {
             const responseJson = JSON.parse(xmlHttp.responseText);
-            callback(responseJson);
+            const result = {
+              ...responseJson,
+              ...(payload && { params: payload }),
+            };
+            callback(result);
           } catch (error) {
             console.error('Failed to parse response as JSON', error);
           }
@@ -774,9 +463,6 @@ export function httpPostAsync<T, O, U>(
     xmlHttp.overrideMimeType('text/plain; charset=UTF-8');
   }
   xmlHttp.send(encodeURIComponent(params as string));
-  //xmlHttp.onerror = function () {
-  //  console.log("** An error occurred during the transaction");
-  //};
 }
 
 function httpPostAsyncPoll(theUrl: string, params: string, callback: any) {

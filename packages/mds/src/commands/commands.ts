@@ -1,3 +1,4 @@
+import { MDS } from '../mds.js';
 import type {
   BalanceParams,
   CheckAddressParams,
@@ -498,12 +499,14 @@ export module SearchCommands {
 
   type TokensCallback<T> = (data: Tokens.ReturnType<T>) => void;
 
-  export type TokensFunc = <T extends { params: TokenParams }>(
-    ...args: T['params']['action'] extends 'import'
-      ? [T & { params: { data: string } }, TokensCallback<T>?]
-      : T['params']['action'] extends 'export'
-        ? [T & { params: { tokenid: string } }, TokensCallback<T>?]
-        : [T, TokensCallback<T>?]
+  export type TokensFunc = <T extends { params: TokenParams } | undefined>(
+    ...args: T extends undefined
+      ? [TokensCallback<T>?]
+      : T extends { params: { action: 'import' } }
+        ? [T & { params: { data: string } }, TokensCallback<T>?]
+        : T extends { params: { action: 'export' } }
+          ? [T & { params: { tokenid: string } }, TokensCallback<T>?]
+          : [T, TokensCallback<T>?]
   ) => Promise<Tokens.ReturnType<T>>;
 }
 

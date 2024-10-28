@@ -5,29 +5,48 @@
  * @returns An object containing the command string and callback.
  */
 
-export function commandHandler(command: string, args: any[]) {
-  let commandString: string = command;
-  let callback: any;
-  let payload: any;
+import { httpPostAsync } from './mds.js';
 
-  if (
-    args.length === 2 &&
-    typeof args[1] === 'function' &&
-    typeof args[0] === 'object'
-  ) {
-    [payload, callback] = args;
-  } else if (args.length === 1 && typeof args[0] === 'function') {
-    [callback] = args;
-  }
+export function commandHandler<T, U>(command: string) {
+  return (...args: any[]): Promise<U> => {
+    const callback =
+      typeof args[args.length - 1] === 'function' ? args.pop() : undefined;
+    const payload =
+      args[0] && typeof args[0] === 'object' ? args[0] : undefined;
+    let commandString = command;
 
-  if (typeof payload === 'object' && payload.params) {
-    const payloadString = Object.entries(payload.params)
-      .map(([key, value]) => `${key}:${value}`)
-      .join(' ');
-    commandString += ` ${payloadString}`;
-  }
+    if (payload) {
+      const params = new URLSearchParams(payload).toString();
+      commandString += ` ${params}`;
+    } else if (args.length > 0) {
+      commandString += ` ${args.join(' ')}`;
+    }
 
-  return { commandString, callback };
+    commandString = commandString.trim();
+
+    return new Promise((resolve, reject) => {
+      httpPostAsync(
+        'cmd',
+        commandString,
+        (data: U) => {
+          if (
+            data &&
+            typeof data === 'object' &&
+            'status' in data &&
+            !data.status
+          ) {
+            reject(data);
+          } else {
+            resolve(data);
+            if (callback) {
+              callback(data);
+            }
+          }
+        },
+        payload,
+      );
+    });
+  };
 }
 
 export type Prettify<T> = {
