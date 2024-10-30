@@ -134,6 +134,7 @@ export type Coin = {
   mmrentry: string;
   created: string;
   age: string;
+  tokenamount: string;
 };
 
 export type SimpleCoinResponse = MDSResObj<string>;

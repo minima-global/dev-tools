@@ -17,7 +17,7 @@ function App() {
           "0x380FE0BCA875DB18083AA9114A2D87904872A872742E6911699DFB20B9D68029",
       },
     })
-    console.log(res)
+    console.log(res.response.map((coin) => coin.tokenamount))
   }
 
   useEffect(() => {
