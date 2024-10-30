@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.13.2
+
+### Patch Changes
+
+- 57cc2e5: fixed coin type
+
 ## 0.13.1
 
 ### Patch Changes
