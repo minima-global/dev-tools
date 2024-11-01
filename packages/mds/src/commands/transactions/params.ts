@@ -101,3 +101,20 @@ export type TxnOutputParams = {
   tokenid?: string;
   storestate?: 'true' | 'false';
 };
+
+export type TxnSignParams = {
+  id: string;
+  publickey: string | 'auto';
+  txnpostauto?: 'true' | 'false';
+  txnpostburn?: 'true' | 'false';
+  txnpostmine?: 'true' | 'false';
+  txndelete?: 'true' | 'false';
+};
+
+export type TxnPostParams = {
+  id: string;
+  auto?: 'true' | 'false';
+  burn?: string;
+  mine?: 'true' | 'false';
+  txndelete?: 'true' | 'false';
+};

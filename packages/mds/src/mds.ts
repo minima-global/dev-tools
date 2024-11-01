@@ -400,6 +400,42 @@ export const MDS: MDSObj = {
       });
     },
 
+    txnpost: (...args) => {
+      const { commandString, callback } = commandHandler('txnpost', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txnsign: (...args) => {
+      const { commandString, callback } = commandHandler('txnsign', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    txnoutput: (...args) => {
+      const { commandString, callback } = commandHandler('txnoutput', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
     scripts: (...args) => {
       const { commandString, callback } = commandHandler('scripts', args);
       return new Promise((resolve) => {

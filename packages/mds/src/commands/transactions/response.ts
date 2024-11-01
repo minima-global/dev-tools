@@ -1,5 +1,5 @@
 import type { MDSResObj } from '../../types.js';
-import type { Witness } from '../send/response.js';
+import type { Header, Witness } from '../send/response.js';
 
 export type BurnResponse = MDSResObj<{
   '1block': Burn;
@@ -88,3 +88,48 @@ export type TxnInputResponse = MDSResObj<{
   spent: boolean;
   mmrentry: string;
 }>;
+
+export type TxnSignResponse = MDSResObj<{
+  keys: string[];
+}>;
+
+export type TxSignPostResponse = MDSResObj<{
+  keys: string[];
+  txpow: TxPow;
+  txnpostauto: boolean;
+  txnpostburn: string;
+  txnpostmine: boolean;
+  delete: boolean;
+}>;
+
+export type TxnPostResponse = MDSResObj<{
+  txpowid: string;
+  isblock: boolean;
+  istransaction: boolean;
+  superblock: number;
+  size: number;
+  burn: number;
+  header: Header;
+  hasbody: boolean;
+  body: Body;
+}>;
+
+export type TxnSignReturnType<S> = S extends {
+  params: any;
+}
+  ? S['params'] extends { txnpostauto: 'true' }
+    ? TxSignPostResponse
+    : TxnSignResponse
+  : TxnSignResponse;
+
+export type TxPow = {
+  txpowid: string;
+  isblock: boolean;
+  istransaction: boolean;
+  superblock: number;
+  size: number;
+  burn: number;
+  header: Header;
+  hasbody: boolean;
+  body: Body;
+};

@@ -47,6 +47,8 @@ import type {
   TxnListParams,
   TxnOutputParams,
   TxnParams,
+  TxnPostParams,
+  TxnSignParams,
 } from './transactions/params.js';
 import type {
   BurnResponse,
@@ -55,7 +57,9 @@ import type {
   TxnCheckResponse,
   TxnDeleteResponse,
   TxnInputResponse,
+  TxnPostResponse,
   TxnResponse,
+  TxnSignReturnType,
 } from './transactions/response.js';
 
 /**
@@ -454,6 +458,16 @@ export module TransactionCommands {
     args: T,
     callback?: (data: TxnResponse) => void,
   ) => Promise<TxnResponse>;
+
+  export type TxnSignFunc = <T extends { params: TxnSignParams }>(
+    args: T,
+    callback?: (data: TxnSignReturnType<T>) => void,
+  ) => Promise<TxnSignReturnType<T>>;
+
+  export type TxnPostFunc = <T extends { params: TxnPostParams }>(
+    args: T,
+    callback?: (data: TxnPostResponse) => void,
+  ) => Promise<TxnPostResponse>;
 }
 
 export interface TransactionCommands {
@@ -468,6 +482,9 @@ export interface TransactionCommands {
   txnimport: TransactionCommands.TxnImportFunc;
   txninput: TransactionCommands.TxnInputFunc;
   txnlist: TransactionCommands.TxnList;
+  txnoutput: TransactionCommands.TxnOutputFunc;
+  txnsign: TransactionCommands.TxnSignFunc;
+  txnpost: TransactionCommands.TxnPostFunc;
   //TODO: Add txnscript command
 }
 
