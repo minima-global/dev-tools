@@ -120,7 +120,6 @@ export type CoinCheck = MDSResObj<
 
 export type CoinTrack = MDSResObj<string>; // 🟢
 
-// TODO : Check types
 export type Coin = {
   coinid: string;
   amount: string;

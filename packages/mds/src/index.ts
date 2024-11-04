@@ -11,3 +11,5 @@ export * from './commands/search/response.js';
 export * from './commands/search/params.js';
 export * from './commands/transactions/params.js';
 export * from './commands/transactions/response.js';
+export * from './commands/mds/params.js';
+export * from './commands/mds/response.js';

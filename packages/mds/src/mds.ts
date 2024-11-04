@@ -546,6 +546,7 @@ export const MDS: MDSObj = {
     },
     save: (filename, text, callback) => {
       var commsline = 'save&' + filename + '&' + text;
+      httpPostAsync('file', commsline, callback);
     },
     savebinary: function (filename, hexdata, callback) {
       var commsline = 'savebinary&' + filename + '&' + hexdata;

@@ -6,7 +6,6 @@ import type {
   TransactionCommands,
 } from './commands/commands.js';
 import type { Header } from './commands/send/response.js';
-import { MDS } from './mds.js';
 
 /**
  * Types for the MDS Object

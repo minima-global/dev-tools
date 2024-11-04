@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-
+import { MDS } from './mds.js';
 describe('MDS functions ', () => {
   /*it('should call callback function', () => {
     const mockCallback = vi.fn();

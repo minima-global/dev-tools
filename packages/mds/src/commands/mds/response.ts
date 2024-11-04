@@ -30,10 +30,6 @@ export module MDSCommand {
     minidapps: Minidapp[];
   }>;
 
-  export type DefaultResponse = MDSResObj<{
-    foo: string;
-  }>;
-
   export type InstallResponse = MDSResObj<{
     installed: Omit<Minidapp, 'sessionid'>;
   }>;

@@ -10,7 +10,7 @@ export type SendParams = {
   /**
    * JSON Array listing addresses and amounts to send in one transaction. Takes the format ["address:amount","address2:amount2",..], with each set in double quotes.
    */
-  multi?: string;
+  multi?: string[];
   /**
    * If sending a custom token, you must specify its tokenid. Defaults to Minima (0x00).
    */
