@@ -32,18 +32,32 @@ export function commandHandler(command: string, args: any[]) {
       // Handle object parameters
       if (payload.params) {
         const payloadString = Object.entries(payload.params)
-          .map(([key, value]) => `${key}:${value}`)
+          .map(([key, value]) => {
+            // If value is an array, preserve the brackets
+            if (Array.isArray(value)) {
+              return `${key}:[${value.join(',')}]`;
+            }
+            return `${key}:${value}`;
+          })
           .join(' ');
         commandString += ` ${payloadString}`;
       } else {
         // Handle direct object parameters
         const payloadString = Object.entries(payload)
-          .map(([key, value]) => `${key}:${value}`)
+          .map(([key, value]) => {
+            // If value is an array, preserve the brackets
+            if (Array.isArray(value)) {
+              return `${key}:[${value.join(',')}]`;
+            }
+            return `${key}:${value}`;
+          })
           .join(' ');
         commandString += ` ${payloadString}`;
       }
     }
   }
+
+  console.log('COMMAND STRING', commandString);
 
   return { commandString, callback };
 }

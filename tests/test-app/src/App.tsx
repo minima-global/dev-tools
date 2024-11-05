@@ -29,10 +29,15 @@ function App() {
   }, [])
 
   const send = async () => {
+    const test = [
+      "MxG084A4PMTFKVNER0W2965E06RN02C5YEFP8RE2N9TZBD6TB1YRMEZKCN6SMJW:500",
+      "MxG086NDNE0Y6CGS2BSTT2ZZADTDZ45RYD3D7GN0ST79MM1ZMYD9ENWRMB80BJ8:1000",
+    ]
     const data = await MDS.cmd.send({
       params: {
-        address: Node2Address,
-        amount: "100",
+        amount: "1000",
+        address:
+          "MxG084A4PMTFKVNER0W2965E06RN02C5YEFP8RE2N9TZBD6TB1YRMEZKCN6SMJW",
       },
     })
     console.log("DATA", data)
