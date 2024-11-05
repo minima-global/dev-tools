@@ -57,8 +57,6 @@ export function commandHandler(command: string, args: any[]) {
     }
   }
 
-  console.log('COMMAND STRING', commandString);
-
   return { commandString, callback };
 }
 
