@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.13.4
+
+### Patch Changes
+
+- 4c5d325: fixed send multi command and added formatting for data sent as array
+
 ## 0.13.3
 
 ### Patch Changes
