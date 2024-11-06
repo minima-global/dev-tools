@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.13.6
+
+### Patch Changes
+
+- 66312f8: fixes for mds command
+
 ## 0.13.5
 
 ### Patch Changes
