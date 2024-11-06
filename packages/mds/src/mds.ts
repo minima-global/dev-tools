@@ -259,7 +259,6 @@ export const MDS: MDSObj = {
         });
       });
     },
-
     mds: (...args) => {
       const { commandString, callback } = commandHandler('mds', args);
       return new Promise((resolve) => {
