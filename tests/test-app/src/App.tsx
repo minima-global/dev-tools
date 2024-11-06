@@ -35,9 +35,8 @@ function App() {
     ]
     const data = await MDS.cmd.send({
       params: {
-        amount: "1000",
-        address:
-          "MxG084A4PMTFKVNER0W2965E06RN02C5YEFP8RE2N9TZBD6TB1YRMEZKCN6SMJW",
+        split: "5",
+        multi: JSON.stringify(test),
       },
     })
     console.log("DATA", data)

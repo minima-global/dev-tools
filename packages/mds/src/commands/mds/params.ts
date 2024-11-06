@@ -3,7 +3,7 @@ export type MDSParams = {
    * The action to perform.
    * @default 'list'
    */
-  action:
+  action?:
     | 'list'
     | 'install'
     | 'update'

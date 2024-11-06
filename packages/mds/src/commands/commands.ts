@@ -205,9 +205,11 @@ export module MDSCommands {
     | 'accept'
     | 'deny'
     | 'permission'
-    | 'pending';
+    | 'pending'
+    | 'list'
+    | 'publicmds';
 
-  type MDSParamsForAction<A extends MDSAction> = A extends 'install'
+  type MDSParamsForAction<A extends MDSAction | undefined> = A extends 'install'
     ? MDSParamsActionInstall
     : A extends 'update'
       ? MDSParamsActionUpdate
@@ -219,22 +221,21 @@ export module MDSCommands {
             ? MDSParamsActionPermission
             : A extends 'pending'
               ? MDSParamsActionPending
-              : never;
+              : A extends 'list' | 'publicmds' | undefined
+                ? { action?: A }
+                : never;
 
-  export type MDSFunc = <T extends { params: MDSParams }>(
-    ...args: MDSFuncArgs<T>
-  ) => Promise<MDSCommand.ReturnType<T>>;
-
-  type MDSFuncArgs<T extends { params: MDSParams } | undefined> = T extends {
-    params: { action: MDSAction };
-  }
-    ? [
-        Omit<T, 'params'> & {
-          params: MDSParamsForAction<T['params']['action']>;
-        },
-        MDSCallback<T>?,
-      ]
-    : [MDSCallback<T>?];
+  export type MDSFunc = {
+    (
+      callback?: MDSCallback<undefined>,
+    ): Promise<MDSCommand.ReturnType<undefined>>;
+    <T extends { params: MDSParams }>(
+      args: Omit<T, 'params'> & {
+        params: MDSParamsForAction<T['params']['action']>;
+      },
+      callback?: MDSCallback<T>,
+    ): Promise<MDSCommand.ReturnType<T>>;
+  };
 
   /**
    * Function for the checkmode command.
