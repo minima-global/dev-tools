@@ -29,8 +29,12 @@ import type { ScriptsParams } from './scripts/params.js';
 import type { ScriptsCommand } from './scripts/response.js';
 import type { CoinsParams, TokenParams } from './search/params.js';
 import type { CoinsResponse, Tokens } from './search/response.js';
-import type { SendParams } from './send/params.js';
-import type { SendResponse } from './send/response.js';
+import type { SendNoSign, SendParams, SendPoll } from './send/params.js';
+import type {
+  SendNoSignResponse,
+  SendPollResponse,
+  SendResponse,
+} from './send/response.js';
 import type {
   LogParams,
   TxnExportParams,
@@ -169,6 +173,39 @@ export module SendCommands {
     args: T,
     callback?: (data: SendResponse) => void,
   ) => Promise<SendResponse>;
+
+  export type SendPollFunc = <T extends { params: SendPoll }>(
+    args: T,
+    callback?: (data: SendPollResponse) => void,
+  ) => Promise<SendPollResponse>;
+
+  export type SendNoSignFunc = <T extends { params: SendNoSign }>(
+    args: T,
+    callback?: (data: SendNoSignResponse) => void,
+  ) => Promise<SendNoSignResponse>;
+}
+
+export interface SendCommands {
+  /**
+   * Function for the send command.
+   * @param callback - The callback function for the send command.
+   * @returns A promise that resolves to the data returned from the send command.
+   */
+  send: SendCommands.SendFunc;
+
+  /**
+   * Function for the sendpoll command.
+   * @param callback - The callback function for the sendpoll command.
+   * @returns A promise that resolves to the data returned from the sendpoll command.
+   */
+  sendpoll: SendCommands.SendPollFunc;
+
+  /**
+   * Function for the sendnosign command.
+   * @param callback - The callback function for the sendnosign command.
+   * @returns A promise that resolves to the data returned from the sendnosign command.
+   */
+  sendnosign: SendCommands.SendNoSignFunc;
 }
 
 export module MDSCommands {
@@ -279,13 +316,6 @@ export interface GeneralCommands {
    * @returns A promise that resolves to the data returned from the cointrack command.
    */
   cointrack: GeneralCommands.CoinTrackFunc;
-
-  /**
-   * Function for the send command.
-   * @param callback - The callback function for the send command.
-   * @returns A promise that resolves to the data returned from the send command.
-   */
-  send: SendCommands.SendFunc;
 
   /**
    * Function for the newaddress command.
@@ -450,7 +480,6 @@ export interface TransactionCommands {
   txnoutput: TransactionCommands.TxnOutputFunc;
   txnsign: TransactionCommands.TxnSignFunc;
   txnpost: TransactionCommands.TxnPostFunc;
-  //TODO: Add txnscript command
 }
 
 export module ScriptsCommands {

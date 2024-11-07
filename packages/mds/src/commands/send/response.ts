@@ -13,6 +13,14 @@ export type SendResponse = MDSResObj<{
   body: Body;
 }>;
 
+export type SendPollResponse = MDSResObj<{
+  command: string;
+}>;
+
+export type SendNoSignResponse = MDSResObj<{
+  txpow: string;
+}>;
+
 export interface Header {
   chainid: string;
   block: string;

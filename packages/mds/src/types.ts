@@ -3,6 +3,7 @@ import type {
   MDSCommands,
   ScriptsCommands,
   SearchCommands,
+  SendCommands,
   TransactionCommands,
 } from './commands/commands.js';
 import type { Header } from './commands/send/response.js';
@@ -65,6 +66,7 @@ type DefaultRes = {
   pending: boolean;
   status: boolean;
   error?: string;
+  pendinguid?: string;
 };
 
 type DefaultEventRes = {
@@ -168,7 +170,8 @@ export interface MDSObj {
     MDSCommands &
     TransactionCommands &
     ScriptsCommands &
-    SearchCommands;
+    SearchCommands &
+    SendCommands;
   /**
    * Run a SQL command
    * @param command The SQL command to run

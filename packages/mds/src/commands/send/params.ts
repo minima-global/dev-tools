@@ -63,3 +63,26 @@ export type SendParams = {
    */
   storestate?: 'true' | 'false';
 };
+
+export type SendPoll = SendParams & {
+  /**
+   * The action to perform.
+   */
+  action: 'list' | 'remove';
+  /**
+   * The uid of the transaction to remove.
+   */
+  uid: string;
+};
+
+export type SendNoSign = {
+  address?: string;
+  amount?: string;
+  multi?: string;
+  tokenid?: string;
+  state?: string;
+  burn?: string;
+  split?: string;
+  file?: string;
+  debug?: 'true' | 'false';
+};

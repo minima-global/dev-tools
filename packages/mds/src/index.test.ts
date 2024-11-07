@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { MDS } from './mds.js';
 describe('MDS functions ', () => {
   /*it('should call callback function', () => {
     const mockCallback = vi.fn();
@@ -17,6 +18,8 @@ describe('MDS functions ', () => {
   });*/
 
   // 1 + 1 = 2
+
+  MDS.cmd;
 
   it('should return 2', () => {
     expect(1 + 1).toBe(2);

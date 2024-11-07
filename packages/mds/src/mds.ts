@@ -281,6 +281,31 @@ export const MDS: MDSObj = {
         });
       });
     },
+
+    sendpoll: (...args) => {
+      const { commandString, callback } = commandHandler('sendpoll', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    sendnosign: (...args) => {
+      const { commandString, callback } = commandHandler('sendnosign', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
     log: (...args) => {
       const { commandString, callback } = commandHandler('log', args);
       return new Promise((resolve) => {
