@@ -133,3 +133,13 @@ export type TxPow = {
   hasbody: boolean;
   body: Body;
 };
+
+//TODO: Add txnstate response
+export type TxnArray = [
+  TxnResponse,
+  TxnInputResponse,
+  TxnResponse,
+  TxnResponse,
+  TxnExportResponse,
+  TxnDeleteResponse,
+];

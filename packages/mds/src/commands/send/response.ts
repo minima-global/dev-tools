@@ -1,7 +1,69 @@
 import type { MDSResObj } from '../../types.js';
 import type { Coin } from '../general/response.js';
+import type {
+  TxnArray,
+  TxnDeleteResponse,
+  TxnExportResponse,
+  TxnResponse,
+  TxnSignResponse,
+} from '../transactions/response.js';
 
-export type SendResponse = MDSResObj<{
+export type SendResponse = MDSResObj<Transaction>;
+
+export type SendPollResponse = MDSResObj<{
+  command: string;
+}>;
+
+export type SendNoSignResponse = MDSResObj<{
+  txpow: string;
+}>;
+
+export type SendTxPowResponse = MDSResObj<{
+  txpow: Transaction;
+}>;
+
+export type ReturnTypeMultiSig<S> = S extends {
+  params: any;
+}
+  ? S['params'] extends { action: 'create' }
+    ? CreateMultiSigResponse
+    : S['params'] extends { action: 'getkey' }
+      ? GetKeyMultiSigResponse
+      : S['params'] extends { action: 'spend' }
+        ? SpendMultiSigResponse
+        : S['params'] extends { action: 'sign' }
+          ? SignMultiSigResponse
+          : S['params'] extends { action: 'view' }
+            ? MultiSigViewResponse
+            : S['params'] extends { action: 'post' }
+              ? PostMultiSigResponse
+              : S['params'] extends { action: 'list' }
+                ? ListMultiSigResponse
+                : never
+  : never;
+
+export type CreateMultiSigResponse = MDSResObj<{
+  send: Transaction;
+  id: string;
+}>;
+
+export type GetKeyMultiSigResponse = MDSResObj<{
+  publickey: string;
+}>;
+
+export type SpendMultiSigResponse = MDSResObj<TxnArray>;
+
+export type SignMultiSigResponse = MDSResObj<
+  [TxnSignResponse, TxnExportResponse, TxnDeleteResponse]
+>;
+
+export type PostMultiSigResponse = MDSResObj<Transaction>;
+
+export type MultiSigViewResponse = MDSResObj<[TxnResponse, TxnDeleteResponse]>;
+
+export type ListMultiSigResponse = MDSResObj<Coin[]>;
+
+export interface Transaction {
   txpowid: string;
   isblock: boolean;
   istransaction: boolean;
@@ -11,15 +73,7 @@ export type SendResponse = MDSResObj<{
   header: Header;
   hasbody: boolean;
   body: Body;
-}>;
-
-export type SendPollResponse = MDSResObj<{
-  command: string;
-}>;
-
-export type SendNoSignResponse = MDSResObj<{
-  txpow: string;
-}>;
+}
 
 export interface Header {
   chainid: string;

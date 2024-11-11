@@ -9,18 +9,27 @@ import type {
 import type { Header } from './commands/send/response.js';
 
 /**
+ * Event constants for the MDS Object
+ */
+export const MinimaEvents = {
+  INITED: 'inited',
+  NEWBLOCK: 'NEWBLOCK',
+  MINING: 'MINING',
+  MINIMALOG: 'MINIMALOG',
+  MAXIMA: 'MAXIMA',
+  TIMER_10SECONDS: 'MDS_TIMER_10SECONDS',
+  TIMER_1HOUR: 'MDS_TIMER_1HOUR',
+  SHUTDOWN: 'MDS_SHUTDOWN',
+  PENDING: 'MDS_PENDING',
+  NEWCOIN: 'NEWCOIN',
+  NOTIFYCOIN: 'NOTIFYCOIN',
+  NOTIFYCASCADECOIN: 'NOTIFYCASCADECOIN',
+} as const;
+
+/**
  * Types for the MDS Object
  */
-type MinimaEvents =
-  | 'inited'
-  | 'NEWBALANCE' // TODO: Add this event
-  | 'NEWBLOCK'
-  | 'MINING'
-  | 'MINIMALOG'
-  | 'MAXIMA' // TODO: Add this event
-  | 'MDS_TIMER_1HOUR'
-  | 'MDS_TIMER_10SECONDS'
-  | 'MDS_SHUTDOWN'; // TODO: Add this event
+type MinimaEvents = (typeof MinimaEvents)[keyof typeof MinimaEvents];
 
 type BaseEvent<T extends MinimaEvents, D = unknown> = {
   event: T;
