@@ -29,11 +29,26 @@ import type { ScriptsParams } from './scripts/params.js';
 import type { ScriptsCommand } from './scripts/response.js';
 import type { CoinsParams, TokenParams } from './search/params.js';
 import type { CoinsResponse, Tokens } from './search/response.js';
-import type { SendNoSign, SendParams, SendPoll } from './send/params.js';
 import type {
+  SendNoSignParams,
+  SendParams,
+  SendPollParams,
+  SendSignParams,
+  SendFileParams,
+  MultiSigAction,
+  MultiSigCreateParams,
+  MultiSigListParams,
+  MultiSigSpendParams,
+  MultiSigSignParams,
+  MultiSigViewParams,
+  MultiSigPostParams,
+} from './send/params.js';
+import type {
+  ReturnTypeMultiSig,
   SendNoSignResponse,
   SendPollResponse,
   SendResponse,
+  SendTxPowResponse,
 } from './send/response.js';
 import type {
   LogParams,
@@ -168,23 +183,6 @@ export module GeneralCommands {
   ) => Promise<Keys.ReturnType<T>>;
 }
 
-export module SendCommands {
-  export type SendFunc = <T extends { params: SendParams }>(
-    args: T,
-    callback?: (data: SendResponse) => void,
-  ) => Promise<SendResponse>;
-
-  export type SendPollFunc = <T extends { params: SendPoll }>(
-    args: T,
-    callback?: (data: SendPollResponse) => void,
-  ) => Promise<SendPollResponse>;
-
-  export type SendNoSignFunc = <T extends { params: SendNoSign }>(
-    args: T,
-    callback?: (data: SendNoSignResponse) => void,
-  ) => Promise<SendNoSignResponse>;
-}
-
 export interface SendCommands {
   /**
    * Function for the send command.
@@ -206,6 +204,75 @@ export interface SendCommands {
    * @returns A promise that resolves to the data returned from the sendnosign command.
    */
   sendnosign: SendCommands.SendNoSignFunc;
+  sendview: SendCommands.SendViewFunc;
+  sendsign: SendCommands.SendSignFunc;
+  sendpost: SendCommands.SendPostFunc;
+  multisig: SendCommands.MultiSigFunc;
+}
+
+export module SendCommands {
+  export type SendFunc = <T extends { params: SendParams }>(
+    args: T,
+    callback?: (data: SendResponse) => void,
+  ) => Promise<SendResponse>;
+
+  export type SendPollFunc = <T extends { params: SendPollParams }>(
+    args: T,
+    callback?: (data: SendPollResponse) => void,
+  ) => Promise<SendPollResponse>;
+
+  export type SendNoSignFunc = <T extends { params: SendNoSignParams }>(
+    args: T,
+    callback?: (data: SendNoSignResponse) => void,
+  ) => Promise<SendNoSignResponse>;
+
+  export type SendViewFunc = <T extends { params: SendFileParams }>(
+    args: T,
+    callback?: (data: SendTxPowResponse) => void,
+  ) => Promise<SendTxPowResponse>;
+
+  export type SendSignFunc = <T extends { params: SendSignParams }>(
+    args: T,
+    callback?: (data: SendNoSignResponse) => void,
+  ) => Promise<SendNoSignResponse>;
+
+  export type SendPostFunc = <T extends { params: SendFileParams }>(
+    args: T,
+    callback?: (data: SendTxPowResponse) => void,
+  ) => Promise<SendTxPowResponse>;
+
+  type MultiSigCallback<T> = (data: ReturnTypeMultiSig<T>) => void;
+
+  type Params = {
+    params: {
+      action: MultiSigAction;
+    };
+  };
+
+  export type MultiSigFunc = <T extends Params | undefined>(
+    ...args: T extends undefined
+      ? [MultiSigCallback<T>?]
+      : T extends { params: { action: 'create' } }
+        ? [
+            T & {
+              params: MultiSigCreateParams;
+            },
+            MultiSigCallback<T>?,
+          ]
+        : T extends { params: { action: 'list' } }
+          ? [T & { params: MultiSigListParams }, MultiSigCallback<T>?]
+          : T extends { params: { action: 'spend' } }
+            ? [T & { params: MultiSigSpendParams }, MultiSigCallback<T>?]
+            : T extends { params: { action: 'sign' } }
+              ? [T & { params: MultiSigSignParams }, MultiSigCallback<T>?]
+              : T extends { params: { action: 'view' } }
+                ? [T & { params: MultiSigViewParams }, MultiSigCallback<T>?]
+                : T extends { params: { action: 'post' } }
+                  ? [T & { params: MultiSigPostParams }, MultiSigCallback<T>?]
+                  : T extends { params: { action: 'getkey' } }
+                    ? [T, MultiSigCallback<T>?]
+                    : never
+  ) => Promise<ReturnTypeMultiSig<T>>;
 }
 
 export module MDSCommands {
@@ -480,6 +547,7 @@ export interface TransactionCommands {
   txnoutput: TransactionCommands.TxnOutputFunc;
   txnsign: TransactionCommands.TxnSignFunc;
   txnpost: TransactionCommands.TxnPostFunc;
+  // TODO: Add txnstate command
 }
 
 export module ScriptsCommands {

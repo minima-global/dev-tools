@@ -471,6 +471,41 @@ export const MDS: MDSObj = {
         });
       });
     },
+    sendpost: (...args) => {
+      const { commandString, callback } = commandHandler('sendpost', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    sendsign: (...args) => {
+      const { commandString, callback } = commandHandler('sendsign', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
+    sendview: (...args) => {
+      const { commandString, callback } = commandHandler('sendview', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {
