@@ -506,6 +506,17 @@ export const MDS: MDSObj = {
         });
       });
     },
+    multisig: (...args) => {
+      const { commandString, callback } = commandHandler('multisig', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {
