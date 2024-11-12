@@ -79,16 +79,16 @@ export module Keys {
     address: string;
     miniaddress: string;
   }>;
-
-  type Key = {
-    size: number;
-    depth: number;
-    uses: number;
-    maxuses: number;
-    modifier: string;
-    publickey: string;
-  };
 }
+
+export type Key = {
+  size: number;
+  depth: number;
+  uses: number;
+  maxuses: number;
+  modifier: string;
+  publickey: string;
+};
 
 export type Block = MDSResObj<{
   block: string;

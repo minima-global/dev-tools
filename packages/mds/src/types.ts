@@ -1,6 +1,7 @@
 import type {
   GeneralCommands,
   MDSCommands,
+  NetworkCommands,
   ScriptsCommands,
   SearchCommands,
   SendCommands,
@@ -180,7 +181,8 @@ export interface MDSObj {
     TransactionCommands &
     ScriptsCommands &
     SearchCommands &
-    SendCommands;
+    SendCommands &
+    NetworkCommands;
   /**
    * Run a SQL command
    * @param command The SQL command to run

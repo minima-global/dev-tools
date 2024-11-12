@@ -32,7 +32,7 @@ export type TxnResponse = MDSResObj<{
   outputcoindata: any[];
 }>;
 
-export type Transaction = {
+type Transaction = {
   inputs: any[];
   outputs: any[];
   state: any[];

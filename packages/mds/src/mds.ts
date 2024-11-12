@@ -125,6 +125,18 @@ export const MDS: MDSObj = {
       });
     },
 
+    txpow: (...args) => {
+      const { commandString, callback } = commandHandler('txpow', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
     newaddress: (...args) => {
       const { commandString, callback } = commandHandler('newaddress', args);
       return new Promise((resolve) => {
@@ -508,6 +520,39 @@ export const MDS: MDSObj = {
     },
     multisig: (...args) => {
       const { commandString, callback } = commandHandler('multisig', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    connect: (...args) => {
+      const { commandString, callback } = commandHandler('connect', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    disconnect: (...args) => {
+      const { commandString, callback } = commandHandler('disconnect', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    network: (...args) => {
+      const { commandString, callback } = commandHandler('network', args);
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);

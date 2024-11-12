@@ -25,10 +25,29 @@ import type {
   CheckRestoreResponse,
   MDSCommand,
 } from './mds/response.js';
+import type {
+  ConnectParams,
+  DisconnectParams,
+  NetworkActionParams,
+  NetworkListParams,
+  PeersParams,
+} from './network/params.js';
+import type { MessageResponse, NetworkReturnType } from './network/response.js';
 import type { ScriptsParams } from './scripts/params.js';
 import type { ScriptsCommand } from './scripts/response.js';
-import type { CoinsParams, TokenParams } from './search/params.js';
-import type { CoinsResponse, Tokens } from './search/response.js';
+import type {
+  CoinsParams,
+  KeysListParams,
+  KeysParamsAction,
+  TokenParams,
+  TxPowParams,
+} from './search/params.js';
+import type {
+  CoinsResponse,
+  KeysReturnType,
+  Tokens,
+  TxPowReturnType,
+} from './search/response.js';
 import type {
   SendNoSignParams,
   SendParams,
@@ -168,7 +187,7 @@ export module GeneralCommands {
     args: T,
   ) => Promise<SendResponse>;
 
-  export type KeysFunc = <T extends { params: KeysParams }>(
+  /*export type KeysFunc = <T extends { params: KeysParams }>(
     ...args: T extends { params: { action: 'genkey' } }
       ? [
           Omit<T, 'params'> & {
@@ -180,7 +199,7 @@ export module GeneralCommands {
           (data: Keys.ReturnType<T>) => void,
         ]
       : [T, (data: Keys.ReturnType<T>) => void]
-  ) => Promise<Keys.ReturnType<T>>;
+  ) => Promise<Keys.ReturnType<T>>;*/
 }
 
 export interface SendCommands {
@@ -397,13 +416,6 @@ export interface GeneralCommands {
    * @returns A promise that resolves to the data returned from the consolidate command.
    */
   consolidate: GeneralCommands.ConsolidateFunc;
-
-  /**
-   * Function for the keys command.
-   * @param callback - The callback function for the keys command.
-   * @returns A promise that resolves to the data returned from the keys command.
-   */
-  keys: GeneralCommands.KeysFunc;
 }
 
 export interface MDSCommands {
@@ -586,9 +598,65 @@ export module SearchCommands {
           ? [T & { params: { tokenid: string } }, TokensCallback<T>?]
           : [T, TokensCallback<T>?]
   ) => Promise<Tokens.ReturnType<T>>;
+
+  type KeysCallback<T> = (data: KeysReturnType<T>) => void;
+
+  export type KeysFunc = <
+    T extends { params: { action: KeysParamsAction } } | undefined,
+  >(
+    ...args: T extends undefined
+      ? [KeysCallback<T>?]
+      : T extends { params: { action: 'list' } }
+        ? [T & { params: KeysListParams }, KeysCallback<T>?]
+        : [T, KeysCallback<T>?]
+  ) => Promise<KeysReturnType<T>>;
+
+  type TxPowCallback<T> = (data: TxPowReturnType<T>) => void;
+
+  export type TxPowFunc = <T extends { params: TxPowParams }>(
+    args: T,
+    callback?: TxPowCallback<T>,
+  ) => Promise<TxPowReturnType<T>>;
 }
 
 export interface SearchCommands {
   coins: SearchCommands.CoinsFunc;
   tokens: SearchCommands.TokensFunc;
+  keys: SearchCommands.KeysFunc;
+  txpow: SearchCommands.TxPowFunc;
 }
+
+export module NetworkCommands {
+  export type ConnectFunc = <T extends { params: ConnectParams }>(
+    args: T,
+    callback?: (data: MessageResponse) => void,
+  ) => Promise<MessageResponse>;
+
+  export type DisconnectFunc = <T extends { params: DisconnectParams }>(
+    args: T,
+    callback?: (data: MessageResponse) => void,
+  ) => Promise<MessageResponse>;
+
+  type NetworkCallback<T> = (data: NetworkReturnType<T>) => void;
+
+  export type NetworkFunc = <T extends NetworkListParams['action']>(
+    args: { params: { action: T } },
+    callback?: NetworkCallback<T>,
+  ) => Promise<NetworkReturnType<T>>;
+}
+
+export interface NetworkCommands {
+  connect: NetworkCommands.ConnectFunc;
+  disconnect: NetworkCommands.DisconnectFunc;
+  network: NetworkCommands.NetworkFunc;
+}
+
+/**
+ *  export type NetworkFunc = <T extends NetworkActionParams['params']>(
+    ...args: Extract<NetworkActionParams, { params: T }> extends {
+      params: infer TPayload;
+    }
+      ? [TPayload, NetworkCallback<T>?]
+      : [NetworkCallback<T>?]
+  ) => Promise<NetworkReturnType<T>>;
+ */

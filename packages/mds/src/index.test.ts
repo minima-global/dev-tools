@@ -19,27 +19,7 @@ describe('MDS functions ', () => {
 
   // 1 + 1 = 2
 
-  MDS.init(({ event, data }) => {});
-
   it('should return 2', () => {
     expect(1 + 1).toBe(2);
   });
 });
-
-MDS.cmd.multisig(
-  {
-    params: {
-      action: 'view',
-      file: 'test',
-    },
-  },
-  (data) => {
-    data.response.map((item) => {
-      if (typeof item.response === 'object') {
-        console.log(item.response.transaction);
-      } else {
-        console.log(item.response);
-      }
-    });
-  },
-);
