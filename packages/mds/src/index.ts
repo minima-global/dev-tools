@@ -15,3 +15,5 @@ export * from './commands/mds/params.js';
 export * from './commands/mds/response.js';
 export * from './commands/network/params.js';
 export * from './commands/network/response.js';
+export * from './commands/maxima/params.js';
+export * from './commands/maxima/response.js';

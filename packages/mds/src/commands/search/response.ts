@@ -1,21 +1,21 @@
 import type { MDSResObj } from '../../types.js';
 import type { Coin, Key, Token } from '../general/response.js';
 import type { Transaction } from '../send/response.js';
+import type { TokenParams } from './params.js';
 
 export type CoinsResponse = MDSResObj<Coin[]>;
 
 export module Tokens {
-  export type ReturnType<S> = S extends {
-    params: any;
-  }
-    ? S['params'] extends { action: 'export' }
+  export type ReturnType<S> = S extends TokenParams
+    ? S['action'] extends 'export'
       ? TokenExportResponse
-      : S['params'] extends { action: 'import' }
+      : S['action'] extends 'import'
         ? TokenResponseSingle
-        : S['params'] extends { tokenid: string }
+        : S extends { tokenid: string }
           ? TokenResponseSingle
           : TokensResponse
     : TokensResponse;
+
   export type TokensResponse = MDSResObj<Token[]>;
 
   export type TokenExportResponse = MDSResObj<{
@@ -26,17 +26,13 @@ export module Tokens {
   export type TokenResponseSingle = MDSResObj<Token>;
 }
 
-export type KeysReturnType<S> = S extends {
-  params: any;
-}
-  ? S['params'] extends { action: 'list' }
-    ? KeysResponse
-    : S['params'] extends { action: 'checkkeys' }
-      ? CheckKeysResponse
-      : S['params'] extends { action: 'new' }
-        ? NewKeysResponse
-        : KeysResponse
-  : KeysResponse;
+export type KeysReturnType<S> = S extends 'list'
+  ? KeysResponse
+  : S extends 'checkkeys'
+    ? CheckKeysResponse
+    : S extends 'new'
+      ? NewKeysResponse
+      : KeysResponse;
 
 export type KeysResponse = MDSResObj<Key[]>;
 

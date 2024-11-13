@@ -562,6 +562,72 @@ export const MDS: MDSObj = {
         });
       });
     },
+    peers: (...args) => {
+      const { commandString, callback } = commandHandler('peers', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    ping: (...args) => {
+      const { commandString, callback } = commandHandler('ping', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    rpc: (...args) => {
+      const { commandString, callback } = commandHandler('rpc', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    tutorial: (...args) => {
+      const { commandString, callback } = commandHandler('tutorial', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    maxima: (...args) => {
+      const { commandString, callback } = commandHandler('maxima', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    maxcontacts: (...args) => {
+      const { commandString, callback } = commandHandler('maxcontacts', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {

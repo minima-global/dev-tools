@@ -1,5 +1,6 @@
 import type {
   GeneralCommands,
+  MaximaCommands,
   MDSCommands,
   NetworkCommands,
   ScriptsCommands,
@@ -182,7 +183,8 @@ export interface MDSObj {
     ScriptsCommands &
     SearchCommands &
     SendCommands &
-    NetworkCommands;
+    NetworkCommands &
+    MaximaCommands;
   /**
    * Run a SQL command
    * @param command The SQL command to run

@@ -10,9 +10,11 @@ export type CoinsParams = {
   order?: 'asc' | 'desc';
 };
 
+export type TokenAction = 'import' | 'export';
+
 export type TokenParams = {
+  action?: TokenAction;
   tokenid?: string;
-  action?: 'import' | 'export';
   data?: string;
 };
 

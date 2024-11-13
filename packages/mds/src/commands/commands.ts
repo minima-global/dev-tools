@@ -5,7 +5,6 @@ import type {
   CoinTrackParams,
   ConsolidateParams,
   HashTestParams,
-  KeysParams,
 } from './general/params.js';
 import type {
   Balance,
@@ -15,9 +14,24 @@ import type {
   CoinTrack,
   GetAddress,
   HashTest,
-  Keys,
   NewAddress,
 } from './general/response.js';
+import type {
+  MaxContactsAddParams,
+  MaxContactsImportParams,
+  MaxContactsParams,
+  MaxContactsRemoveParams,
+  MaxContactsSearchParams,
+  MaximaParams,
+  MaximaSendallParams,
+  MaximaSendParams,
+  MaximaSeticonParams,
+  MaximaSetnameParams,
+} from './maxima/params.js';
+import type {
+  MaxContactsReturnType,
+  MaximaReturnType,
+} from './maxima/response.js';
 import type { CheckPendingParams, MDSParams } from './mds/params.js';
 import type {
   CheckModeResponse,
@@ -28,13 +42,19 @@ import type {
 import type {
   ConnectParams,
   DisconnectParams,
-  NetworkActionParams,
   NetworkListParams,
   PeersParams,
+  RPCParams,
 } from './network/params.js';
-import type { MessageResponse, NetworkReturnType } from './network/response.js';
+import type {
+  MessageResponse,
+  NetworkReturnType,
+  PeersReturnType,
+  PingResponse,
+  RPCResponse,
+} from './network/response.js';
 import type { ScriptsParams } from './scripts/params.js';
-import type { ScriptsCommand } from './scripts/response.js';
+import type { ScriptsCommand, TutorialResponse } from './scripts/response.js';
 import type {
   CoinsParams,
   KeysListParams,
@@ -186,20 +206,6 @@ export module GeneralCommands {
   export type ConsolidateFunc = <T extends { params: ConsolidateParams }>(
     args: T,
   ) => Promise<SendResponse>;
-
-  /*export type KeysFunc = <T extends { params: KeysParams }>(
-    ...args: T extends { params: { action: 'genkey' } }
-      ? [
-          Omit<T, 'params'> & {
-            params: {
-              action: 'genkey';
-              phrase: string;
-            };
-          },
-          (data: Keys.ReturnType<T>) => void,
-        ]
-      : [T, (data: Keys.ReturnType<T>) => void]
-  ) => Promise<Keys.ReturnType<T>>;*/
 }
 
 export interface SendCommands {
@@ -268,6 +274,7 @@ export module SendCommands {
     };
   };
 
+  // TODO: FIX THIS
   export type MultiSigFunc = <T extends Params | undefined>(
     ...args: T extends undefined
       ? [MultiSigCallback<T>?]
@@ -485,7 +492,7 @@ export module TransactionCommands {
     callback?: (data: TxnResponse) => void,
   ) => Promise<TxnResponse>;
 
-  // Function overload for txninput command
+  // TODO: FIX THIS
   export type TxnInputFunc = {
     (
       args: {
@@ -570,10 +577,15 @@ export module ScriptsCommands {
       ? [ScriptsCallback<T>?]
       : [T, ScriptsCallback<T>?]
   ) => Promise<ScriptsCommand.ReturnType<T>>;
+
+  export type TutorialFunc = (
+    callback?: (data: TutorialResponse) => void,
+  ) => Promise<TutorialResponse>;
 }
 
 export interface ScriptsCommands {
   scripts: ScriptsCommands.ScriptsFunc;
+  tutorial: ScriptsCommands.TutorialFunc;
 }
 
 export module SearchCommands {
@@ -589,74 +601,262 @@ export module SearchCommands {
 
   type TokensCallback<T> = (data: Tokens.ReturnType<T>) => void;
 
-  export type TokensFunc = <T extends { params: TokenParams } | undefined>(
+  export type TokensFunc = <T extends TokenParams | undefined>(
     ...args: T extends undefined
       ? [TokensCallback<T>?]
-      : T extends { params: { action: 'import' } }
-        ? [T & { params: { data: string } }, TokensCallback<T>?]
-        : T extends { params: { action: 'export' } }
-          ? [T & { params: { tokenid: string } }, TokensCallback<T>?]
-          : [T, TokensCallback<T>?]
+      : T extends { action: 'import' }
+        ? [
+            { params: { action?: T['action']; data: string } },
+            TokensCallback<T>?,
+          ]
+        : T extends { action: 'export' }
+          ? [
+              { params: { action?: T['action']; tokenid: string } },
+              TokensCallback<T>?,
+            ]
+          : [{ params: T }, TokensCallback<T>?]
   ) => Promise<Tokens.ReturnType<T>>;
 
   type KeysCallback<T> = (data: KeysReturnType<T>) => void;
 
-  export type KeysFunc = <
-    T extends { params: { action: KeysParamsAction } } | undefined,
-  >(
+  export type KeysFunc = <T extends KeysParamsAction | undefined>(
     ...args: T extends undefined
       ? [KeysCallback<T>?]
-      : T extends { params: { action: 'list' } }
-        ? [T & { params: KeysListParams }, KeysCallback<T>?]
-        : [T, KeysCallback<T>?]
+      : T extends 'list'
+        ? [{ params: KeysListParams }, KeysCallback<T>?]
+        : [{ params: { action: T } }, KeysCallback<T>?]
   ) => Promise<KeysReturnType<T>>;
 
   type TxPowCallback<T> = (data: TxPowReturnType<T>) => void;
 
   export type TxPowFunc = <T extends { params: TxPowParams }>(
-    args: T,
+    args: { params: TxPowParams },
     callback?: TxPowCallback<T>,
   ) => Promise<TxPowReturnType<T>>;
 }
 
 export interface SearchCommands {
+  /**
+   * Search for coins that are relevant to you or in the unpruned chain.
+   * @param args - Coins parameters
+   * @param args.params - Coins parameters object
+   * @param args.params.relevant - (Optional) true or false, true will only return coins you are tracking. False will search all coins in the unpruned chain. Default is false unless no other parameters are provided.
+   * @param args.params.sendable - (Optional) true only, filter out coins that are not sendable, they might be locked in a contract. Default is to return sendable and unsendable coins.
+   * @param args.params.coinid - (Optional) A coinid, to search for a single coin.
+   * @param args.params.amount - (Optional) The coin value to search for.
+   * @param args.params.address - (Optional) Address of a coin to search for, could be a script address. Can be a 0x or Mx address.
+   * @param args.params.tokenid - (Optional) A tokenid, to search for coins of a specific token. Minima is 0x00.
+   * @param args.params.checkmempool - (Optional) Check if the coin is in the mempool.
+   * @param args.params.coinage - (Optional) How old does the coin have to be.
+   * @param args.params.order - (Optional) Order asc or desc (Ascending or Descending).
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with coins response
+   */
   coins: SearchCommands.CoinsFunc;
+  /**
+   * List all tokens in the unpruned chain.
+   * @param args - Tokens parameters
+   * @param args.params - Tokens parameters object
+   * @param args.params.tokenid - (Optional) The tokenid of the token to search for or export
+   * @param args.params.action - (Optional) The action to perform - 'import' or 'export'
+   * @param args.params.data - (Optional) The data of the token to import, generated from the export
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with tokens response
+   */
   tokens: SearchCommands.TokensFunc;
+  /**
+   * List all keys in the unpruned chain.
+   * @param args - Keys parameters
+   * @param args.params - Keys parameters object
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with keys response
+   */
   keys: SearchCommands.KeysFunc;
+  /**
+   * Check the proof of work for a transaction.
+   * @param args - TxPow parameters
+   * @param args.params - TxPow parameters object
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with txpow response
+   */
   txpow: SearchCommands.TxPowFunc;
 }
 
+/**
+ * ------- Network Commands -------
+ */
+
 export module NetworkCommands {
-  export type ConnectFunc = <T extends { params: ConnectParams }>(
-    args: T,
+  // Connect Function Types
+  export type ConnectFunc = (
+    args: { params: ConnectParams },
     callback?: (data: MessageResponse) => void,
   ) => Promise<MessageResponse>;
 
-  export type DisconnectFunc = <T extends { params: DisconnectParams }>(
-    args: T,
+  // Disconnect Function Types
+  export type DisconnectFunc = (
+    args: { params: DisconnectParams },
     callback?: (data: MessageResponse) => void,
   ) => Promise<MessageResponse>;
 
+  // Network Function Types
   type NetworkCallback<T> = (data: NetworkReturnType<T>) => void;
-
   export type NetworkFunc = <T extends NetworkListParams['action']>(
     args: { params: { action: T } },
     callback?: NetworkCallback<T>,
   ) => Promise<NetworkReturnType<T>>;
+
+  // Peers Function Types
+  type PeersCallback<T> = (data: PeersReturnType<T>) => void;
+  export type PeersFunc = <T extends PeersParams | undefined>(
+    ...args: T extends undefined
+      ? [PeersCallback<T>?]
+      : T extends { action: 'list' }
+        ? [{ params: { action: T['action'] } }, PeersCallback<T>?]
+        : T extends { action: 'addpeers' }
+          ? [
+              { params: { action: T['action']; peerslist: string } },
+              PeersCallback<T>?,
+            ]
+          : [{ params: T }, PeersCallback<T>?]
+  ) => Promise<PeersReturnType<T>>;
+
+  // Ping Function Types
+  export type PingFunc = (
+    callback?: (data: PingResponse) => void,
+  ) => Promise<PingResponse>;
+
+  // RPC Function Types
+  type RPCCallback<T> = (data: RPCResponse) => void;
+  export type RPCFunc = <T extends RPCParams | undefined>(
+    ...args: T extends undefined
+      ? [RPCCallback<T>?]
+      : T extends { enable: 'true' }
+        ? [
+            {
+              params: { enable: T['enable']; password?: string; ssl?: boolean };
+            },
+            RPCCallback<T>?,
+          ]
+        : [{ params: T }, RPCCallback<T>?]
+  ) => Promise<RPCResponse>;
 }
 
 export interface NetworkCommands {
+  /**
+   * Connect to a network Minima instance.
+   *
+   * Connect to another node to join the main network or to create a private test network.
+   *
+   * Set your own host using the -host parameter at start up.
+   *
+   * @param args - Connection parameters
+   * @param args.params - Connection parameters object
+   * @param args.params.host - Host address to connect to
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with connection message response
+   */
   connect: NetworkCommands.ConnectFunc;
+
+  /**
+   * Disconnect from a network Minima instance.
+   *
+   * @param args - Disconnection parameters
+   * @param args.params - Disconnection parameters object
+   * @param args.params.uid - Unique identifier for the connection to disconnect
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with disconnection message response
+   */
   disconnect: NetworkCommands.DisconnectFunc;
+  /**
+   * Show network status or reset traffic counter.
+   *
+   * @param args - Network parameters
+   * @param args.params - Network parameters object
+   * @param args.params.action - Optional action to perform:
+   *   - 'list': List direct peer connections
+   *   - 'reset': Restart traffic counter from 0
+   *   - 'recalculateip': Reset IP when changing networks
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with network status or action response
+   */
   network: NetworkCommands.NetworkFunc;
+  /**
+   * List or add peers.
+   *
+   * @param args - Peers parameters
+   * @param args.params - Peers parameters object
+   * @param args.params.action - Optional action to perform:
+   *   - 'list': List direct peer connections
+   *   - 'addpeers': Add peers from a list
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with peers list or action response
+   */
+  peers: NetworkCommands.PeersFunc;
+  /**
+   * Ping a Minima instance.
+   *
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with ping response
+   */
+  ping: NetworkCommands.PingFunc;
+  /**
+   * Enable or disable RPC.
+   *
+   * @param args - RPC parameters
+   * @param args.params - RPC parameters object
+   * @param args.params.enable - Enable or disable RPC
+   * @param callback - Optional callback function
+   * @returns Promise that resolves with RPC status response
+   */
+  rpc: NetworkCommands.RPCFunc;
+  // TODO: Add webhooks command
 }
 
 /**
- *  export type NetworkFunc = <T extends NetworkActionParams['params']>(
-    ...args: Extract<NetworkActionParams, { params: T }> extends {
-      params: infer TPayload;
-    }
-      ? [TPayload, NetworkCallback<T>?]
-      : [NetworkCallback<T>?]
-  ) => Promise<NetworkReturnType<T>>;
+ * ------- Maxima Commands -------
  */
+
+export module MaximaCommands {
+  type MaximaCallback<A> = (data: MaximaReturnType<A>) => void;
+  export type MaximaFunc = <A extends MaximaParams | undefined>(
+    ...args: A extends undefined
+      ? [MaximaCallback<A>?]
+      : A extends { action: 'info' }
+        ? [{ params: { action: A['action'] } }, MaximaCallback<A>?]
+        : A extends { action: 'setname' }
+          ? [{ params: MaximaSetnameParams }, MaximaCallback<A>?]
+          : A extends { action: 'refresh' }
+            ? [{ params: { action: A['action'] } }, MaximaCallback<A>?]
+            : A extends { action: 'send' }
+              ? [{ params: MaximaSendParams }, MaximaCallback<A>?]
+              : A extends { action: 'sendall' }
+                ? [{ params: MaximaSendallParams }, MaximaCallback<A>?]
+                : A extends { action: 'seticon' }
+                  ? [{ params: MaximaSeticonParams }, MaximaCallback<A>?]
+                  : [{ params: A }, MaximaCallback<A>?]
+  ) => Promise<MaximaReturnType<A>>;
+
+  type MaxContactsCallback<A> = (data: MaxContactsReturnType<A>) => void;
+
+  export type MaxContactsFunc = <A extends MaxContactsParams | undefined>(
+    ...args: A extends undefined
+      ? [MaxContactsCallback<A>?]
+      : A extends { action: 'add' }
+        ? [{ params: MaxContactsAddParams }, MaxContactsCallback<A>?]
+        : A extends { action: 'remove' }
+          ? [{ params: MaxContactsRemoveParams }, MaxContactsCallback<A>?]
+          : A extends { action: 'search' }
+            ? [{ params: MaxContactsSearchParams }, MaxContactsCallback<A>?]
+            : A extends { action: 'import' }
+              ? [{ params: MaxContactsImportParams }, MaxContactsCallback<A>?]
+              : A extends { action: 'export' | 'list' }
+                ? [{ params: { action: A['action'] } }, MaxContactsCallback<A>?]
+                : [{ params: A }, MaxContactsCallback<A>?]
+  ) => Promise<MaxContactsReturnType<A>>;
+}
+
+export interface MaximaCommands {
+  maxima: MaximaCommands.MaximaFunc;
+  maxcontacts: MaximaCommands.MaxContactsFunc;
+}

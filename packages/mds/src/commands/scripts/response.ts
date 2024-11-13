@@ -23,3 +23,5 @@ export type Script = {
   publickey: string;
   track: boolean;
 };
+
+export type TutorialResponse = MDSResObj<string>;
