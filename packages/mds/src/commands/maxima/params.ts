@@ -69,3 +69,55 @@ export type MaxContactsImportParams = {
   action: 'import';
   contactlist: string;
 };
+
+export type MaxSignParams = {
+  data: string;
+  privatekey?: string;
+};
+
+export type MaxExtraAction =
+  | 'staticmls'
+  | 'addpermanent'
+  | 'removepermanent'
+  | 'listpermanent'
+  | 'clearpermanent'
+  | 'allowallcontacts'
+  | 'clearallowed'
+  | 'mlsinfo'
+  | 'getaddress'
+  | 'addallowed';
+
+export type MaxExtraParams = {
+  action: MaxExtraAction;
+};
+
+export type MaxExtraStaticMLSParams = {
+  action: 'staticmls';
+  host: string | 'clear';
+};
+
+export type MaxExtraPermanentParams = {
+  action: 'addpermanent' | 'removepermanent';
+  publickey: string;
+};
+
+export type MaxExtraGetAddressParams = {
+  action: 'getaddress';
+  maxaddress: string;
+};
+
+export type MaxExtraAllowAllContactsParams = {
+  action: 'allowallcontacts';
+  enable: 'true' | 'false';
+};
+
+export type MaxExtraAddAllowedParams = {
+  action: 'addallowed';
+  publickey: string;
+};
+
+export type MaxVerifyParams = {
+  data: string;
+  signature: string;
+  publickey: string;
+};

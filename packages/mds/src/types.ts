@@ -172,10 +172,12 @@ export interface MDSObj {
   /**
    * Runs a function on the Minima Command Line - same format as MInima
    * @param args The arguments to pass to the command, command, payload, callback
-   * @example
-   * MDS.CMD("balance", { address: "0x00" }, (data) => {
+   * @example using callback
+   * MDS.cmd.balance({ params: { address: '0x00' } }, (data) => {
    * console.log(data)
    * })
+   * @example using promise
+   * const data = await MDS.cmd.balance({ params: { address: '0x00' } })
    */
   cmd: GeneralCommands &
     MDSCommands &

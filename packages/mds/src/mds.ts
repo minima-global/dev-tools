@@ -628,6 +628,83 @@ export const MDS: MDSObj = {
         });
       });
     },
+    maxcreate: (...args) => {
+      const { commandString, callback } = commandHandler('maxcreate', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    maxsign: (...args) => {
+      const { commandString, callback } = commandHandler('maxsign', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    maxextra: (...args) => {
+      const { commandString, callback } = commandHandler('maxextra', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    maxverify: (...args) => {
+      const { commandString, callback } = commandHandler('maxverify', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    newscript: (...args) => {
+      const { commandString, callback } = commandHandler('newscript', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    runscript: (...args) => {
+      const { commandString, callback } = commandHandler('runscript', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    removescript: (...args) => {
+      const { commandString, callback } = commandHandler('removescript', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {

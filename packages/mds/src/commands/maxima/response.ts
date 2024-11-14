@@ -1,5 +1,9 @@
 import type { MDSResObj } from '../../types.js';
-import type { MaxContactsParams, MaximaParams } from './params.js';
+import type {
+  MaxContactsParams,
+  MaxExtraParams,
+  MaximaParams,
+} from './params.js';
 
 export type MaximaInfo = {
   name: string;
@@ -139,4 +143,90 @@ export type MaxContactsImportResponse = MDSResObj<MaxContactImport>;
 // action:search
 export type MaxContactsSearchResponse = MDSResObj<{
   contact: Omit<MaxContacts, 'chaintip' | 'samechain'>;
+}>;
+
+export type MaxCreateResponse = MDSResObj<{
+  publickey: string;
+  privatekey: string;
+}>;
+
+export type MaxSignResponse = MDSResObj<{
+  signature: string;
+}>;
+
+export type MaxExtraStaticMLS = {
+  staticmls: boolean;
+  mls: string;
+};
+
+export type MaxExtraMLSInfo = {
+  publickey: string;
+  mlsallowed: {
+    maximaidentity: string;
+    valid: string[];
+  };
+};
+
+export type MaxExtraReturnType<A> = A extends MaxExtraParams
+  ? A['action'] extends 'staticmls'
+    ? MaxStaticMLSResponse
+    : A['action'] extends 'addpermanent'
+      ? MaxExtraPermanentResponse
+      : A['action'] extends 'removepermanent'
+        ? MaxExtraPermanentResponse
+        : A['action'] extends 'listpermanent'
+          ? MaxListPermanentResponse
+          : A['action'] extends 'clearpermanent'
+            ? MaxClearPermanentResponse
+            : A['action'] extends 'allowallcontacts'
+              ? MaxAllowAllContactsResponse
+              : A['action'] extends 'clearallowed'
+                ? MaxClearAllowedResponse
+                : A['action'] extends 'mlsinfo'
+                  ? MaxMLSInfoResponse
+                  : A['action'] extends 'getaddress'
+                    ? MaxGetAddressResponse
+                    : A['action'] extends 'addallowed'
+                      ? MaxAddAllowedResponse
+                      : never
+  : never;
+
+// action:staticmls host:
+export type MaxStaticMLSResponse = MDSResObj<MaxExtraStaticMLS>;
+
+// action:addpermanent and action:removepermanent
+export type MaxExtraPermanentResponse = MDSResObj<string>;
+
+// action:listpermanent
+export type MaxListPermanentResponse = MDSResObj<string[]>;
+
+// action:clearpermanent
+export type MaxClearPermanentResponse = MDSResObj<string>;
+
+// action:allowallcontacts enable:true/false
+export type MaxAllowAllContactsResponse = MDSResObj<string>;
+
+// action:clearallowed
+export type MaxClearAllowedResponse = MDSResObj<{
+  allowed: string[];
+}>;
+
+// action:mlsinfo
+export type MaxMLSInfoResponse = MDSResObj<MaxExtraMLSInfo>;
+
+// action:getaddress
+export type MaxGetAddressResponse = MDSResObj<{
+  publickey: string;
+  mls: string;
+  success: boolean;
+  mlsresponse: {};
+}>;
+
+// action:addallowed
+export type MaxAddAllowedResponse = MDSResObj<{
+  added: string;
+}>;
+
+export type MaxVerifyResponse = MDSResObj<{
+  valid: boolean;
 }>;

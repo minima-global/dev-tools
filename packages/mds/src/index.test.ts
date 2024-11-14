@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { MDS } from './mds.js';
 describe('MDS functions ', () => {
   /*it('should call callback function', () => {
     const mockCallback = vi.fn();
@@ -21,4 +22,17 @@ describe('MDS functions ', () => {
   it('should return 2', () => {
     expect(1 + 1).toBe(2);
   });
+});
+
+MDS.cmd.maxsign({ params: { data: 'test', privatekey: 'test' } });
+
+MDS.cmd.send({
+  params: {
+    address: '0x00',
+    amount: '200',
+  },
+});
+
+MDS.cmd.newscript({
+  params: { script: 'test', trackall: 'true', clean: 'true' },
 });

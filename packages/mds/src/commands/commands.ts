@@ -22,15 +22,27 @@ import type {
   MaxContactsParams,
   MaxContactsRemoveParams,
   MaxContactsSearchParams,
+  MaxExtraAddAllowedParams,
+  MaxExtraAllowAllContactsParams,
+  MaxExtraGetAddressParams,
+  MaxExtraParams,
+  MaxExtraPermanentParams,
+  MaxExtraStaticMLSParams,
   MaximaParams,
   MaximaSendallParams,
   MaximaSendParams,
   MaximaSeticonParams,
   MaximaSetnameParams,
+  MaxSignParams,
+  MaxVerifyParams,
 } from './maxima/params.js';
 import type {
   MaxContactsReturnType,
+  MaxCreateResponse,
+  MaxExtraReturnType,
   MaximaReturnType,
+  MaxSignResponse,
+  MaxVerifyResponse,
 } from './maxima/response.js';
 import type { CheckPendingParams, MDSParams } from './mds/params.js';
 import type {
@@ -53,8 +65,19 @@ import type {
   PingResponse,
   RPCResponse,
 } from './network/response.js';
-import type { ScriptsParams } from './scripts/params.js';
-import type { ScriptsCommand, TutorialResponse } from './scripts/response.js';
+import type {
+  NewScriptParams,
+  RemoveScriptParams,
+  RunScriptParams,
+  ScriptsParams,
+} from './scripts/params.js';
+import type {
+  NewScriptResponse,
+  RemoveScriptResponse,
+  RunScriptResponse,
+  ScriptsCommand,
+  TutorialResponse,
+} from './scripts/response.js';
 import type {
   CoinsParams,
   KeysListParams,
@@ -581,11 +604,29 @@ export module ScriptsCommands {
   export type TutorialFunc = (
     callback?: (data: TutorialResponse) => void,
   ) => Promise<TutorialResponse>;
+
+  export type NewScriptFunc = (
+    args: { params: NewScriptParams },
+    callback?: (data: NewScriptResponse) => void,
+  ) => Promise<NewScriptResponse>;
+
+  export type RunScriptFunc = (
+    args: { params: RunScriptParams },
+    callback?: (data: RunScriptResponse) => void,
+  ) => Promise<RunScriptResponse>;
+
+  export type RemoveScriptFunc = (
+    args: { params: RemoveScriptParams },
+    callback?: (data: RemoveScriptResponse) => void,
+  ) => Promise<RemoveScriptResponse>;
 }
 
 export interface ScriptsCommands {
   scripts: ScriptsCommands.ScriptsFunc;
   tutorial: ScriptsCommands.TutorialFunc;
+  newscript: ScriptsCommands.NewScriptFunc;
+  runscript: ScriptsCommands.RunScriptFunc;
+  removescript: ScriptsCommands.RemoveScriptFunc;
 }
 
 export module SearchCommands {
@@ -854,9 +895,54 @@ export module MaximaCommands {
                 ? [{ params: { action: A['action'] } }, MaxContactsCallback<A>?]
                 : [{ params: A }, MaxContactsCallback<A>?]
   ) => Promise<MaxContactsReturnType<A>>;
+
+  type MaxCreateCallback = (data: MaxCreateResponse) => void;
+
+  export type MaxCreateFunc = (
+    callback?: MaxCreateCallback,
+  ) => Promise<MaxCreateResponse>;
+
+  type MaxSignCallback = (data: MaxSignResponse) => void;
+
+  export type MaxSignFunc = (
+    args: { params: MaxSignParams },
+    callback?: MaxSignCallback,
+  ) => Promise<MaxSignResponse>;
+
+  type MaxExtraCallback<A> = (data: MaxExtraReturnType<A>) => void;
+
+  export type MaxExtraFunc = <A extends MaxExtraParams>(
+    ...args: A extends { action: 'staticmls' }
+      ? [{ params: MaxExtraStaticMLSParams }, MaxExtraCallback<A>?]
+      : A extends { action: 'addpermanent' }
+        ? [{ params: MaxExtraPermanentParams }, MaxExtraCallback<A>?]
+        : A extends { action: 'removepermanent' }
+          ? [{ params: MaxExtraPermanentParams }, MaxExtraCallback<A>?]
+          : A extends { action: 'getaddress' }
+            ? [{ params: MaxExtraGetAddressParams }, MaxExtraCallback<A>?]
+            : A extends { action: 'allowallcontacts' }
+              ? [
+                  { params: MaxExtraAllowAllContactsParams },
+                  MaxExtraCallback<A>?,
+                ]
+              : A extends { action: 'addallowed' }
+                ? [{ params: MaxExtraAddAllowedParams }, MaxExtraCallback<A>?]
+                : [{ params: A }, MaxExtraCallback<A>?]
+  ) => Promise<MaxExtraReturnType<A>>;
+
+  type MaxVerifyCallback = (data: MaxVerifyResponse) => void;
+
+  export type MaxVerifyFunc = (
+    args: { params: MaxVerifyParams },
+    callback?: MaxVerifyCallback,
+  ) => Promise<MaxVerifyResponse>;
 }
 
 export interface MaximaCommands {
   maxima: MaximaCommands.MaximaFunc;
   maxcontacts: MaximaCommands.MaxContactsFunc;
+  maxcreate: MaximaCommands.MaxCreateFunc;
+  maxsign: MaximaCommands.MaxSignFunc;
+  maxextra: MaximaCommands.MaxExtraFunc;
+  maxverify: MaximaCommands.MaxVerifyFunc;
 }

@@ -157,7 +157,7 @@ export interface Output {
 export interface Witness {
   signatures: Signature[];
   mmrproofs: Mmrproof[];
-  scripts: Script[];
+  scripts: ScriptSend[];
 }
 
 export interface Signature {
@@ -208,7 +208,7 @@ export interface Data2 {
   value: string;
 }
 
-export interface Script {
+export interface ScriptSend {
   script: string;
   address: string;
   proof: Proof5;

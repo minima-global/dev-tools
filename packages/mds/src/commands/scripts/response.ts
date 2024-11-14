@@ -25,3 +25,19 @@ export type Script = {
 };
 
 export type TutorialResponse = MDSResObj<string>;
+
+export type NewScriptResponse = MDSResObj<Script>;
+
+type RunScript = {
+  script: RunScript;
+  clean: RunScript;
+  trace: string;
+  variables: Record<string, unknown>;
+  parseok: boolean;
+  monotonic: boolean;
+  success: boolean;
+};
+
+export type RunScriptResponse = MDSResObj<RunScript>;
+
+export type RemoveScriptResponse = MDSResObj<string>;

@@ -8,3 +8,22 @@ export type ScriptsParams = {
    */
   address?: string;
 };
+
+export type NewScriptParams = {
+  script: string;
+  trackall: 'true' | 'false';
+  clean?: 'true' | 'false';
+};
+
+export type RunScriptParams = {
+  script: string;
+  state?: string;
+  prevstate?: string;
+  globals?: string;
+  signatures?: string;
+  extrascripts?: string;
+};
+
+export type RemoveScriptParams = {
+  address: string;
+};
