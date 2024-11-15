@@ -23,16 +23,3 @@ describe('MDS functions ', () => {
     expect(1 + 1).toBe(2);
   });
 });
-
-MDS.cmd.maxsign({ params: { data: 'test', privatekey: 'test' } });
-
-MDS.cmd.send({
-  params: {
-    address: '0x00',
-    amount: '200',
-  },
-});
-
-MDS.cmd.newscript({
-  params: { script: 'test', trackall: 'true', clean: 'true' },
-});

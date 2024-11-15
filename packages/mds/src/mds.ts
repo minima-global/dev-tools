@@ -705,6 +705,28 @@ export const MDS: MDSObj = {
         });
       });
     },
+    archive: (...args) => {
+      const { commandString, callback } = commandHandler('archive', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    backup: (...args) => {
+      const { commandString, callback } = commandHandler('backup', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
   },
 
   sql: (command, callback) => {

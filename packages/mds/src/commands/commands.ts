@@ -1,4 +1,15 @@
 import type {
+  ArchiveAddressCheckParams,
+  ArchiveExportParams,
+  ArchiveExportRawParams,
+  ArchiveImportParams,
+  ArchiveInspectParams,
+  ArchiveParams,
+  ArchiveResyncParams,
+  BackupParams,
+} from './backup/params.js';
+import type { ArchiveReturnType, BackupResponse } from './backup/response.js';
+import type {
   BalanceParams,
   CheckAddressParams,
   CoinCheckParams,
@@ -945,4 +956,38 @@ export interface MaximaCommands {
   maxsign: MaximaCommands.MaxSignFunc;
   maxextra: MaximaCommands.MaxExtraFunc;
   maxverify: MaximaCommands.MaxVerifyFunc;
+}
+
+/**
+ * ------- Backup Commands -------
+ */
+
+export module BackupCommands {
+  type ArchiveCallback<A> = (data: ArchiveReturnType<A>) => void;
+
+  export type ArchiveFunc = <A extends ArchiveParams>(
+    ...args: A extends { action: 'resync' }
+      ? [{ params: ArchiveResyncParams }, ArchiveCallback<A>?]
+      : A extends { action: 'export' }
+        ? [{ params: ArchiveExportParams }, ArchiveCallback<A>?]
+        : A extends { action: 'import' }
+          ? [{ params: ArchiveImportParams }, ArchiveCallback<A>?]
+          : A extends { action: 'inspect' }
+            ? [{ params: ArchiveInspectParams }, ArchiveCallback<A>?]
+            : A extends { action: 'addresscheck' }
+              ? [{ params: ArchiveAddressCheckParams }, ArchiveCallback<A>?]
+              : [{ params: A }, ArchiveCallback<A>?]
+  ) => Promise<ArchiveReturnType<A>>;
+
+  type BackupCallback = (data: BackupResponse) => void;
+
+  export type BackupFunc = (
+    args: { params: BackupParams },
+    callback?: BackupCallback,
+  ) => Promise<BackupResponse>;
+}
+
+export interface BackupCommands {
+  archive: BackupCommands.ArchiveFunc;
+  backup: BackupCommands.BackupFunc;
 }

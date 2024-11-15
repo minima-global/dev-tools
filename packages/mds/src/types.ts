@@ -1,4 +1,5 @@
 import type {
+  BackupCommands,
   GeneralCommands,
   MaximaCommands,
   MDSCommands,
@@ -72,7 +73,7 @@ export type EventCallback = (msg: MinimaEvent) => void;
 
 export type MDS_MAIN_CALLBACK = EventCallback | null;
 
-type DefaultRes = {
+export type DefaultRes = {
   command: string;
   pending: boolean;
   status: boolean;
@@ -186,7 +187,8 @@ export interface MDSObj {
     SearchCommands &
     SendCommands &
     NetworkCommands &
-    MaximaCommands;
+    MaximaCommands &
+    BackupCommands;
   /**
    * Run a SQL command
    * @param command The SQL command to run
