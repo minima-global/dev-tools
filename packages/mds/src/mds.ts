@@ -705,6 +705,84 @@ export const MDS: MDSObj = {
         });
       });
     },
+    megammr: (...args) => {
+      const { commandString, callback } = commandHandler('megammr', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    megammrsync: (...args) => {
+      const { commandString, callback } = commandHandler('megammrsync', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    restore: (...args) => {
+      const { commandString, callback } = commandHandler('restore', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    restoresync: (...args) => {
+      const { commandString, callback } = commandHandler('restoresync', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    vault: (...args) => {
+      const { commandString, callback } = commandHandler('vault', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    tokencreate: (...args) => {
+      const { commandString, callback } = commandHandler('tokencreate', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    tokenvalidate: (...args) => {
+      const { commandString, callback } = commandHandler('tokenvalidate', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+
     archive: (...args) => {
       const { commandString, callback } = commandHandler('archive', args);
       return new Promise((resolve) => {
@@ -724,6 +802,90 @@ export const MDS: MDSObj = {
           if (callback) {
             callback(data);
           }
+        });
+      });
+    },
+    reset: (...args) => {
+      const { commandString, callback } = commandHandler('reset', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    trace: (...args) => {
+      const { commandString, callback } = commandHandler('trace', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    status: (...args) => {
+      const { commandString, callback } = commandHandler('status', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    seedrandom: (...args) => {
+      const { commandString, callback } = commandHandler('seedrandom', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
+    },
+    quit: (...args) => {
+      const { commandString, callback } = commandHandler('quit', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+        });
+      });
+    },
+    printtree: (...args) => {
+      const { commandString, callback } = commandHandler('printtree', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+        });
+      });
+    },
+    printmmr: (...args) => {
+      const { commandString, callback } = commandHandler('printmmr', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+        });
+      });
+    },
+    coinexport: (...args) => {
+      const { commandString, callback } = commandHandler('coinexport', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
+        });
+      });
+    },
+    history: (...args) => {
+      const { commandString, callback } = commandHandler('history', args);
+      return new Promise((resolve) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
+          resolve(data);
         });
       });
     },

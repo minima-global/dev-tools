@@ -10,7 +10,7 @@ export type SendParams = {
   /**
    * JSON Array listing addresses and amounts to send in one transaction. Takes the format ["address:amount","address2:amount2",..], with each set in double quotes.
    */
-  multi?: string;
+  multi?: string[];
   /**
    * If sending a custom token, you must specify its tokenid. Defaults to Minima (0x00).
    */
@@ -141,7 +141,12 @@ export type MultiSigAction =
   | 'post'
   | 'view';
 
+export type MultiSigParams = {
+  action: MultiSigAction;
+};
+
 export type MultiSigCreateParams = {
+  action: 'create';
   id: string;
   amount: string;
   publickeys: string;
@@ -151,10 +156,12 @@ export type MultiSigCreateParams = {
 };
 
 export type MultiSigListParams = {
+  action: 'list';
   id?: string;
 };
 
 export type MultiSigSpendParams = {
+  action: 'spend';
   id?: string;
   coinid?: string;
   file?: string;
@@ -163,57 +170,17 @@ export type MultiSigSpendParams = {
 };
 
 export type MultiSigSignParams = {
+  action: 'sign';
   file: string;
   password?: string;
 };
 
 export type MultiSigViewParams = {
+  action: 'view';
   file: string;
 };
 
 export type MultiSigPostParams = {
+  action: 'post';
   file: string;
-};
-
-export type MultiSigParams = {
-  /**
-   * The action to perform.
-   */
-  action: MultiSigAction;
-  /**
-   * The id of the multisig coin to search for or create.
-   */
-  id?: string;
-  /**
-   * The amount of the multisig coin to create.
-   */
-  amount?: string;
-  /**
-   * The public keys to create the multisig coin with.
-   */
-  publickeys?: string;
-  /**
-   * The number of public keys required to sign the multisig coin.
-   */
-  required?: string;
-  /**
-   * The root public key to create the multisig coin with.
-   */
-  root?: string;
-  /**
-   * The coinid of the multisig coin to spend.
-   */
-  coinid?: string;
-  /**
-   * The address to send the multisig coin to.
-   */
-  address?: string;
-  /**
-   * The file to create, sign or post.
-   */
-  file?: string;
-  /**
-   * The password to decrypt the private keys.
-   */
-  password?: string;
 };

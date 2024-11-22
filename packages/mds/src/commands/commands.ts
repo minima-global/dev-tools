@@ -1,31 +1,72 @@
 import type {
   ArchiveAddressCheckParams,
   ArchiveExportParams,
-  ArchiveExportRawParams,
   ArchiveImportParams,
   ArchiveInspectParams,
   ArchiveParams,
   ArchiveResyncParams,
   BackupParams,
+  MegaMmrFileParams,
+  MegaMmrParams,
+  MegaMmrResyncParams,
+  MegaMmrSyncParams,
+  ResetChainsyncParams,
+  ResetRestoreParams,
+  ResetParams,
+  ResetSeedsyncParams,
+  RestoreParams,
+  RestoreSyncParams,
+  VaultParams,
+  VaultPasswordLockParams,
+  VaultPasswordUnlockParams,
+  VaultRestoreKeysParams,
+  VaultWipeKeysParams,
 } from './backup/params.js';
-import type { ArchiveReturnType, BackupResponse } from './backup/response.js';
+import type {
+  ArchiveReturnType,
+  BackupResponse,
+  MegaMmmrReturnType,
+  MegaMmrSyncReturnType,
+  ResetReturnType,
+  RestoreResponse,
+  VaultReturnType,
+} from './backup/response.js';
 import type {
   BalanceParams,
   CheckAddressParams,
   CoinCheckParams,
+  CoinExportParams,
   CoinTrackParams,
   ConsolidateParams,
   HashTestParams,
+  HistoryParams,
+  PrintTreeParams,
+  QuitParams,
+  SeedRandomParams,
+  StatusParams,
+  TokenCreateParams,
+  TokenValidateParams,
+  TraceParams,
 } from './general/params.js';
 import type {
   Balance,
   Block,
   CheckAddress,
   CoinCheck,
-  CoinTrack,
-  GetAddress,
-  HashTest,
-  NewAddress,
+  CoinExportResponse,
+  CoinTrackResponse,
+  GetAddressResponse,
+  HashTestResponse,
+  HistoryResponse,
+  NewAddressResponse,
+  PrintMmrResponse,
+  PrintTreeResponse,
+  QuitResponse,
+  SeedRandomResponse,
+  StatusResponse,
+  TokenCreateResponse,
+  TokenValidateResponse,
+  Trace,
 } from './general/response.js';
 import type {
   MaxContactsAddParams,
@@ -115,6 +156,7 @@ import type {
   MultiSigSignParams,
   MultiSigViewParams,
   MultiSigPostParams,
+  MultiSigParams,
 } from './send/params.js';
 import type {
   ReturnTypeMultiSig,
@@ -160,7 +202,7 @@ export module GeneralCommands {
   export type BalanceFunc = <T extends { params: BalanceParams } | undefined>(
     ...args: T extends undefined
       ? [BalanceCallback<T>?]
-      : [T, BalanceCallback<T>?]
+      : [{ params: BalanceParams }, BalanceCallback<T>?]
   ) => Promise<Balance.ReturnType<T>>;
 
   /**
@@ -197,9 +239,12 @@ export module GeneralCommands {
    * @param callback - The callback function for the getaddress command.
    * @returns A promise that resolves to the data returned from the getaddress command.
    */
+
+  type GetAddressCallback = (data: GetAddressResponse) => void;
+
   export type GetAddressFunc = (
-    callback?: (data: GetAddress) => void,
-  ) => Promise<GetAddress>;
+    callback?: GetAddressCallback,
+  ) => Promise<GetAddressResponse>;
 
   /**
    * Function for the hash test command.
@@ -207,191 +252,111 @@ export module GeneralCommands {
    * @param callback - The callback function for the hash test command.
    * @returns A promise that resolves to the data returned from the hash test command.
    */
-  type HashTestCallback = (data: HashTest) => void;
+  type HashTestCallback = (data: HashTestResponse) => void;
 
   export type HashTestFunc = <T extends { params: HashTestParams } | undefined>(
-    ...args: T extends undefined ? [HashTestCallback?] : [T, HashTestCallback?]
-  ) => Promise<HashTest>;
+    ...args: T extends undefined
+      ? [HashTestCallback?]
+      : [{ params: HashTestParams }, HashTestCallback?]
+  ) => Promise<HashTestResponse>;
 
   /**
    * Function for the hash command.
    * @param callback - The callback function for the hash command.
    * @returns A promise that resolves to the data returned from the hash command.
    */
-  export type CoinTrackFunc = <T extends { params: CoinTrackParams }>(
-    args: T,
-    callback?: (data: CoinTrack) => void,
-  ) => Promise<CoinTrack>;
+  type CoinTrackCallback = (data: CoinTrackResponse) => void;
+
+  export type CoinTrackFunc = (
+    args: { params: CoinTrackParams },
+    callback?: CoinTrackCallback,
+  ) => Promise<CoinTrackResponse>;
 
   /**
    * Function for the newaddress command.
    * @param callback - The callback function for the newaddress command.
    * @returns A promise that resolves to the data returned from the newaddress command.
    */
+  type NewAddressCallback = (data: NewAddressResponse) => void;
+
   export type NewAddressFunc = (
-    callback?: (data: NewAddress) => void,
-  ) => Promise<NewAddress>;
+    callback?: NewAddressCallback,
+  ) => Promise<NewAddressResponse>;
 
   /**
    * Function for the consolidate command.
    * @param callback - The callback function for the consolidate command.
    * @returns A promise that resolves to the data returned from the consolidate command.
    */
-  export type ConsolidateFunc = <T extends { params: ConsolidateParams }>(
-    args: T,
-  ) => Promise<SendResponse>;
-}
+  type ConsolidateCallback = (data: SendResponse) => void;
 
-export interface SendCommands {
-  /**
-   * Function for the send command.
-   * @param callback - The callback function for the send command.
-   * @returns A promise that resolves to the data returned from the send command.
-   */
-  send: SendCommands.SendFunc;
-
-  /**
-   * Function for the sendpoll command.
-   * @param callback - The callback function for the sendpoll command.
-   * @returns A promise that resolves to the data returned from the sendpoll command.
-   */
-  sendpoll: SendCommands.SendPollFunc;
-
-  /**
-   * Function for the sendnosign command.
-   * @param callback - The callback function for the sendnosign command.
-   * @returns A promise that resolves to the data returned from the sendnosign command.
-   */
-  sendnosign: SendCommands.SendNoSignFunc;
-  sendview: SendCommands.SendViewFunc;
-  sendsign: SendCommands.SendSignFunc;
-  sendpost: SendCommands.SendPostFunc;
-  multisig: SendCommands.MultiSigFunc;
-}
-
-export module SendCommands {
-  export type SendFunc = <T extends { params: SendParams }>(
-    args: T,
-    callback?: (data: SendResponse) => void,
+  export type ConsolidateFunc = (
+    args: { params: ConsolidateParams },
+    callback?: ConsolidateCallback,
   ) => Promise<SendResponse>;
 
-  export type SendPollFunc = <T extends { params: SendPollParams }>(
-    args: T,
-    callback?: (data: SendPollResponse) => void,
-  ) => Promise<SendPollResponse>;
+  export type TokenValidateFunc = (
+    args: { params: TokenValidateParams },
+    callback?: (data: TokenValidateResponse) => void,
+  ) => Promise<TokenValidateResponse>;
 
-  export type SendNoSignFunc = <T extends { params: SendNoSignParams }>(
-    args: T,
-    callback?: (data: SendNoSignResponse) => void,
-  ) => Promise<SendNoSignResponse>;
+  export type TokenCreateFunc = (
+    args: { params: TokenCreateParams },
+    callback?: (data: TokenCreateResponse) => void,
+  ) => Promise<TokenCreateResponse>;
 
-  export type SendViewFunc = <T extends { params: SendFileParams }>(
-    args: T,
-    callback?: (data: SendTxPowResponse) => void,
-  ) => Promise<SendTxPowResponse>;
+  export type TraceFunc = (
+    args: { params: TraceParams },
+    callback?: (data: Trace) => void,
+  ) => Promise<Trace>;
 
-  export type SendSignFunc = <T extends { params: SendSignParams }>(
-    args: T,
-    callback?: (data: SendNoSignResponse) => void,
-  ) => Promise<SendNoSignResponse>;
+  type StatusCallback = (data: StatusResponse) => void;
 
-  export type SendPostFunc = <T extends { params: SendFileParams }>(
-    args: T,
-    callback?: (data: SendTxPowResponse) => void,
-  ) => Promise<SendTxPowResponse>;
-
-  type MultiSigCallback<T> = (data: ReturnTypeMultiSig<T>) => void;
-
-  type Params = {
-    params: {
-      action: MultiSigAction;
-    };
-  };
-
-  // TODO: FIX THIS
-  export type MultiSigFunc = <T extends Params | undefined>(
+  export type StatusFunc = <T extends { params: StatusParams } | undefined>(
     ...args: T extends undefined
-      ? [MultiSigCallback<T>?]
-      : T extends { params: { action: 'create' } }
-        ? [
-            T & {
-              params: MultiSigCreateParams;
-            },
-            MultiSigCallback<T>?,
-          ]
-        : T extends { params: { action: 'list' } }
-          ? [T & { params: MultiSigListParams }, MultiSigCallback<T>?]
-          : T extends { params: { action: 'spend' } }
-            ? [T & { params: MultiSigSpendParams }, MultiSigCallback<T>?]
-            : T extends { params: { action: 'sign' } }
-              ? [T & { params: MultiSigSignParams }, MultiSigCallback<T>?]
-              : T extends { params: { action: 'view' } }
-                ? [T & { params: MultiSigViewParams }, MultiSigCallback<T>?]
-                : T extends { params: { action: 'post' } }
-                  ? [T & { params: MultiSigPostParams }, MultiSigCallback<T>?]
-                  : T extends { params: { action: 'getkey' } }
-                    ? [T, MultiSigCallback<T>?]
-                    : never
-  ) => Promise<ReturnTypeMultiSig<T>>;
-}
+      ? [StatusCallback?]
+      : [{ params: StatusParams }, StatusCallback?]
+  ) => Promise<StatusResponse>;
 
-export module MDSCommands {
-  type MDSCallback<T> = (data: MDSCommand.ReturnType<T>) => void;
+  export type SeedRandomFunc = (
+    args: { params: SeedRandomParams },
+    callback?: (data: SeedRandomResponse) => void,
+  ) => Promise<SeedRandomResponse>;
 
-  export type MDSFunc = <T extends { params: MDSParams } | undefined>(
+  type QuitCallback = (data: QuitResponse) => void;
+
+  export type QuitFunc = <T extends { params: QuitParams } | undefined>(
     ...args: T extends undefined
-      ? [MDSCallback<T>?]
-      : T extends { params: { action: 'install' } }
-        ? [
-            T & { params: { file: string; trust?: 'read' | 'write' } },
-            MDSCallback<T>?,
-          ]
-        : T extends { params: { action: 'uninstall' } }
-          ? [T & { params: { uid: string } }, MDSCallback<T>?]
-          : T extends { params: { action: 'permission' } }
-            ? [
-                T & { params: { uid: string; trust: 'read' | 'write' } },
-                MDSCallback<T>?,
-              ]
-            : T extends { params: { action: 'pending' } }
-              ? [T, MDSCallback<T>?]
-              : T extends { params: { action: 'accept' | 'deny' } }
-                ? [T & { params: { uid: string } }, MDSCallback<T>?]
-                : T extends { params: { action: 'update' } }
-                  ? [
-                      T & { params: { uid: string; file: string } },
-                      MDSCallback<T>?,
-                    ]
-                  : [T, MDSCallback<T>?]
-  ) => Promise<MDSCommand.ReturnType<T>>;
+      ? [QuitCallback?]
+      : [{ params: QuitParams }, QuitCallback?]
+  ) => Promise<QuitResponse>;
 
-  /**
-   * Function for the checkmode command.
-   * @param callback - The callback function for the checkmode command.
-   * @returns A promise that resolves to the data returned from the checkmode command.
-   */
-  export type CheckModeFunc = (
-    callback?: (data: CheckModeResponse) => void,
-  ) => Promise<CheckModeResponse>;
+  type PrintTreeCallback = (data: PrintTreeResponse) => void;
 
-  /**
-   * Function for the checkpending command.
-   * @param callback - The callback function for the checkpending command.
-   * @returns A promise that resolves to the data returned from the checkpending command.
-   */
-  export type CheckPendingFunc = <T extends { params: CheckPendingParams }>(
-    args: T,
-    callback?: (data: CheckPendingResponse) => void,
-  ) => Promise<CheckPendingResponse>;
+  export type PrintTreeFunc = <
+    T extends { params: PrintTreeParams } | undefined,
+  >(
+    ...args: T extends undefined
+      ? [PrintTreeCallback?]
+      : [{ params: PrintTreeParams }, PrintTreeCallback?]
+  ) => Promise<PrintTreeResponse>;
 
-  /**
-   * Function for the checkrestore command.
-   * @param callback - The callback function for the checkrestore command.
-   * @returns A promise that resolves to the data returned from the checkrestore command.
-   */
-  export type CheckRestoreFunc = (
-    callback?: (data: CheckRestoreResponse) => void,
-  ) => Promise<CheckRestoreResponse>;
+  export type PrintMmrFunc = (
+    callback?: (data: PrintMmrResponse) => void,
+  ) => Promise<PrintMmrResponse>;
+
+  type HistoryCallback = (data: HistoryResponse) => void;
+
+  export type HistoryFunc = <T extends { params: HistoryParams } | undefined>(
+    ...args: T extends undefined
+      ? [HistoryCallback?]
+      : [{ params: HistoryParams }, HistoryCallback?]
+  ) => Promise<HistoryResponse>;
+
+  export type CoinExportFunc = (
+    args: { params: CoinExportParams },
+    callback?: (data: CoinExportResponse) => void,
+  ) => Promise<CoinExportResponse>;
 }
 
 export interface GeneralCommands {
@@ -457,6 +422,214 @@ export interface GeneralCommands {
    * @returns A promise that resolves to the data returned from the consolidate command.
    */
   consolidate: GeneralCommands.ConsolidateFunc;
+
+  /**
+   * Function for the tokenvalidate command.
+   * @param callback - The callback function for the tokenvalidate command.
+   * @returns A promise that resolves to the data returned from the tokenvalidate command.
+   */
+  tokenvalidate: GeneralCommands.TokenValidateFunc;
+
+  /**
+   * Function for the tokencreate command.
+   * @param callback - The callback function for the tokencreate command.
+   * @returns A promise that resolves to the data returned from the tokencreate command.
+   */
+  tokencreate: GeneralCommands.TokenCreateFunc;
+
+  /**
+   * Function for the trace command.
+   * @param callback - The callback function for the trace command.
+   * @returns A promise that resolves to the data returned from the trace command.
+   */
+  trace: GeneralCommands.TraceFunc;
+
+  /**
+   * Function for the status command.
+   * @param callback - The callback function for the status command.
+   * @returns A promise that resolves to the data returned from the status command.
+   */
+  status: GeneralCommands.StatusFunc;
+
+  /**
+   * Function for the seedrandom command.
+   * @param callback - The callback function for the seedrandom command.
+   * @returns A promise that resolves to the data returned from the seedrandom command.
+   */
+  seedrandom: GeneralCommands.SeedRandomFunc;
+
+  /**
+   * Function for the quit command.
+   * @param callback - The callback function for the quit command.
+   * @returns A promise that resolves to the data returned from the quit command.
+   */
+  quit: GeneralCommands.QuitFunc;
+
+  /**
+   * Function for the printtree command.
+   * @param callback - The callback function for the printtree command.
+   * @returns A promise that resolves to the data returned from the printtree command.
+   */
+  printtree: GeneralCommands.PrintTreeFunc;
+
+  /**
+   * Function for the printmmr command.
+   * @param callback - The callback function for the printmmr command.
+   * @returns A promise that resolves to the data returned from the printmmr command.
+   */
+  printmmr: GeneralCommands.PrintMmrFunc;
+
+  /**
+   * Function for the history command.
+   * @param callback - The callback function for the history command.
+   * @returns A promise that resolves to the data returned from the history command.
+   */
+  history: GeneralCommands.HistoryFunc;
+
+  /**
+   * Function for the coinexport command.
+   * @param callback - The callback function for the coinexport command.
+   * @returns A promise that resolves to the data returned from the coinexport command.
+   */
+  coinexport: GeneralCommands.CoinExportFunc;
+}
+
+export interface SendCommands {
+  /**
+   * Function for the send command.
+   * @param callback - The callback function for the send command.
+   * @returns A promise that resolves to the data returned from the send command.
+   */
+  send: SendCommands.SendFunc;
+
+  /**
+   * Function for the sendpoll command.
+   * @param callback - The callback function for the sendpoll command.
+   * @returns A promise that resolves to the data returned from the sendpoll command.
+   */
+  sendpoll: SendCommands.SendPollFunc;
+
+  /**
+   * Function for the sendnosign command.
+   * @param callback - The callback function for the sendnosign command.
+   * @returns A promise that resolves to the data returned from the sendnosign command.
+   */
+  sendnosign: SendCommands.SendNoSignFunc;
+  sendview: SendCommands.SendViewFunc;
+  sendsign: SendCommands.SendSignFunc;
+  sendpost: SendCommands.SendPostFunc;
+  multisig: SendCommands.MultiSigFunc;
+}
+
+export module SendCommands {
+  export type SendFunc = <T extends { params: SendParams }>(
+    args: T,
+    callback?: (data: SendResponse) => void,
+  ) => Promise<SendResponse>;
+
+  export type SendPollFunc = <T extends { params: SendPollParams }>(
+    args: T,
+    callback?: (data: SendPollResponse) => void,
+  ) => Promise<SendPollResponse>;
+
+  export type SendNoSignFunc = <T extends { params: SendNoSignParams }>(
+    args: T,
+    callback?: (data: SendNoSignResponse) => void,
+  ) => Promise<SendNoSignResponse>;
+
+  export type SendViewFunc = <T extends { params: SendFileParams }>(
+    args: T,
+    callback?: (data: SendTxPowResponse) => void,
+  ) => Promise<SendTxPowResponse>;
+
+  export type SendSignFunc = <T extends { params: SendSignParams }>(
+    args: T,
+    callback?: (data: SendNoSignResponse) => void,
+  ) => Promise<SendNoSignResponse>;
+
+  export type SendPostFunc = <T extends { params: SendFileParams }>(
+    args: T,
+    callback?: (data: SendTxPowResponse) => void,
+  ) => Promise<SendTxPowResponse>;
+
+  type MultiSigCallback<T> = (data: ReturnTypeMultiSig<T>) => void;
+
+  export type MultiSigFunc = <T extends MultiSigParams>(
+    ...args: T extends { action: 'create' }
+      ? [{ params: MultiSigCreateParams }, MultiSigCallback<T>?]
+      : T extends { action: 'list' }
+        ? [{ params: MultiSigListParams }, MultiSigCallback<T>?]
+        : T extends { action: 'spend' }
+          ? [{ params: MultiSigSpendParams }, MultiSigCallback<T>?]
+          : T extends { action: 'sign' }
+            ? [{ params: MultiSigSignParams }, MultiSigCallback<T>?]
+            : T extends { action: 'view' }
+              ? [{ params: MultiSigViewParams }, MultiSigCallback<T>?]
+              : T extends { action: 'post' }
+                ? [{ params: MultiSigPostParams }, MultiSigCallback<T>?]
+                : T extends { action: 'getkey' }
+                  ? [{ params: T }, MultiSigCallback<T>?]
+                  : [{ params: T }, MultiSigCallback<T>?]
+  ) => Promise<ReturnTypeMultiSig<T>>;
+}
+
+export module MDSCommands {
+  type MDSCallback<T> = (data: MDSCommand.ReturnType<T>) => void;
+
+  export type MDSFunc = <T extends { params: MDSParams } | undefined>(
+    ...args: T extends undefined
+      ? [MDSCallback<T>?]
+      : T extends { params: { action: 'install' } }
+        ? [
+            T & { params: { file: string; trust?: 'read' | 'write' } },
+            MDSCallback<T>?,
+          ]
+        : T extends { params: { action: 'uninstall' } }
+          ? [T & { params: { uid: string } }, MDSCallback<T>?]
+          : T extends { params: { action: 'permission' } }
+            ? [
+                T & { params: { uid: string; trust: 'read' | 'write' } },
+                MDSCallback<T>?,
+              ]
+            : T extends { params: { action: 'pending' } }
+              ? [T, MDSCallback<T>?]
+              : T extends { params: { action: 'accept' | 'deny' } }
+                ? [T & { params: { uid: string } }, MDSCallback<T>?]
+                : T extends { params: { action: 'update' } }
+                  ? [
+                      T & { params: { uid: string; file: string } },
+                      MDSCallback<T>?,
+                    ]
+                  : [T, MDSCallback<T>?]
+  ) => Promise<MDSCommand.ReturnType<T>>;
+
+  /**
+   * Function for the checkmode command.
+   * @param callback - The callback function for the checkmode command.
+   * @returns A promise that resolves to the data returned from the checkmode command.
+   */
+  export type CheckModeFunc = (
+    callback?: (data: CheckModeResponse) => void,
+  ) => Promise<CheckModeResponse>;
+
+  /**
+   * Function for the checkpending command.
+   * @param callback - The callback function for the checkpending command.
+   * @returns A promise that resolves to the data returned from the checkpending command.
+   */
+  export type CheckPendingFunc = <T extends { params: CheckPendingParams }>(
+    args: T,
+    callback?: (data: CheckPendingResponse) => void,
+  ) => Promise<CheckPendingResponse>;
+
+  /**
+   * Function for the checkrestore command.
+   * @param callback - The callback function for the checkrestore command.
+   * @returns A promise that resolves to the data returned from the checkrestore command.
+   */
+  export type CheckRestoreFunc = (
+    callback?: (data: CheckRestoreResponse) => void,
+  ) => Promise<CheckRestoreResponse>;
 }
 
 export interface MDSCommands {
@@ -985,9 +1158,79 @@ export module BackupCommands {
     args: { params: BackupParams },
     callback?: BackupCallback,
   ) => Promise<BackupResponse>;
+
+  type MegaMmrCallback<A> = (data: MegaMmmrReturnType<A>) => void;
+  export type MegaMmrFunc = <A extends MegaMmrParams>(
+    ...args: A extends { action: 'info' }
+      ? [{ params: { action: A['action'] } }, MegaMmrCallback<A>?]
+      : A extends { action: 'export' }
+        ? [{ params: MegaMmrFileParams }, MegaMmrCallback<A>?]
+        : A extends { action: 'import' }
+          ? [{ params: MegaMmrFileParams }, MegaMmrCallback<A>?]
+          : [{ params: A }, MegaMmrCallback<A>?]
+  ) => Promise<MegaMmmrReturnType<A>>;
+
+  type MegaMmrSyncCallback<A> = (data: MegaMmrSyncReturnType<A>) => void;
+
+  export type MegaMmrSyncFunc = <A extends MegaMmrSyncParams>(
+    ...args: A extends { action: 'myDetails' }
+      ? [{ params: { action: A['action'] } }, MegaMmrSyncCallback<A>?]
+      : A extends { action: 'resync' }
+        ? [{ params: MegaMmrResyncParams }, MegaMmrSyncCallback<A>?]
+        : [{ params: A }, MegaMmrSyncCallback<A>?]
+  ) => Promise<MegaMmrSyncReturnType<A>>;
+
+  type RestoreCallback = (data: RestoreResponse) => void;
+
+  export type RestoreFunc = (
+    args: { params: RestoreParams },
+    callback?: RestoreCallback,
+  ) => Promise<RestoreResponse>;
+
+  export type RestoreSyncFunc = (
+    args: { params: RestoreSyncParams },
+    callback?: RestoreCallback,
+  ) => Promise<RestoreResponse>;
+
+  type VaultCallback<A> = (data: VaultReturnType<A>) => void;
+
+  export type VaultFunc = <A extends VaultParams | undefined>(
+    ...args: A extends undefined
+      ? [VaultCallback<A>?]
+      : A extends { action: 'seed' }
+        ? [{ params: { action: A['action'] } }, VaultCallback<A>?]
+        : A extends { action: 'wipekeys' }
+          ? [{ params: VaultWipeKeysParams }, VaultCallback<A>?]
+          : A extends { action: 'restorekeys' }
+            ? [{ params: VaultRestoreKeysParams }, VaultCallback<A>?]
+            : A extends { action: 'passwordlock' }
+              ? [{ params: VaultPasswordLockParams }, VaultCallback<A>?]
+              : A extends { action: 'passwordunlock' }
+                ? [{ params: VaultPasswordUnlockParams }, VaultCallback<A>?]
+                : [{ params: A }, VaultCallback<A>?]
+  ) => Promise<VaultReturnType<A>>;
+
+  type ResetCallback<A> = (data: ResetReturnType<A>) => void;
+
+  export type ResetFunc = <A extends ResetParams>(
+    ...args: A extends { action: 'chainsync' }
+      ? [{ params: ResetChainsyncParams }, ResetCallback<A>?]
+      : A extends { action: 'seedsync' }
+        ? [{ params: ResetSeedsyncParams }, ResetCallback<A>?]
+        : A extends { action: 'restore' }
+          ? [{ params: ResetRestoreParams }, ResetCallback<A>?]
+          : [{ params: A }, ResetCallback<A>?]
+  ) => Promise<ResetReturnType<A>>;
 }
 
 export interface BackupCommands {
   archive: BackupCommands.ArchiveFunc;
   backup: BackupCommands.BackupFunc;
+  megammr: BackupCommands.MegaMmrFunc;
+  megammrsync: BackupCommands.MegaMmrSyncFunc;
+  restore: BackupCommands.RestoreFunc;
+  restoresync: BackupCommands.RestoreSyncFunc;
+  vault: BackupCommands.VaultFunc;
+  reset: BackupCommands.ResetFunc;
+  // TODO: mysql
 }

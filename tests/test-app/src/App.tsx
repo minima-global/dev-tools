@@ -7,17 +7,9 @@ import reactLogo from "./assets/react.svg"
 function App() {
   const [balance, _] = useState("")
 
-  const Node2Address =
-    "MxG082YK24JSUNDU6MJKSZCYAZU90R3E5CS2A8691WCGSBYBHEGKSE3NC781B8N"
-
   async function getBalance() {
-    const res = await MDS.cmd.coins({
-      params: {
-        tokenid:
-          "0x380FE0BCA875DB18083AA9114A2D87904872A872742E6911699DFB20B9D68029",
-      },
-    })
-    console.log(res.response.map((coin) => coin.tokenamount))
+    const res = await MDS.cmd.balance()
+    console.log(res)
   }
 
   useEffect(() => {
@@ -36,7 +28,7 @@ function App() {
     const data = await MDS.cmd.send({
       params: {
         split: "5",
-        multi: JSON.stringify(test),
+        multi: test,
       },
     })
     console.log("DATA", data)

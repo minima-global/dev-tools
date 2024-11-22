@@ -33,9 +33,9 @@ export function commandHandler(command: string, args: any[]) {
       if (payload.params) {
         const payloadString = Object.entries(payload.params)
           .map(([key, value]) => {
-            // If value is an array, preserve the brackets
-            if (Array.isArray(value)) {
-              return `${key}:[${value.join(',')}]`;
+            // Stringify all objects (including arrays)
+            if (typeof value === 'object' && value !== null) {
+              return `${key}:${JSON.stringify(value)}`;
             }
             return `${key}:${value}`;
           })
@@ -45,9 +45,9 @@ export function commandHandler(command: string, args: any[]) {
         // Handle direct object parameters
         const payloadString = Object.entries(payload)
           .map(([key, value]) => {
-            // If value is an array, preserve the brackets
-            if (Array.isArray(value)) {
-              return `${key}:[${value.join(',')}]`;
+            // Stringify all objects (including arrays)
+            if (typeof value === 'object' && value !== null) {
+              return `${key}:${JSON.stringify(value)}`;
             }
             return `${key}:${value}`;
           })
@@ -56,6 +56,8 @@ export function commandHandler(command: string, args: any[]) {
       }
     }
   }
+
+  console.log('commandString', commandString);
 
   return { commandString, callback };
 }

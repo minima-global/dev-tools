@@ -56,3 +56,100 @@ export type BackupParams = {
   file?: string;
   confirm?: string;
 };
+
+export type MegaMmrAction = 'info' | 'export' | 'import';
+
+export type MegaMmrParams = {
+  action: MegaMmrAction;
+};
+
+export type MegaMmrFileParams = {
+  action: 'export' | 'import';
+  file: string;
+};
+
+export type MegaMmrSyncAction = 'myDetails' | 'resync';
+
+export type MegaMmrSyncParams = {
+  action: MegaMmrSyncAction;
+};
+
+export type MegaMmrResyncParams = {
+  action: 'resync';
+  host: string;
+  phrase?: string;
+  anyphrase?: 'true' | 'false';
+  keys?: string;
+  keyuses?: string;
+  file?: string;
+  password?: string;
+};
+
+export type RestoreParams = {
+  file: string;
+  password?: string;
+};
+
+export type RestoreSyncParams = {
+  file: string;
+  password?: string;
+  host?: string;
+  keyuses?: string;
+};
+
+//TODO: mysql, mysqlcoins
+
+export type VaultAction =
+  | 'seed'
+  | 'wipekeys'
+  | 'restorekeys'
+  | 'passwordlock'
+  | 'passwordunlock';
+
+export type VaultParams = {
+  action: VaultAction;
+};
+
+export type VaultWipeKeysParams = {
+  action: 'wipekeys';
+  seed: string;
+};
+
+export type VaultRestoreKeysParams = {
+  action: 'restorekeys';
+  phrase: string;
+};
+
+export type VaultPasswordLockParams = {
+  action: 'passwordlock';
+  password: string;
+  confirm?: string;
+};
+
+export type VaultPasswordUnlockParams = {
+  action: 'passwordunlock';
+  password: string;
+};
+
+export type ResetAction = 'chainsync' | 'seedsync' | 'restore';
+
+export type ResetParams = {
+  action: ResetAction;
+};
+
+export type ResetChainsyncParams = {
+  action: 'chainsync';
+  archivefile: string;
+};
+
+export type ResetSeedsyncParams = {
+  action: 'seedsync';
+  phrase: string;
+  keyuses?: string;
+};
+
+export type ResetRestoreParams = {
+  action: 'restore';
+  file: string;
+  password?: string;
+};

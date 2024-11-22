@@ -105,7 +105,7 @@ export type CheckAddress = MDSResObj<{
   simple: boolean;
 }>; // 🟢
 
-export type HashTest = MDSResObj<{
+export type HashTestResponse = MDSResObj<{
   hashes: string;
   millitime: string;
   speed: string;
@@ -118,7 +118,29 @@ export type CoinCheck = MDSResObj<
   } & { valid: boolean }
 >; // 🟢
 
-export type CoinTrack = MDSResObj<string>; // 🟢
+export type CoinTrackResponse = MDSResObj<string>; // 🟢
+
+export type CoinExportResponse = MDSResObj<{
+  coinproof: {
+    coin: Coin;
+    proof: {
+      blocktime: string;
+      proof: Proof[];
+      prooflenght: string;
+    };
+  };
+  data: string;
+}>;
+
+export type CoinImportResponse = MDSResObj<{
+  //TODO: add response need to start 2 test nodes
+}>;
+
+export type Trace = MDSResObj<{
+  enabled: boolean;
+  filter: string;
+  shownetwork: boolean;
+}>;
 
 export type Coin = {
   coinid: string;
@@ -138,7 +160,7 @@ export type Coin = {
 
 export type SimpleCoinResponse = MDSResObj<string>;
 
-export type TokenCreate = MDSResObj<
+export type TokenCreateResponse = MDSResObj<
   {
     inputs: [Coin];
     outputs: [
@@ -153,7 +175,7 @@ export type TokenCreate = MDSResObj<
   }
 >;
 
-export type GetAddress = MDSResObj<{
+export type GetAddressResponse = MDSResObj<{
   script: string;
   address: string;
   miniaddress: string;
@@ -163,7 +185,7 @@ export type GetAddress = MDSResObj<{
   track: boolean;
 }>;
 
-export type PrintMmr = MDSResObj<{
+export type PrintMmrResponse = MDSResObj<{
   block: string;
   entrynumber: number;
   size: number;
@@ -181,11 +203,11 @@ export type PrintMmr = MDSResObj<{
   };
 }>;
 
-export type PrintTree = MDSResObj<{
+export type PrintTreeResponse = MDSResObj<{
   chain: string;
 }>;
 
-export type NewAddress = MDSResObj<{
+export type NewAddressResponse = MDSResObj<{
   script: string;
   address: string;
   miniaddress: string;
@@ -195,14 +217,29 @@ export type NewAddress = MDSResObj<{
   track: boolean;
 }>;
 
-export type TokenValidate = MDSResObj<{
+export type TokenValidateResponse = MDSResObj<{
   signature: {
     signed: boolean;
   };
   web: {
     webvalidate: boolean;
+    url: string;
+    valid: boolean;
+    reason: string;
   };
 }>;
+
+export type SeedRandomResponse = MDSResObj<{
+  modifier: string;
+  seedrandom: string;
+}>;
+
+export type QuitResponse = {
+  command: string;
+  pending: boolean;
+  status: boolean;
+  message: string;
+};
 
 export type Colnsolidate = MDSResObj<{
   txpowid: string;
@@ -321,7 +358,7 @@ export type Token = {
   tokenid: string;
 };
 
-type Status = MDSResObj<{
+export type StatusResponse = MDSResObj<{
   version: string;
   uptime: string;
   locked: boolean;
@@ -403,7 +440,7 @@ type Traffic = {
   write: string;
 };
 
-export type History = MDSResObj<{
+export type HistoryResponse = MDSResObj<{
   txpows: HistoryTxpow[];
   details: Details;
   size: number;

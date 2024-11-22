@@ -7,6 +7,7 @@ import type {
   TxnResponse,
   TxnSignResponse,
 } from '../transactions/response.js';
+import type { MultiSigParams } from './params.js';
 
 export type SendResponse = MDSResObj<Transaction>;
 
@@ -22,22 +23,20 @@ export type SendTxPowResponse = MDSResObj<{
   txpow: Transaction;
 }>;
 
-export type ReturnTypeMultiSig<S> = S extends {
-  params: any;
-}
-  ? S['params'] extends { action: 'create' }
+export type ReturnTypeMultiSig<S> = S extends MultiSigParams
+  ? S['action'] extends 'create'
     ? CreateMultiSigResponse
-    : S['params'] extends { action: 'getkey' }
+    : S['action'] extends 'getkey'
       ? GetKeyMultiSigResponse
-      : S['params'] extends { action: 'spend' }
+      : S['action'] extends 'spend'
         ? SpendMultiSigResponse
-        : S['params'] extends { action: 'sign' }
+        : S['action'] extends 'sign'
           ? SignMultiSigResponse
-          : S['params'] extends { action: 'view' }
+          : S['action'] extends 'view'
             ? MultiSigViewResponse
-            : S['params'] extends { action: 'post' }
+            : S['action'] extends 'post'
               ? PostMultiSigResponse
-              : S['params'] extends { action: 'list' }
+              : S['action'] extends 'list'
                 ? ListMultiSigResponse
                 : never
   : never;

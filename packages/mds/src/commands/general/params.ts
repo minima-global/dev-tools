@@ -146,13 +146,17 @@ export type HistoryParams = {
    * If not provided, retrieves all relevant TxPoW.
    */
   max?: string;
+  /**
+   * The number of TxPoW to skip before starting to retrieve.
+   */
+  offset?: string;
 };
 export type TokenCreateParams = {
   /**
    * The name of the token.
    * Can be a string or JSON object.
    */
-  name: string;
+  name: Partial<Record<'name' | 'link' | 'description', string>> | string;
   /**
    * The amount of total supply to create for the token.
    * Must be between 1 and 1 trillion.
@@ -228,4 +232,21 @@ export type TokenValidateParams = {
    * The tokenid of the custom token/NFT to validate.
    */
   tokenid: string;
+};
+
+export type TraceParams = {
+  enable: 'true' | 'false';
+  filter?: string;
+};
+
+export type StatusParams = {
+  clean?: 'true';
+};
+
+export type SeedRandomParams = {
+  modifier: string;
+};
+
+export type QuitParams = {
+  compact?: 'true' | 'false';
 };
