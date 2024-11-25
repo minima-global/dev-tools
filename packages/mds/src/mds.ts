@@ -318,7 +318,7 @@ export const MDS: MDSObj = {
       });
     },
 
-    log: (...args) => {
+    logs: (...args) => {
       const { commandString, callback } = commandHandler('log', args);
       return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {

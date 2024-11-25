@@ -5,6 +5,28 @@ import type {
   MaximaParams,
 } from './params.js';
 
+export type MaximaReturnType<A> = A extends MaximaParams
+  ? A['action'] extends 'info'
+    ? MDSResObj<MaximaInfo>
+    : A['action'] extends 'setname'
+      ? MDSResObj<MaximaSetname>
+      : A['action'] extends 'refresh'
+        ? MDSResObj<MaximaRefresh>
+        : A['action'] extends 'send'
+          ? MDSResObj<MaximaSend>
+          : A['action'] extends 'sendall'
+            ? MDSResObj<MaximaSendall>
+            : never
+  : MDSResObj<MaximaInfo>;
+
+export type MaximaSetname = {
+  name: string;
+};
+
+export type MaximaRefresh = string;
+
+export type MaximaSendall = string;
+
 export type MaximaInfo = {
   name: string;
   icon: string;
@@ -34,37 +56,6 @@ export type MaximaSend = {
   sending: number;
 };
 
-export type MaximaReturnType<A> = A extends MaximaParams
-  ? A['action'] extends 'info'
-    ? MaximaResponse
-    : A['action'] extends 'setname'
-      ? MaximaSetnameResponse
-      : A['action'] extends 'refresh'
-        ? MaximaRefreshResponse
-        : A['action'] extends 'send'
-          ? MaximaSendResponse
-          : A['action'] extends 'sendall'
-            ? MaximaSendallResponse
-            : never
-  : MaximaResponse;
-
-// Default Response and action:info
-export type MaximaResponse = MDSResObj<MaximaInfo>;
-
-// action:setname
-export type MaximaSetnameResponse = MDSResObj<{
-  name: string;
-}>;
-
-// action:refresh
-export type MaximaRefreshResponse = MDSResObj<string>;
-
-// action:send
-export type MaximaSendResponse = MDSResObj<MaximaSend>;
-
-// action:sendall
-export type MaximaSendallResponse = MDSResObj<string>;
-
 type MaxContactsExtraData = {
   name: string;
   icon: string;
@@ -87,7 +78,7 @@ type MaxContacts = {
   samechain: boolean;
 };
 
-type MaxContactsAdd = {
+export type Add = {
   from: string;
   to: string;
   time: string;
@@ -107,52 +98,41 @@ type MaxContactsExport = {
 
 type MaxContactImport = {
   size: number;
-  contacts: MaxContactsAddResponse[];
+  contacts: MaxContactsAdd[];
 };
 
 export type MaxContactsReturnType<A> = A extends MaxContactsParams
   ? A['action'] extends 'add'
-    ? MaxContactsAddResponse
+    ? MDSResObj<MaxContactsAdd>
     : A['action'] extends 'remove'
       ? string
       : A['action'] extends 'search'
-        ? MaxContactsSearchResponse
+        ? MDSResObj<MaxContactsSearch>
         : A['action'] extends 'import'
-          ? MaxContactsImportResponse
+          ? MDSResObj<MaxContactImport>
           : A['action'] extends 'export'
-            ? MaxContactsExportResponse
+            ? MDSResObj<MaxContactsExport>
             : A['action'] extends 'list'
-              ? MaxContactsResponse
+              ? MDSResObj<MaxContacts>
               : never
-  : MaxContactsResponse;
+  : MDSResObj<MaxContacts>;
 
-// action:add
-export type MaxContactsAddResponse = MDSResObj<{
-  maxima: MaxContactsAdd;
-}>;
+export type MaxContactsAdd = {
+  maxima: Add;
+};
 
-// action:list and default
-export type MaxContactsResponse = MDSResObj<MaxContacts>;
-
-// action:export
-export type MaxContactsExportResponse = MDSResObj<MaxContactsExport>;
-
-// action:import
-export type MaxContactsImportResponse = MDSResObj<MaxContactImport>;
-
-// action:search
-export type MaxContactsSearchResponse = MDSResObj<{
+export type MaxContactsSearch = {
   contact: Omit<MaxContacts, 'chaintip' | 'samechain'>;
-}>;
+};
 
-export type MaxCreateResponse = MDSResObj<{
+export type MaxCreate = {
   publickey: string;
   privatekey: string;
-}>;
+};
 
-export type MaxSignResponse = MDSResObj<{
+export type MaxSign = {
   signature: string;
-}>;
+};
 
 export type MaxExtraStaticMLS = {
   staticmls: boolean;
@@ -169,64 +149,43 @@ export type MaxExtraMLSInfo = {
 
 export type MaxExtraReturnType<A> = A extends MaxExtraParams
   ? A['action'] extends 'staticmls'
-    ? MaxStaticMLSResponse
+    ? MDSResObj<MaxExtraStaticMLS>
     : A['action'] extends 'addpermanent'
-      ? MaxExtraPermanentResponse
+      ? MDSResObj<string>
       : A['action'] extends 'removepermanent'
-        ? MaxExtraPermanentResponse
+        ? MDSResObj<string>
         : A['action'] extends 'listpermanent'
-          ? MaxListPermanentResponse
+          ? MDSResObj<string[]>
           : A['action'] extends 'clearpermanent'
-            ? MaxClearPermanentResponse
+            ? MDSResObj<string>
             : A['action'] extends 'allowallcontacts'
-              ? MaxAllowAllContactsResponse
+              ? MDSResObj<string>
               : A['action'] extends 'clearallowed'
-                ? MaxClearAllowedResponse
+                ? MDSResObj<MaxClearAllowed>
                 : A['action'] extends 'mlsinfo'
-                  ? MaxMLSInfoResponse
+                  ? MDSResObj<MaxExtraMLSInfo>
                   : A['action'] extends 'getaddress'
-                    ? MaxGetAddressResponse
+                    ? MDSResObj<MaxGetAddress>
                     : A['action'] extends 'addallowed'
-                      ? MaxAddAllowedResponse
+                      ? MDSResObj<MaxAddAllowed>
                       : never
   : never;
 
-// action:staticmls host:
-export type MaxStaticMLSResponse = MDSResObj<MaxExtraStaticMLS>;
-
-// action:addpermanent and action:removepermanent
-export type MaxExtraPermanentResponse = MDSResObj<string>;
-
-// action:listpermanent
-export type MaxListPermanentResponse = MDSResObj<string[]>;
-
-// action:clearpermanent
-export type MaxClearPermanentResponse = MDSResObj<string>;
-
-// action:allowallcontacts enable:true/false
-export type MaxAllowAllContactsResponse = MDSResObj<string>;
-
-// action:clearallowed
-export type MaxClearAllowedResponse = MDSResObj<{
+export type MaxClearAllowed = {
   allowed: string[];
-}>;
+};
 
-// action:mlsinfo
-export type MaxMLSInfoResponse = MDSResObj<MaxExtraMLSInfo>;
-
-// action:getaddress
-export type MaxGetAddressResponse = MDSResObj<{
+export type MaxGetAddress = {
   publickey: string;
   mls: string;
   success: boolean;
   mlsresponse: {};
-}>;
+};
 
-// action:addallowed
-export type MaxAddAllowedResponse = MDSResObj<{
+export type MaxAddAllowed = {
   added: string;
-}>;
+};
 
-export type MaxVerifyResponse = MDSResObj<{
+export type MaxVerify = {
   valid: boolean;
-}>;
+};

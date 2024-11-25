@@ -1,19 +1,19 @@
 import type { MDSResObj } from '../../types.js';
 import type { PeersParams } from './params.js';
 
-export type MessageResponse = MDSResObj<{
+export type Message = {
   message: string;
-}>;
+};
 
 export type NetworkReturnType<T> = T extends 'list'
-  ? NetworkListResponse
+  ? MDSResObj<NetworkList>
   : T extends 'reset'
-    ? NetworkResetResponse
+    ? MDSResObj<NetworkReset>
     : T extends 'recalculateip'
-      ? NetworkRecalculateIPResponse
+      ? MDSResObj<NetworkRecalculateIP>
       : never;
 
-export type NetworkListResponse = MDSResObj<{
+export type NetworkList = {
   welcome: string;
   uid: string;
   incoming: boolean;
@@ -23,36 +23,34 @@ export type NetworkListResponse = MDSResObj<{
   isconnected: boolean;
   valid: boolean;
   connected: string;
-}>;
+};
 
-export type NetworkResetResponse = MDSResObj<string>;
+export type NetworkReset = string;
 
-export type NetworkRecalculateIPResponse = MDSResObj<{
+export type NetworkRecalculateIP = {
   ip: string;
-}>;
+};
 
 export type PeersReturnType<A> = A extends PeersParams
   ? A['action'] extends 'list'
-    ? PeersListResponse
+    ? MDSResObj<PeersList>
     : A['action'] extends 'addpeers'
-      ? PeersAddResponse
+      ? MDSResObj<PeersAdd>
       : never
-  : PeersListResponse;
+  : MDSResObj<PeersList>;
 
-export type PeersListResponse = MDSResObj<{
+export type PeersList = {
   peerslist: string;
   size: number;
   havepeers: boolean;
   p2penabled: boolean;
-}>;
+};
 
-export type PeersAddResponse = MDSResObj<{
+export type PeersAdd = {
   valid: string[];
   invalid: string[];
   message: string;
-}>;
-
-export type PingResponse = MDSResObj<Ping>;
+};
 
 export type Ping = {
   host: string;
@@ -70,11 +68,11 @@ export type Ping = {
   };
 };
 
-export type RPCResponse = MDSResObj<{
+export type RPC = {
   enabled: boolean;
   port: number;
   ssl: boolean;
   sslpubkey: string;
   authenticate: boolean;
   password: string;
-}>;
+};

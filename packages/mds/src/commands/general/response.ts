@@ -1,126 +1,69 @@
 import type { MDSResObj } from '../../types.js';
-export module Balance {
-  export type ReturnType<S> = S extends {
-    params: any;
-  }
-    ? S['params'] extends { tokendetails: string }
-      ? BalanceWithTokenDetails
-      : Balance
-    : Balance;
 
-  export type Balance = MDSResObj<RawBalance[]>;
-
-  export type BalanceWithTokenDetails = MDSResObj<RawBalanceWithDetails[]>;
-
-  export type RawBalance = {
-    token:
-      | string
-      | {
-          name: string;
-          url: string;
-          description: string;
-          ticker: string;
-          webvalidate: string;
-        };
-    tokenid: string;
-    confirmed: string;
-    unconfirmed: string;
-    sendable: string;
-    coins: string;
-    total: string;
-  };
-
-  export type RawBalanceWithDetails = RawBalance & {
-    details: {
-      decimals?: string;
-      script?: string;
-      totalamount?: string;
-      scale?: string;
-      created?: string;
-    };
-  };
+export type BalanceReturnType<S> = S extends {
+  params: any;
 }
+  ? S['params'] extends { tokendetails: string }
+    ? MDSResObj<BalanceWithTokenDetails[]>
+    : MDSResObj<Balance[]>
+  : MDSResObj<Balance[]>;
 
-export module Keys {
-  export type ReturnType<S> = S extends {
-    params: any;
-  }
-    ? S['params'] extends { action: 'checkkeys' }
-      ? KeysCheck
-      : S['params'] extends { action: 'new' }
-        ? KeysNew
-        : S['params'] extends { action: 'genkey' }
-          ? KeysGenKey
-          : Keys
-    : Keys;
-
-  export type Keys = MDSResObj<{
-    keys: Key[];
-    total: number;
-    maxuses: number;
-  }>;
-
-  export type KeysCheck = MDSResObj<{
-    allkeys: number;
-    correct: number;
-    wrong: number;
-  }>;
-
-  export type KeysNew = MDSResObj<{
-    keys: Key[];
-  }>;
-
-  export type KeysGenKey = MDSResObj<{
-    phrase: string;
-    privatekey: string;
-    modifier: string;
-    publickey: string;
-    script: string;
-    address: string;
-    miniaddress: string;
-  }>;
-}
-
-export type Key = {
-  size: number;
-  depth: number;
-  uses: number;
-  maxuses: number;
-  modifier: string;
-  publickey: string;
+export type Balance = {
+  token:
+    | string
+    | {
+        name: string;
+        url: string;
+        description: string;
+        ticker: string;
+        webvalidate: string;
+      };
+  tokenid: string;
+  confirmed: string;
+  unconfirmed: string;
+  sendable: string;
+  coins: string;
+  total: string;
 };
 
-export type Block = MDSResObj<{
+export type BalanceWithTokenDetails = Balance & {
+  details: {
+    decimals?: string;
+    script?: string;
+    totalamount?: string;
+    scale?: string;
+    created?: string;
+  };
+};
+
+export type Block = {
   block: string;
   date: string;
   hash: string;
   timemilli: string;
-}>; // 🟢
+};
 
-export type CheckAddress = MDSResObj<{
+export type CheckAddress = {
   '0x': string;
   Mx: string;
   original: string;
   relevant: boolean;
   simple: boolean;
-}>; // 🟢
+};
 
-export type HashTestResponse = MDSResObj<{
+export type HashTest = {
   hashes: string;
   millitime: string;
   speed: string;
-}>; // 🟢
+};
 
-export type CoinCheck = MDSResObj<
-  {
-    proofblock: number;
-    coin: Coin;
-  } & { valid: boolean }
->; // 🟢
+export type CoinCheck = {
+  proofblock: number;
+  coin: Coin;
+  valid: boolean;
+};
 
-export type CoinTrackResponse = MDSResObj<string>; // 🟢
-
-export type CoinExportResponse = MDSResObj<{
+export type CoinExportResponse = {
   coinproof: {
     coin: Coin;
     proof: {
@@ -130,17 +73,17 @@ export type CoinExportResponse = MDSResObj<{
     };
   };
   data: string;
-}>;
+};
 
-export type CoinImportResponse = MDSResObj<{
+export type CoinImport = {
   //TODO: add response need to start 2 test nodes
-}>;
+};
 
-export type Trace = MDSResObj<{
+export type Trace = {
   enabled: boolean;
   filter: string;
   shownetwork: boolean;
-}>;
+};
 
 export type Coin = {
   coinid: string;
@@ -160,22 +103,15 @@ export type Coin = {
 
 export type SimpleCoinResponse = MDSResObj<string>;
 
-export type TokenCreateResponse = MDSResObj<
-  {
-    inputs: [Coin];
-    outputs: [
-      Coin & {
-        tokenamount?: string;
-      },
-    ];
-  } & {
-    state: [];
-    linkhash: string;
-    transactionid: string;
-  }
->;
+export type TokenCreate = {
+  inputs: Coin[];
+  outputs: Coin[];
+  state: any[];
+  linkhash: string;
+  transactionid: string;
+};
 
-export type GetAddressResponse = MDSResObj<{
+export type GetAddress = {
   script: string;
   address: string;
   miniaddress: string;
@@ -183,9 +119,9 @@ export type GetAddressResponse = MDSResObj<{
   default: boolean;
   publickey: string;
   track: boolean;
-}>;
+};
 
-export type PrintMmrResponse = MDSResObj<{
+export type PrintMmrResponse = {
   block: string;
   entrynumber: number;
   size: number;
@@ -201,13 +137,13 @@ export type PrintMmrResponse = MDSResObj<{
     data: string;
     value: string;
   };
-}>;
+};
 
-export type PrintTreeResponse = MDSResObj<{
+export type PrintTree = {
   chain: string;
-}>;
+};
 
-export type NewAddressResponse = MDSResObj<{
+export type NewAddress = {
   script: string;
   address: string;
   miniaddress: string;
@@ -215,9 +151,9 @@ export type NewAddressResponse = MDSResObj<{
   default: boolean;
   publickey: string;
   track: boolean;
-}>;
+};
 
-export type TokenValidateResponse = MDSResObj<{
+export type TokenValidate = {
   signature: {
     signed: boolean;
   };
@@ -227,14 +163,14 @@ export type TokenValidateResponse = MDSResObj<{
     valid: boolean;
     reason: string;
   };
-}>;
+};
 
-export type SeedRandomResponse = MDSResObj<{
+export type SeedRandom = {
   modifier: string;
   seedrandom: string;
-}>;
+};
 
-export type QuitResponse = {
+export type Quit = {
   command: string;
   pending: boolean;
   status: boolean;
@@ -358,7 +294,7 @@ export type Token = {
   tokenid: string;
 };
 
-export type StatusResponse = MDSResObj<{
+export type Status = {
   version: string;
   uptime: string;
   locked: boolean;
@@ -371,7 +307,7 @@ export type StatusResponse = MDSResObj<{
   chain: Chain;
   txpow: StatusTxPow;
   network: Network;
-}>;
+};
 
 type Memory = {
   ram: string;
@@ -440,11 +376,11 @@ type Traffic = {
   write: string;
 };
 
-export type HistoryResponse = MDSResObj<{
+export type HistoryResponse = {
   txpows: HistoryTxpow[];
   details: Details;
   size: number;
-}>;
+};
 
 type HistoryTxpow = {
   txpowid: string;

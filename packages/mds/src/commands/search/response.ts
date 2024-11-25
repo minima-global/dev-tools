@@ -1,46 +1,38 @@
 import type { MDSResObj } from '../../types.js';
-import type { Coin, Key, Token } from '../general/response.js';
-import type { Transaction } from '../send/response.js';
+import type { Token } from '../general/response.js';
+import type { Transaction, Txn } from '../send/response.js';
 import type { TokenParams } from './params.js';
 
-export type CoinsResponse = MDSResObj<Coin[]>;
+export type TokensReturnType<S> = S extends TokenParams
+  ? S['action'] extends 'export'
+    ? MDSResObj<TokenExport>
+    : S['action'] extends 'import'
+      ? MDSResObj<Token>
+      : S extends { tokenid: string }
+        ? MDSResObj<Token>
+        : MDSResObj<Token[]>
+  : MDSResObj<Token[]>;
 
-export module Tokens {
-  export type ReturnType<S> = S extends TokenParams
-    ? S['action'] extends 'export'
-      ? TokenExportResponse
-      : S['action'] extends 'import'
-        ? TokenResponseSingle
-        : S extends { tokenid: string }
-          ? TokenResponseSingle
-          : TokensResponse
-    : TokensResponse;
-
-  export type TokensResponse = MDSResObj<Token[]>;
-
-  export type TokenExportResponse = MDSResObj<{
-    tokenid: string;
-    data: string;
-  }>;
-
-  export type TokenResponseSingle = MDSResObj<Token>;
-}
+export type TokenExport = {
+  tokenid: string;
+  data: string;
+};
 
 export type KeysReturnType<S> = S extends 'list'
-  ? KeysResponse
+  ? MDSResObj<Key[]>
   : S extends 'checkkeys'
-    ? CheckKeysResponse
+    ? MDSResObj<CheckKeys>
     : S extends 'new'
-      ? NewKeysResponse
-      : KeysResponse;
+      ? MDSResObj<Key>
+      : MDSResObj<Key[]>;
 
 export type KeysResponse = MDSResObj<Key[]>;
 
-export type CheckKeysResponse = MDSResObj<{
+export type CheckKeys = {
   allkeys: number;
   correct: number;
   wrong: number;
-}>;
+};
 
 export type NewKeysResponse = MDSResObj<Key>;
 
@@ -48,9 +40,30 @@ export type TxPowReturnType<S> = S extends {
   params: any;
 }
   ? S['params'] extends { address: string }
-    ? TxPowAddressResponse
-    : TxPowResponse
+    ? MDSResObj<Transaction[]>
+    : MDSResObj<Transaction>
   : never;
 
-export type TxPowAddressResponse = MDSResObj<Transaction[]>;
-export type TxPowResponse = MDSResObj<Transaction>;
+export type Key = {
+  size: number;
+  depth: number;
+  uses: number;
+  maxuses: number;
+  modifier: string;
+  publickey: string;
+};
+
+export type ScanChain = {
+  depth: number;
+  blocks: ScanChainBlock[];
+};
+
+type ScanChainBlock = {
+  block: number;
+  depth: number;
+  timemilli: string;
+  date: string;
+  txpowid: string;
+  transactions: Txn[];
+  isburntransaction: boolean;
+};

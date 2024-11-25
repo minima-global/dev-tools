@@ -9,58 +9,54 @@ import type {
 } from '../transactions/response.js';
 import type { MultiSigParams } from './params.js';
 
-export type SendResponse = MDSResObj<Transaction>;
-
-export type SendPollResponse = MDSResObj<{
+export type SendPoll = {
   command: string;
-}>;
+};
 
-export type SendNoSignResponse = MDSResObj<{
+export type SendNoSign = {
   txpow: string;
-}>;
+};
 
-export type SendTxPowResponse = MDSResObj<{
+export type SendTxPow = {
   txpow: Transaction;
-}>;
+};
 
 export type ReturnTypeMultiSig<S> = S extends MultiSigParams
   ? S['action'] extends 'create'
-    ? CreateMultiSigResponse
+    ? MDSResObj<CreateMultiSig>
     : S['action'] extends 'getkey'
-      ? GetKeyMultiSigResponse
+      ? MDSResObj<GetKeyMultiSig>
       : S['action'] extends 'spend'
-        ? SpendMultiSigResponse
+        ? MDSResObj<TxnArray>
         : S['action'] extends 'sign'
-          ? SignMultiSigResponse
+          ? MDSResObj<SignMultiSig>
           : S['action'] extends 'view'
-            ? MultiSigViewResponse
+            ? MDSResObj<MultiSigView>
             : S['action'] extends 'post'
-              ? PostMultiSigResponse
+              ? MDSResObj<Transaction>
               : S['action'] extends 'list'
-                ? ListMultiSigResponse
+                ? MDSResObj<ListMultiSig>
                 : never
   : never;
 
-export type CreateMultiSigResponse = MDSResObj<{
+export type CreateMultiSig = {
   send: Transaction;
   id: string;
-}>;
+};
 
-export type GetKeyMultiSigResponse = MDSResObj<{
+export type GetKeyMultiSig = {
   publickey: string;
-}>;
+};
 
-export type SpendMultiSigResponse = MDSResObj<TxnArray>;
+export type SignMultiSig = [
+  TxnSignResponse,
+  TxnExportResponse,
+  TxnDeleteResponse,
+];
 
-export type SignMultiSigResponse = MDSResObj<
-  [TxnSignResponse, TxnExportResponse, TxnDeleteResponse]
->;
+export type MultiSigView = [TxnResponse, TxnDeleteResponse];
 
-export type PostMultiSigResponse = MDSResObj<Transaction>;
-
-export type MultiSigViewResponse = MDSResObj<[TxnResponse, TxnDeleteResponse]>;
-
-export type ListMultiSigResponse = MDSResObj<Coin[]>;
+export type ListMultiSig = Coin[];
 
 export interface Transaction {
   txpowid: string;

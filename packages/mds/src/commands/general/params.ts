@@ -28,7 +28,10 @@ export type BalanceParams = {
    * @example 6  // Higher confidence
    */
   confirmations?: number;
-
+  /**
+   * If true, includes detailed token information in the response.
+   * @default false
+   */
   tokendetails?: 'true';
 };
 

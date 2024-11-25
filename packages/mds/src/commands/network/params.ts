@@ -18,6 +18,17 @@ export type PeersParams = {
   action: PeersAction;
 };
 
+export type AddPeersParams = {
+  action: 'addpeers';
+  peerslist: string;
+};
+
 export type RPCParams = {
   enable: 'true' | 'false';
+};
+
+export type RPCEnableParams = {
+  enable: 'true';
+  password?: string;
+  ssl?: boolean;
 };

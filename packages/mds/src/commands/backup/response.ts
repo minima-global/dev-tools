@@ -35,47 +35,43 @@ type AddressCheck = {
 
 export type ArchiveReturnType<A> = A extends ArchiveParams
   ? A['action'] extends 'integrity'
-    ? ArchiveIntegrityResponse
+    ? MDSResObj<ArchiveIntegrity>
     : A['action'] extends 'export'
-      ? ArchiveExportResponse
+      ? MDSResObj<ArchiveExport>
       : A['action'] extends 'import'
-        ? ArchiveResponse
+        ? MDSResObj<Archive>
         : A['action'] extends 'inspect'
-          ? ArchiveInspectResponse
+          ? MDSResObj<ArchiveInspect>
           : A['action'] extends 'addresscheck'
-            ? ArchiveAddressCheckResponse
+            ? MDSResObj<ArchiveAddressCheck>
             : A['action'] extends 'exportraw'
-              ? ArchiveExportResponse
+              ? MDSResObj<ArchiveExport>
               : A['action'] extends 'resync'
-                ? ArchiveResponse
+                ? MDSResObj<Archive>
                 : never
   : never;
 
-// Archive action: integrity
-export type ArchiveIntegrityResponse = MDSResObj<ArchiveIntegrity>;
-
-// action: export
-export type ArchiveExportResponse = MDSResObj<{
+export type ArchiveExport = {
   message: string;
   rows: number;
   file: string;
   size: string;
-}>;
+};
 
-export type ArchiveAddressCheckResponse = MDSResObj<{
+export type ArchiveAddressCheck = {
   coins: {
     created: AddressCheck[];
     spent: AddressCheck[];
   };
-}>;
+};
 
-export type ArchiveResponse = MDSResObj<{
+export type Archive = {
   message: string;
   start: string;
   end: string;
-}>;
+};
 
-export type ArchiveInspectResponse = MDSResObj<{
+export type ArchiveInspect = {
   cascade: {
     exists: boolean;
     start: string;
@@ -86,11 +82,11 @@ export type ArchiveInspectResponse = MDSResObj<{
     last: string;
   };
   size: number;
-}>;
+};
 
 export type BackupResObj<T> = DefaultRes & { backup: T };
 
-export type BackupResponse = BackupResObj<{
+export type Backup = {
   block: number;
   files: {
     wallet: string;
@@ -104,20 +100,20 @@ export type BackupResponse = BackupResObj<{
   file: string;
   size: string;
   auto: boolean;
-}>;
+};
 
 export type MegaMmmrReturnType<A> = A extends MegaMmrParams
   ? A['action'] extends 'info'
-    ? MegaMmrInfoResponse
+    ? MDSResObj<MegaMmrInfo>
     : A['action'] extends 'export'
-      ? MegaMmrExportResponse
+      ? MDSResObj<MegaMmrExport>
       : A['action'] extends 'import'
-        ? MegaMmrImportResponse
+        ? MDSResObj<MegaMmrImport>
         : never
   : never;
 
 // TODO: check
-export type MegaMmrInfoResponse = MDSResObj<{
+export type MegaMmrInfo = {
   enabled: boolean;
   mmr: {
     block: number;
@@ -128,16 +124,16 @@ export type MegaMmrInfoResponse = MDSResObj<{
     root: null | MegaMmmrData;
   };
   coins: number;
-}>;
+};
 
-export type MegaMmrExportResponse = MDSResObj<{
+export type MegaMmrExport = {
   megammrtip: number;
   ibdtip: number;
   backup: string;
   size: string;
-}>;
+};
 
-export type MegaMmrImportResponse = MDSResObj<string>;
+export type MegaMmrImport = string;
 
 type MaxEntries = {
   row: number;
@@ -157,52 +153,37 @@ export type MegaMmrSyncDetails = {
 
 export type MegaMmrSyncReturnType<A> = A extends MegaMmrSyncParams
   ? A['action'] extends 'myDetails'
-    ? MegaMmrSyncDetailsResponse
+    ? MDSResObj<{ details: MegaMmrSyncDetails[] }>
     : A['action'] extends 'resync'
-      ? MegaMmrResyncResponse
+      ? MDSResObj<MegaMmrResync>
       : never
   : never;
 
-// action: myDetails
-export type MegaMmrSyncDetailsResponse = MDSResObj<{
-  details: MegaMmrSyncDetails[];
-}>;
-
-// action: resync
-export type MegaMmrResyncResponse = MDSResObj<{
+export type MegaMmrResync = {
   message: string;
   coins: number;
-}>;
+};
 
-export type RestoreResponse = MDSResObj<{
+export type Restore = {
   restore: {
     file: string;
   };
   message: string;
-}>;
+};
 
 export type VaultReturnType<A> = A extends VaultParams
   ? A['action'] extends 'seed'
-    ? VaultResponse
+    ? MDSResObj<Vault>
     : A['action'] extends 'wipekeys'
-      ? VaultStringResponse
+      ? MDSResObj<string>
       : A['action'] extends 'restorekeys'
-        ? VaultRestoreKeysResponse
+        ? MDSResObj<RestoreKeys>
         : A['action'] extends 'passwordlock'
-          ? VaultStringResponse
+          ? MDSResObj<string>
           : A['action'] extends 'passwordunlock'
-            ? VaultStringResponse
+            ? MDSResObj<string>
             : never
-  : VaultResponse;
-
-// default response
-export type VaultResponse = MDSResObj<Vault>;
-
-// passwordlock response and passwordunlock response and wipekeys response
-export type VaultStringResponse = MDSResObj<string>;
-
-// restorekeys response
-export type VaultRestoreKeysResponse = MDSResObj<RestoreKeys>;
+  : MDSResObj<Vault>;
 
 export type Vault = {
   phrase: string;
@@ -219,27 +200,22 @@ export type RestoreKeys = {
 
 export type ResetReturnType<A> = A extends ResetParams
   ? A['action'] extends 'chainsync'
-    ? ResetChainSyncResponse
+    ? MDSResObj<ResetChainSync>
     : A['action'] extends 'seedsync'
-      ? ResetSeedsyncResponse
+      ? MDSResObj<Archive>
       : A['action'] extends 'restore'
-        ? ResetRestoreResponse
+        ? MDSResObj<ResetRestore>
         : never
   : never;
 
-// action: chainsync
-export type ResetChainSyncResponse = MDSResObj<{
+export type ResetChainSync = {
   message: string;
   start: string;
   end: string;
-}>;
+};
 
-// action: seedsync
-export type ResetSeedsyncResponse = MDSResObj<ArchiveResponse>;
-
-// action: restore
-export type ResetRestoreResponse = MDSResObj<{
-  restore: RestoreResponse;
+export type ResetRestore = {
+  restore: MDSResObj<Restore>;
   chainsync: {
     command: string;
     params: {
@@ -249,7 +225,7 @@ export type ResetRestoreResponse = MDSResObj<{
     status: string;
     pending: boolean;
     response: {
-      archiveresync: ArchiveResponse;
+      archiveresync: MDSResObj<Archive>;
     };
   };
-}>;
+};

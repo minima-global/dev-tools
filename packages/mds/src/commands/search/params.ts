@@ -15,7 +15,16 @@ export type TokenAction = 'import' | 'export';
 export type TokenParams = {
   action?: TokenAction;
   tokenid?: string;
-  data?: string;
+};
+
+export type TokenImportParams = {
+  action: 'import';
+  data: string;
+};
+
+export type TokenExportParams = {
+  action: 'export';
+  tokenid: string;
 };
 
 export type KeysParamsAction = 'list' | 'checkkeys' | 'new';
@@ -81,3 +90,7 @@ export type TxPowParams =
   | BlockParams
   | AddressParams
   | OnChainParams;
+
+export type ScanChainParams = {
+  depth: number;
+};
