@@ -1,5 +1,5 @@
 import type { MDSResObj } from '../../types.js';
-import type { Header, Witness } from '../send/response.js';
+import type { Header, Txn, Witness } from '../send/response.js';
 import type { TxnExportParams } from './params.js';
 
 export type Burn = {
@@ -24,13 +24,6 @@ export type Log = {
   blocks: boolean;
   ibd: boolean;
   peerschecker: boolean;
-};
-
-export type Txn = {
-  id: string;
-  transaction: Transaction;
-  witness: Witness;
-  outputcoindata: any[];
 };
 
 type Transaction = {
@@ -77,7 +70,7 @@ export type TxnExport = {
   size: string;
 };
 
-export type TxnInputResponse = MDSResObj<{
+export type TxnInput = {
   coinid: string;
   amount: string;
   address: string;
@@ -88,20 +81,20 @@ export type TxnInputResponse = MDSResObj<{
   state: string[];
   spent: boolean;
   mmrentry: string;
-}>;
+};
 
-export type TxnSignResponse = MDSResObj<{
+export type TxnSign = {
   keys: string[];
-}>;
+};
 
-export type TxSignPostResponse = MDSResObj<{
+export type TxSignPost = {
   keys: string[];
   txpow: TxPow;
   txnpostauto: boolean;
   txnpostburn: string;
   txnpostmine: boolean;
   delete: boolean;
-}>;
+};
 
 export type TxnPost = {
   txpowid: string;
@@ -119,9 +112,9 @@ export type TxnSignReturnType<S> = S extends {
   params: any;
 }
   ? S['params'] extends { txnpostauto: 'true' }
-    ? TxSignPostResponse
-    : TxnSignResponse
-  : TxnSignResponse;
+    ? MDSResObj<TxSignPost>
+    : MDSResObj<TxnSign>
+  : MDSResObj<TxnSign>;
 
 export type TxPow = {
   txpowid: string;
@@ -137,10 +130,10 @@ export type TxPow = {
 
 //TODO: Add txnstate response
 export type TxnArray = [
-  Txn,
-  TxnInputResponse,
-  Txn,
-  Txn,
+  MDSResObj<Txn>,
+  MDSResObj<TxnInput>,
+  MDSResObj<Txn>,
+  MDSResObj<Txn>,
   MDSResObj<TxnExportData>,
-  TxnDelete,
+  MDSResObj<TxnDelete>,
 ];

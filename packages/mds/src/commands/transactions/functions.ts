@@ -1,4 +1,5 @@
 import type { MDSResObj } from '../../types.js';
+import type { Txn } from '../send/response.js';
 import type {
   LogParams,
   TxnExportParams,
@@ -13,10 +14,9 @@ import type {
   Burn,
   ExportReturnType,
   Log,
-  Txn,
   TxnCheck,
   TxnDelete,
-  TxnInputResponse,
+  TxnInput,
   TxnPost,
   TxnSignReturnType,
 } from './response.js';
@@ -72,8 +72,8 @@ export type TxnInputFunc = {
         scriptmmr?: string; // Optional
       };
     },
-    callback?: (data: TxnInputResponse) => void,
-  ): Promise<TxnInputResponse>;
+    callback?: (data: MDSResObj<TxnInput>) => void,
+  ): Promise<MDSResObj<TxnInput>>;
 
   (
     args: {
@@ -83,8 +83,8 @@ export type TxnInputFunc = {
         scriptmmr?: 'true' | 'false';
       };
     },
-    callback?: (data: TxnInputResponse) => void,
-  ): Promise<TxnInputResponse>;
+    callback?: (data: MDSResObj<TxnInput>) => void,
+  ): Promise<MDSResObj<TxnInput>>;
   (
     args: {
       params: {
@@ -93,8 +93,8 @@ export type TxnInputFunc = {
         scriptmmr?: 'true' | 'false';
       };
     },
-    callback?: (data: TxnInputResponse) => void,
-  ): Promise<TxnInputResponse>;
+    callback?: (data: MDSResObj<TxnInput>) => void,
+  ): Promise<MDSResObj<TxnInput>>;
 };
 
 export type TxnList = (

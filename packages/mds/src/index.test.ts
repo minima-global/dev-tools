@@ -5,23 +5,3 @@ describe('MDS functions ', () => {
     expect(1 + 1).toBe(2);
   });
 });
-
-const res = await MDS.cmd.coins({
-  params: {
-    address: '0x123',
-  },
-});
-
-const res2 = await MDS.cmd.txpow({
-  params: {
-    address: '0x123',
-  },
-});
-
-const res3 = await MDS.cmd.peers({
-  params: {
-    action: 'list',
-  },
-});
-
-const res4 = await MDS.cmd.rpc();

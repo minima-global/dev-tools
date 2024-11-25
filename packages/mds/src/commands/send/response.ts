@@ -2,10 +2,9 @@ import type { MDSResObj } from '../../types.js';
 import type { Coin } from '../general/response.js';
 import type {
   TxnArray,
-  TxnDeleteResponse,
-  TxnExportResponse,
-  TxnResponse,
-  TxnSignResponse,
+  TxnDelete,
+  TxnExport,
+  TxnSign,
 } from '../transactions/response.js';
 import type { MultiSigParams } from './params.js';
 
@@ -49,12 +48,12 @@ export type GetKeyMultiSig = {
 };
 
 export type SignMultiSig = [
-  TxnSignResponse,
-  TxnExportResponse,
-  TxnDeleteResponse,
+  MDSResObj<TxnSign>,
+  MDSResObj<TxnExport>,
+  MDSResObj<TxnDelete>,
 ];
 
-export type MultiSigView = [TxnResponse, TxnDeleteResponse];
+export type MultiSigView = [MDSResObj<Txn>, MDSResObj<TxnDelete>];
 
 export type ListMultiSig = Coin[];
 
