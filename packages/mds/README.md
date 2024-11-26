@@ -2,20 +2,26 @@
 
 The Minima MDS (MiniDapp System) Library is a TypeScript implementation of the MDS interface for building MiniDapps on the Minima blockchain platform.
 
+## Installation
+
+Install `mds` using your preferred package manager:
+
+```bash
+npm install @minima-global/mds
+```
+
 ## Features
 
-- Fully typed MDS interface
+- TypeScript support for a fully typesafe experience
 - Promise-based API for asynchronous operations
 - Comprehensive set of commands for interacting with the Minima blockchain
 - File system operations
 - Network requests
 - Utility functions for data conversion
 
-## Installation
+## Documentation
 
-```bash
-npm install @minima-global/mds
-```
+View the full documentation and examples on [docs.minima.global](https://docs.minima.global/docs/development).
 
 ## Usage
 
@@ -23,15 +29,17 @@ Using callback
 
 ```tsx
 MDS.cmd.block((data) => {
-  console.log('BLOCK DATA');
-  console.log(data);
+  // do someting with the data
 });
 ```
 
-You can also await the response
+Using async/await
 
 ```tsx
-const res = await MDS.cmd.block();
-
-console.log(res.response.block);
+const block = await MDS.cmd.block();
+// do someting with the data
 ```
+
+## Contributing
+
+This project is made better by contributors like you, and we welcome contributions of all sizes - from fixing typos, adding new features and fixing types, please open an issue or submit a pull request, but be sure to read the [contributing guidelines](https://github.com/minima-global/dev-tools/blob/main/CONTRIBUTING.md).

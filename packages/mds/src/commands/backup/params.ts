@@ -97,8 +97,6 @@ export type RestoreSyncParams = {
   keyuses?: string;
 };
 
-//TODO: mysql, mysqlcoins
-
 export type VaultAction =
   | 'seed'
   | 'wipekeys'
