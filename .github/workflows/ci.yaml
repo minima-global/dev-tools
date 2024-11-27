@@ -41,7 +41,7 @@ jobs:
             -e minima_rpcenable=true \
             -e minima_host=127.0.0.1 \
             -e minima_rpccrlf=true \
-            -e minima_p2pnodes=megammr.minima.global \
+            -e minima_p2pnodes=megammr.minima.global:9001 \
             -v ~/minimadocker9001:/home/minima/data \
             -p 9001-9005:9001-9005 \
             --name minima9001 \
