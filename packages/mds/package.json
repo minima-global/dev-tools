@@ -43,7 +43,7 @@
     "format": "prettier --write \"./src/**/**.ts\" --write",
     "check-format": "prettier \"./src/**/**.ts\" --check",
     "dev": "vitest --typecheck",
-    "test": "vitest run --typecheck",
+    "test": "vitest run --pool=threads --typecheck",
     "coverage": "vitest run --coverage",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "ci": "turbo build check-format check-exports test",
