@@ -218,4 +218,157 @@ describe('MDS General Commands', () => {
       expect(result.command).toBe('coincheck');
     });
   });
+
+  describe('GetAddress Command', () => {
+    it('should return successful response with correct structure', async () => {
+      const result = await MDS.cmd.getaddress();
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('getaddress');
+      expect(result.response).toHaveProperty('script');
+      expect(result.response).toHaveProperty('address');
+      expect(result.response).toHaveProperty('miniaddress');
+      expect(result.response).toHaveProperty('simple');
+      expect(result.response).toHaveProperty('default');
+      expect(result.response).toHaveProperty('publickey');
+      expect(result.response).toHaveProperty('track');
+    });
+  });
+
+  describe('HashTest Command', () => {
+    it('should return successful response with correct structure when called without params', async () => {
+      const result = await MDS.cmd.hashtest();
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('hashtest');
+      expect(result.response).toHaveProperty('hashes');
+      expect(result.response).toHaveProperty('millitime');
+      expect(result.response).toHaveProperty('speed');
+    });
+
+    it('should accept custom amount parameter', async () => {
+      const result = await MDS.cmd.hashtest({
+        params: {
+          amount: '100000',
+        },
+      });
+      expect(result.status).toBe(true);
+      expect(result.response.hashes).toBe(100000);
+    });
+  });
+
+  describe('History Command', () => {
+    it('should return successful response with correct structure when called without params', async () => {
+      const result = await MDS.cmd.history();
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('history');
+      expect(result.response).toHaveProperty('txpows');
+      expect(result.response).toHaveProperty('size');
+      expect(Array.isArray(result.response.txpows)).toBe(true);
+    });
+
+    it('should accept max and offset parameters', async () => {
+      const result = await MDS.cmd.history({
+        params: {
+          max: '10',
+          offset: '0',
+        },
+      });
+      expect(result.status).toBe(true);
+      expect(result.response.txpows.length).toBeLessThanOrEqual(10);
+    });
+  });
+
+  describe('NewAddress Command', () => {
+    it('should return successful response with correct structure', async () => {
+      const result = await MDS.cmd.newaddress();
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('newaddress');
+      expect(result.response).toHaveProperty('script');
+      expect(result.response).toHaveProperty('address');
+      expect(result.response).toHaveProperty('miniaddress');
+      expect(result.response).toHaveProperty('simple');
+      expect(result.response).toHaveProperty('default');
+      expect(result.response).toHaveProperty('publickey');
+      expect(result.response).toHaveProperty('track');
+    });
+  });
+
+  describe('Status Command', () => {
+    it('should return successful response with correct structure', async () => {
+      const result = await MDS.cmd.status();
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('status');
+      expect(result.response).toHaveProperty('version');
+      expect(result.response).toHaveProperty('uptime');
+      expect(result.response).toHaveProperty('chain');
+      expect(result.response).toHaveProperty('memory');
+      expect(result.response).toHaveProperty('network');
+    });
+
+    it('should accept clean parameter', async () => {
+      const result = await MDS.cmd.status({
+        params: {
+          clean: 'true',
+        },
+      });
+      expect(result.status).toBe(true);
+    });
+  });
+
+  describe('Trace Command', () => {
+    it('should enable and disable trace successfully', async () => {
+      // Enable trace
+      const enableResult = await MDS.cmd.trace({
+        params: {
+          enable: 'true',
+        },
+      });
+      expect(enableResult.status).toBe(true);
+      expect(enableResult.response.enabled).toBe(true);
+
+      // Disable trace
+      const disableResult = await MDS.cmd.trace({
+        params: {
+          enable: 'false',
+        },
+      });
+      expect(disableResult.status).toBe(true);
+      expect(disableResult.response.enabled).toBe(false);
+    });
+
+    it('should accept filter parameter', async () => {
+      const result = await MDS.cmd.trace({
+        params: {
+          enable: 'true',
+          filter: 'test',
+        },
+      });
+      expect(result.status).toBe(true);
+      expect(result.response.filter).toBe('test');
+    });
+  });
+
+  describe('PrintTree Command', () => {
+    it('should return successful response with correct structure', async () => {
+      const result = await MDS.cmd.printtree();
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('printtree');
+      expect(result.response).toHaveProperty('chain');
+    });
+
+    it('should accept depth and cascade parameters', async () => {
+      const result = await MDS.cmd.printtree({
+        params: {
+          depth: '10',
+          cascade: 'true',
+        },
+      });
+      expect(result.status).toBe(true);
+    });
+  });
 });

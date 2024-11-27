@@ -66,26 +66,28 @@ export type BlockFunc = (callback?: BlockCallback) => Promise<MDSResObj<Block>>;
 /**
  * CheckAddress function types
  */
+export type CheckAddressCallback = (data: MDSResObj<CheckAddress>) => void;
 
 export type CheckAddressFunc = (
   args: { params: CheckAddressParams },
-  callback?: (data: MDSResObj<CheckAddress>) => void,
+  callback?: CheckAddressCallback,
 ) => Promise<MDSResObj<CheckAddress>>;
 
 /**
  * CoinCheck function types
  */
+export type CoinCheckCallback = (data: MDSResObj<CoinCheck>) => void;
 
 export type CoinCheckFunc = (
   args: { params: CoinCheckParams },
-  callback?: (data: MDSResObj<CoinCheck>) => void,
+  callback?: CoinCheckCallback,
 ) => Promise<MDSResObj<CoinCheck>>;
 
 /**
  * GetAddress function types
  */
 
-type GetAddressCallback = (data: MDSResObj<GetAddress>) => void;
+export type GetAddressCallback = (data: MDSResObj<GetAddress>) => void;
 
 export type GetAddressFunc = (
   callback?: GetAddressCallback,
@@ -95,7 +97,7 @@ export type GetAddressFunc = (
  * HashTest function types
  */
 
-type HashTestCallback = (data: MDSResObj<HashTest>) => void;
+export type HashTestCallback = (data: MDSResObj<HashTest>) => void;
 
 type HashTestFuncParams<T extends HashTestParams | undefined> =
   T extends undefined
@@ -110,7 +112,7 @@ export type HashTestFunc = <T extends HashTestParams | undefined>(
  * CoinTrack function types
  */
 
-type CoinTrackCallback = (data: MDSResObj<string>) => void;
+export type CoinTrackCallback = (data: MDSResObj<string>) => void;
 
 export type CoinTrackFunc = (
   args: { params: CoinTrackParams },
@@ -121,7 +123,7 @@ export type CoinTrackFunc = (
  * NewAddress function types
  */
 
-type NewAddressCallback = (data: MDSResObj<NewAddress>) => void;
+export type NewAddressCallback = (data: MDSResObj<NewAddress>) => void;
 
 export type NewAddressFunc = (
   callback?: NewAddressCallback,
@@ -131,7 +133,7 @@ export type NewAddressFunc = (
  * Consolidate function types
  */
 
-type ConsolidateCallback = (data: MDSResObj<Transaction>) => void;
+export type ConsolidateCallback = (data: MDSResObj<Transaction>) => void;
 
 export type ConsolidateFunc = (
   args: { params: ConsolidateParams },
@@ -142,27 +144,33 @@ export type ConsolidateFunc = (
  * TokenValidate function types
  */
 
+export type TokenValidateCallback = (data: MDSResObj<TokenValidate>) => void;
+
 export type TokenValidateFunc = (
   args: { params: TokenValidateParams },
-  callback?: (data: MDSResObj<TokenValidate>) => void,
+  callback?: TokenValidateCallback,
 ) => Promise<MDSResObj<TokenValidate>>;
 
 /**
  * TokenCreate function types
  */
 
+export type TokenCreateCallback = (data: MDSResObj<TokenCreate>) => void;
+
 export type TokenCreateFunc = (
   args: { params: TokenCreateParams },
-  callback?: (data: MDSResObj<TokenCreate>) => void,
+  callback?: TokenCreateCallback,
 ) => Promise<MDSResObj<TokenCreate>>;
 
 /**
  * Trace function types
  */
 
+export type TraceCallback = (data: MDSResObj<Trace>) => void;
+
 export type TraceFunc = (
   args: { params: TraceParams },
-  callback?: (data: MDSResObj<Trace>) => void,
+  callback?: TraceCallback,
 ) => Promise<MDSResObj<Trace>>;
 
 /**
@@ -173,7 +181,7 @@ type StatusFuncParams<T extends StatusParams | undefined> = T extends undefined
   ? [StatusCallback?]
   : [{ params: StatusParams }, StatusCallback?];
 
-type StatusCallback = (data: MDSResObj<Status>) => void;
+export type StatusCallback = (data: MDSResObj<Status>) => void;
 
 export type StatusFunc = <T extends StatusParams | undefined>(
   ...args: StatusFuncParams<T>
@@ -183,16 +191,18 @@ export type StatusFunc = <T extends StatusParams | undefined>(
  * SeedRandom function types
  */
 
+export type SeedRandomCallback = (data: MDSResObj<SeedRandom>) => void;
+
 export type SeedRandomFunc = (
   args: { params: SeedRandomParams },
-  callback?: (data: MDSResObj<SeedRandom>) => void,
+  callback?: SeedRandomCallback,
 ) => Promise<MDSResObj<SeedRandom>>;
 
 /**
  * Quit function types
  */
 
-type QuitCallback = (data: Prettify<Quit>) => void;
+export type QuitCallback = (data: Prettify<Quit>) => void;
 
 type QuitFuncParams<T extends QuitParams | undefined> = T extends undefined
   ? [QuitCallback?]
@@ -206,7 +216,7 @@ export type QuitFunc = <T extends QuitParams | undefined>(
  * PrintTree function types
  */
 
-type PrintTreeCallback = (data: MDSResObj<PrintTree>) => void;
+export type PrintTreeCallback = (data: MDSResObj<PrintTree>) => void;
 
 type PrintTreeFuncParams<T extends PrintTreeParams | undefined> =
   T extends undefined
@@ -221,15 +231,17 @@ export type PrintTreeFunc = <T extends PrintTreeParams | undefined>(
  * PrintMmr function types
  */
 
+export type PrintMmrCallback = (data: MDSResObj<PrintMmrResponse>) => void;
+
 export type PrintMmrFunc = (
-  callback?: (data: MDSResObj<PrintMmrResponse>) => void,
+  callback?: PrintMmrCallback,
 ) => Promise<MDSResObj<PrintMmrResponse>>;
 
 /**
  * History function types
  */
 
-type HistoryCallback = (data: MDSResObj<HistoryResponse>) => void;
+export type HistoryCallback = (data: MDSResObj<HistoryResponse>) => void;
 
 type HistoryFuncParams<T extends HistoryParams | undefined> =
   T extends undefined
@@ -244,16 +256,20 @@ export type HistoryFunc = <T extends HistoryParams | undefined>(
  * CoinExport function types
  */
 
+export type CoinExportCallback = (data: MDSResObj<CoinExportResponse>) => void;
+
 export type CoinExportFunc = (
   args: { params: CoinExportParams },
-  callback?: (data: MDSResObj<CoinExportResponse>) => void,
+  callback?: CoinExportCallback,
 ) => Promise<MDSResObj<CoinExportResponse>>;
 
 /**
  * CoinImport function types
  */
 
+export type CoinImportCallback = (data: MDSResObj<CoinImport>) => void;
+
 export type CoinImportFunc = (
   args: { params: CoinImportParams },
-  callback?: (data: MDSResObj<CoinImport>) => void,
+  callback?: CoinImportCallback,
 ) => Promise<MDSResObj<CoinImport>>;
