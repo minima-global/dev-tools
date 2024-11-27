@@ -137,7 +137,7 @@ export const MDS: MDSObj = {
 
     checkaddress: (...args) => {
       const { commandString, callback } = commandHandler('checkaddress', args);
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);
           if (callback) {

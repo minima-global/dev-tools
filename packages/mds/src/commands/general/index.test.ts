@@ -4,10 +4,18 @@ import { MDS } from '../../index.js';
 const BEFORE_ALL_TIMEOUT = 30000; // 30 sec
 
 describe('MDS General Commands', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     MDS.TEST_MODE = true;
     MDS.DEBUG_HOST = '127.0.0.1';
     MDS.DEBUG_PORT = 9005;
+
+    // Check if MDS is running by fetching status
+    const response = await fetch('http://127.0.0.1:9005/status');
+    const data = await response.json();
+
+    if (!data.status) {
+      throw new Error('MDS cannot be reached via RPC');
+    }
   }, BEFORE_ALL_TIMEOUT);
 
   describe('Balance Command', () => {
