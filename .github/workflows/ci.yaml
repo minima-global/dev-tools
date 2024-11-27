@@ -57,7 +57,7 @@ jobs:
           echo "Minima is up and running!"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run CI
         run: pnpm run ci
