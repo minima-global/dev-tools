@@ -40,6 +40,7 @@ jobs:
             -e minima_desktop=true \
             -e minima_rpcenable=true \
             -e minima_rpcssl=true \
+            -e minima_host=127.0.0.1 \
             -v ~/minimadocker9001:/home/minima/data \
             -p 9001-9005:9001-9005 \
             --name minima9001 \
@@ -50,13 +51,16 @@ jobs:
         run: |
           echo "Waiting for Minima to start..."
           while true; do
-            response=$(curl -s -k https://localhost:9005/status 2>&1)
-            echo "Curl response: $response"
-            if echo "$response" | grep -q "status"; then
+            response=$(curl -s -k https://127.0.0.1:9005/status 2>&1)
+            echo "RPC status response: $response"
+            if echo "$response" | grep -q "\"status\":true"; then
               break
             fi
             sleep 5
             echo "Still waiting for Minima..."
             docker logs minima9001 --tail 20
           done
+          # Make a final RPC status call to verify and log the full response
+          final_status=$(curl -s -k https://127.0.0.1:9005/status)
+          echo "Final RPC status check: $final_status"
           echo "Minima is up and running!"
