@@ -53,7 +53,7 @@ jobs:
             response=$(curl -s -k https://localhost:9005/status 2>&1)
             echo "Curl response: $response"
             if echo "$response" | grep -q "status"; then
-              breaka
+              break
             fi
             sleep 5
             echo "Still waiting for Minima..."
