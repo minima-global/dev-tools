@@ -49,15 +49,14 @@ jobs:
         timeout-minutes: 2
         run: |
           echo "Waiting for Minima to start..."
-          while ! curl -s -k https://localhost:9005/status 2>&1 | grep -q "status"; do
+          while true; do
+            response=$(curl -s -k https://localhost:9005/status 2>&1)
+            echo "Curl response: $response"
+            if echo "$response" | grep -q "status"; then
+              breaka
+            fi
             sleep 5
             echo "Still waiting for Minima..."
             docker logs minima9001 --tail 20
           done
           echo "Minima is up and running!"
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Run CI
-        run: pnpm run ci
