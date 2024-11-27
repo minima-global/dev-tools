@@ -39,7 +39,6 @@ jobs:
             -e minima_mdspassword=test \
             -e minima_desktop=true \
             -e minima_rpcenable=true \
-            -e minima_rpcssl=true \
             -e minima_host=127.0.0.1 \
             -v ~/minimadocker9001:/home/minima/data \
             -p 9001-9005:9001-9005 \
