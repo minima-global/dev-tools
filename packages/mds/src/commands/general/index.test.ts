@@ -7,7 +7,7 @@ describe('MDS General Commands', () => {
   beforeAll(async () => {
     MDS.TEST_MODE = true;
     MDS.DEBUG_HOST = '127.0.0.1';
-    MDS.DEBUG_PORT = 9005;
+    MDS.DEBUG_PORT = 10005;
 
     // Check if MDS is running by fetching status
     const response = await fetch('http://127.0.0.1:9005/status');
@@ -148,6 +148,74 @@ describe('MDS General Commands', () => {
 
       expect(res.status).toBe(false);
       expect(res.error).toBe('Invalid parameter : ' + INVALID_PARAMS.invalid);
+    });
+  });
+
+  describe('Coins Commands: CoinExport, CoinCheck, Coins', () => {
+    let COINID: string;
+
+    it('should return coins with correct structure when called without params', async () => {
+      const result = await MDS.cmd.coins();
+
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('coins');
+      expect(Array.isArray(result.response)).toBe(true);
+      expect(result.response[0]).toHaveProperty('coinid');
+      expect(result.response[0]).toHaveProperty('amount');
+      expect(result.response[0]).toHaveProperty('address');
+      expect(result.response[0]).toHaveProperty('miniaddress');
+      expect(result.response[0]).toHaveProperty('tokenid');
+      expect(result.response[0]).toHaveProperty('token');
+      expect(result.response[0]).toHaveProperty('storestate');
+      expect(result.response[0]).toHaveProperty('state');
+      expect(result.response[0]).toHaveProperty('spent');
+      expect(result.response[0]).toHaveProperty('mmrentry');
+      expect(result.response[0]).toHaveProperty('created');
+
+      COINID = result.response[0].coinid;
+    });
+
+    let COINDATA: string;
+    it('should return successful response with correct structure when called with valid params', async () => {
+      const result = await MDS.cmd.coinexport({
+        params: {
+          coinid: COINID,
+        },
+      });
+
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('coinexport');
+      expect(result.params?.coinid).toBe(COINID);
+      expect(result.response).toHaveProperty('data');
+      expect(result.response).toHaveProperty('coinproof');
+      expect(result.response.coinproof).toHaveProperty('coin');
+      expect(result.response.coinproof.coin).toHaveProperty('coinid');
+      expect(result.response.coinproof.coin).toHaveProperty('amount');
+      expect(result.response.coinproof.coin).toHaveProperty('address');
+      expect(result.response.coinproof.coin).toHaveProperty('miniaddress');
+      expect(result.response.coinproof.coin).toHaveProperty('tokenid');
+      expect(result.response.coinproof.coin).toHaveProperty('token');
+      expect(result.response.coinproof.coin).toHaveProperty('storestate');
+      expect(result.response.coinproof.coin).toHaveProperty('state');
+      expect(result.response.coinproof.coin).toHaveProperty('spent');
+      expect(result.response.coinproof.coin).toHaveProperty('mmrentry');
+      expect(result.response.coinproof.coin).toHaveProperty('created');
+
+      COINDATA = result.response.data;
+    });
+
+    it('should return successful response with correct structure when called with valid params', async () => {
+      const result = await MDS.cmd.coincheck({
+        params: {
+          data: COINDATA,
+        },
+      });
+
+      expect(result.status).toBe(true);
+      expect(result.pending).toBe(false);
+      expect(result.command).toBe('coincheck');
     });
   });
 });

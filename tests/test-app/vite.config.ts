@@ -10,9 +10,6 @@ export default ({ mode }) => {
   // Load environment variables based on the mode
   const env = loadEnv(mode, process.cwd())
 
-  console.log("env", env)
-  console.log("running with MODE", mode)
-
   if (mode === "development" || mode === "dev") {
     devEnv = `
       <script>
@@ -22,8 +19,6 @@ export default ({ mode }) => {
         var DEBUG_UID = "${env.VITE_DEBUG_UID}";
       </script>
     `
-
-    console.log("devEnv", devEnv)
   }
 
   return defineConfig({
