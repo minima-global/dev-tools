@@ -6,7 +6,7 @@ const BEFORE_ALL_TIMEOUT = 30000; // 30 sec
 describe('MDS General Commands', () => {
   beforeAll(() => {
     MDS.TEST_MODE = true;
-    MDS.DEBUG_HOST = '127.0.0.1';
+    MDS.DEBUG_HOST = 'localhost';
     MDS.DEBUG_PORT = 9005;
   }, BEFORE_ALL_TIMEOUT);
 
