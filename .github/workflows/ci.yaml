@@ -50,17 +50,32 @@ jobs:
         timeout-minutes: 2
         run: |
           echo "Waiting for Minima to start..."
-          while true; do
-            response=$(curl -s -k https://127.0.0.1:9005/status 2>&1)
+          for i in {1..24}; do
+            echo "Attempt $i: Checking Minima status..."
+            response=$(curl -s http://127.0.0.1:9005/status || echo "Failed to connect")
             echo "RPC status response: $response"
+            
             if echo "$response" | grep -q "\"status\":true"; then
+              echo "Minima is responding correctly!"
               break
             fi
-            sleep 5
-            echo "Still waiting for Minima..."
+            
+            echo "Container logs:"
             docker logs minima9001 --tail 20
+            
+            if [ $i -eq 24 ]; then
+              echo "Timeout waiting for Minima to start"
+              docker ps
+              docker logs minima9001
+              exit 1
+            fi
+            
+            echo "Waiting 5 seconds before next attempt..."
+            sleep 5
           done
-          # Make a final RPC status call to verify and log the full response
-          final_status=$(curl -s -k https://127.0.0.1:9005/status)
-          echo "Final RPC status check: $final_status"
-          echo "Minima is up and running!"
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Run CI
+        run: pnpm run ci
