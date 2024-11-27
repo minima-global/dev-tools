@@ -7,11 +7,18 @@ import type {
   MaxContactsSearchParams,
   MaxExtraAddAllowedParams,
   MaxExtraAllowAllContactsParams,
+  MaxExtraClearAllowedParams,
+  MaxExtraClearPermanentParams,
   MaxExtraGetAddressParams,
+  MaxExtraListPermanentParams,
+  MaxExtraMLSInfoParams,
   MaxExtraParams,
   MaxExtraPermanentParams,
   MaxExtraStaticMLSParams,
+  MaximaHostsParams,
+  MaximaInfoParams,
   MaximaParams,
+  MaximaRefreshParams,
   MaximaSendallParams,
   MaximaSendParams,
   MaximaSeticonParams,
@@ -28,49 +35,83 @@ import type {
   MaxVerify,
 } from './response.js';
 
+/**
+ * Maxima function types
+ */
+
+export type ActionParamMapMaxima = {
+  readonly info: MaximaInfoParams;
+  readonly setname: MaximaSetnameParams;
+  readonly refresh: MaximaRefreshParams;
+  readonly send: MaximaSendParams;
+  readonly sendall: MaximaSendallParams;
+  readonly seticon: MaximaSeticonParams;
+  readonly hosts: MaximaHostsParams;
+};
+
+export type MaximaParamType<A extends MaximaParams | undefined> = A extends {
+  action: keyof ActionParamMapMaxima;
+}
+  ? ActionParamMapMaxima[A['action']]
+  : A;
+
+type MaximaFuncParams<A extends MaximaParams | undefined> = [
+  { params: MaximaParamType<A> },
+  MaximaCallback<A>?,
+];
+
 type MaximaCallback<A> = (data: MaximaReturnType<A>) => void;
 
 export type MaximaFunc = <A extends MaximaParams | undefined>(
-  ...args: A extends undefined
-    ? [MaximaCallback<A>?]
-    : A extends { action: 'info' }
-      ? [{ params: { action: A['action'] } }, MaximaCallback<A>?]
-      : A extends { action: 'setname' }
-        ? [{ params: MaximaSetnameParams }, MaximaCallback<A>?]
-        : A extends { action: 'refresh' }
-          ? [{ params: { action: A['action'] } }, MaximaCallback<A>?]
-          : A extends { action: 'send' }
-            ? [{ params: MaximaSendParams }, MaximaCallback<A>?]
-            : A extends { action: 'sendall' }
-              ? [{ params: MaximaSendallParams }, MaximaCallback<A>?]
-              : A extends { action: 'seticon' }
-                ? [{ params: MaximaSeticonParams }, MaximaCallback<A>?]
-                : [{ params: A }, MaximaCallback<A>?]
+  ...args: A extends undefined ? [MaximaCallback<A>?] : MaximaFuncParams<A>
 ) => Promise<MaximaReturnType<A>>;
+
+/**
+ * MaxContacts function types
+ */
+
+export type ActionParamMapContacts = {
+  readonly add: MaxContactsAddParams;
+  readonly remove: MaxContactsRemoveParams;
+  readonly search: MaxContactsSearchParams;
+  readonly import: MaxContactsImportParams;
+  readonly export: MaxContactsParams;
+  readonly list: MaxContactsParams;
+};
+
+export type MaxContactsParamType<A extends MaxContactsParams | undefined> =
+  A extends {
+    action: keyof ActionParamMapContacts;
+  }
+    ? ActionParamMapContacts[A['action']]
+    : A;
+
+type MaxContactsFuncParams<A extends MaxContactsParams | undefined> = [
+  { params: MaxContactsParamType<A> },
+  MaxContactsCallback<A>?,
+];
 
 type MaxContactsCallback<A> = (data: MaxContactsReturnType<A>) => void;
 
 export type MaxContactsFunc = <A extends MaxContactsParams | undefined>(
   ...args: A extends undefined
     ? [MaxContactsCallback<A>?]
-    : A extends { action: 'add' }
-      ? [{ params: MaxContactsAddParams }, MaxContactsCallback<A>?]
-      : A extends { action: 'remove' }
-        ? [{ params: MaxContactsRemoveParams }, MaxContactsCallback<A>?]
-        : A extends { action: 'search' }
-          ? [{ params: MaxContactsSearchParams }, MaxContactsCallback<A>?]
-          : A extends { action: 'import' }
-            ? [{ params: MaxContactsImportParams }, MaxContactsCallback<A>?]
-            : A extends { action: 'export' | 'list' }
-              ? [{ params: { action: A['action'] } }, MaxContactsCallback<A>?]
-              : [{ params: A }, MaxContactsCallback<A>?]
+    : MaxContactsFuncParams<A>
 ) => Promise<MaxContactsReturnType<A>>;
+
+/**
+ * MaxCreate function types
+ */
 
 type MaxCreateCallback = (data: MDSResObj<MaxCreate>) => void;
 
 export type MaxCreateFunc = (
   callback?: MaxCreateCallback,
 ) => Promise<MDSResObj<MaxCreate>>;
+
+/**
+ * MaxSign function types
+ */
 
 type MaxSignCallback = (data: MDSResObj<MaxSign>) => void;
 
@@ -79,23 +120,43 @@ export type MaxSignFunc = (
   callback?: MaxSignCallback,
 ) => Promise<MDSResObj<MaxSign>>;
 
+/**
+ * MaxExtra function types
+ */
+
+export type ActionParamMapExtra = {
+  readonly staticmls: MaxExtraStaticMLSParams;
+  readonly addpermanent: MaxExtraPermanentParams;
+  readonly removepermanent: MaxExtraPermanentParams;
+  readonly listpermanent: MaxExtraListPermanentParams;
+  readonly clearpermanent: MaxExtraClearPermanentParams;
+  readonly allowallcontacts: MaxExtraAllowAllContactsParams;
+  readonly clearallowed: MaxExtraClearAllowedParams;
+  readonly mlsinfo: MaxExtraMLSInfoParams;
+  readonly getaddress: MaxExtraGetAddressParams;
+  readonly addallowed: MaxExtraAddAllowedParams;
+};
+
+export type MaxExtraParamType<A extends MaxExtraParams> = A extends {
+  action: keyof ActionParamMapExtra;
+}
+  ? ActionParamMapExtra[A['action']]
+  : A;
+
+type MaxExtraFuncParams<A extends MaxExtraParams> = [
+  { params: MaxExtraParamType<A> },
+  MaxExtraCallback<A>?,
+];
+
 type MaxExtraCallback<A> = (data: MaxExtraReturnType<A>) => void;
 
 export type MaxExtraFunc = <A extends MaxExtraParams>(
-  ...args: A extends { action: 'staticmls' }
-    ? [{ params: MaxExtraStaticMLSParams }, MaxExtraCallback<A>?]
-    : A extends { action: 'addpermanent' }
-      ? [{ params: MaxExtraPermanentParams }, MaxExtraCallback<A>?]
-      : A extends { action: 'removepermanent' }
-        ? [{ params: MaxExtraPermanentParams }, MaxExtraCallback<A>?]
-        : A extends { action: 'getaddress' }
-          ? [{ params: MaxExtraGetAddressParams }, MaxExtraCallback<A>?]
-          : A extends { action: 'allowallcontacts' }
-            ? [{ params: MaxExtraAllowAllContactsParams }, MaxExtraCallback<A>?]
-            : A extends { action: 'addallowed' }
-              ? [{ params: MaxExtraAddAllowedParams }, MaxExtraCallback<A>?]
-              : [{ params: A }, MaxExtraCallback<A>?]
+  ...args: MaxExtraFuncParams<A>
 ) => Promise<MaxExtraReturnType<A>>;
+
+/**
+ * MaxVerify function types
+ */
 
 type MaxVerifyCallback = (data: MDSResObj<MaxVerify>) => void;
 

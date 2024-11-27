@@ -16,7 +16,9 @@ export type MaximaReturnType<A> = A extends MaximaParams
           ? MDSResObj<MaximaSend>
           : A['action'] extends 'sendall'
             ? MDSResObj<MaximaSendall>
-            : never
+            : A['action'] extends 'hosts'
+              ? MDSResObj<MaximaHosts[]>
+              : never
   : MDSResObj<MaximaInfo>;
 
 export type MaximaSetname = {
@@ -26,6 +28,13 @@ export type MaximaSetname = {
 export type MaximaRefresh = string;
 
 export type MaximaSendall = string;
+
+export type MaximaHosts = {
+  host: string;
+  public: string;
+  lastseen: string;
+  connected: boolean;
+};
 
 export type MaximaInfo = {
   name: string;

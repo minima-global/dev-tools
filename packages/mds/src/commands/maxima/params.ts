@@ -11,6 +11,18 @@ export type MaximaParams = {
   action: MaximaAction;
 };
 
+export type MaximaHostsParams = {
+  action: 'hosts';
+};
+
+export type MaximaInfoParams = {
+  action: 'info';
+};
+
+export type MaximaRefreshParams = {
+  action: 'refresh';
+};
+
 export type MaximaSeticonParams = {
   action: 'seticon';
   icon: string;
@@ -89,6 +101,22 @@ export type MaxExtraAction =
 
 export type MaxExtraParams = {
   action: MaxExtraAction;
+};
+
+export type MaxExtraMLSInfoParams = {
+  action: 'mlsinfo';
+};
+
+export type MaxExtraClearPermanentParams = {
+  action: 'clearpermanent';
+};
+
+export type MaxExtraListPermanentParams = {
+  action: 'listpermanent';
+};
+
+export type MaxExtraClearAllowedParams = {
+  action: 'clearallowed';
 };
 
 export type MaxExtraStaticMLSParams = {

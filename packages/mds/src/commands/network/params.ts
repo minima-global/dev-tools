@@ -18,6 +18,10 @@ export type PeersParams = {
   action: PeersAction;
 };
 
+export type ListPeersParams = {
+  action: 'list';
+};
+
 export type AddPeersParams = {
   action: 'addpeers';
   peerslist: string;

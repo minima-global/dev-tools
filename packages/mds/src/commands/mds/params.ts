@@ -21,6 +21,14 @@ export type TestParams = {
   action: MDSAction;
 };
 
+export type MDSPendingParams = {
+  action: 'pending';
+};
+
+export type MDSListParams = {
+  action: 'list';
+};
+
 export type MDSInstallParams = {
   action: 'install';
   file: string;

@@ -10,6 +10,7 @@ import type {
   TransactionCommands,
 } from './commands/commands.js';
 import type { Header } from './commands/send/response.js';
+import type { Prettify } from './helpers.js';
 
 /**
  * Event constants for the MDS Object
@@ -75,6 +76,7 @@ export type MDS_MAIN_CALLBACK = EventCallback | null;
 
 export type DefaultRes = {
   command: string;
+  params?: Record<string, string>;
   pending: boolean;
   status: boolean;
   error?: string;
@@ -116,7 +118,7 @@ type RAW_NEWBLOCKRES = {
 
 type DefaultResObj<T> = DefaultEventRes & { data: T };
 
-export type MDSResObj<T> = DefaultRes & { response: T };
+export type MDSResObj<T> = Prettify<DefaultRes & { response: T }>;
 
 type FileAccessParams = (
   opt: string,
@@ -145,11 +147,13 @@ interface MDSFileAccess {
 export interface MDSObj {
   filehost: string;
   mainhost: string;
+  testhost: string;
   minidappuid: string | null;
   logging: boolean;
   DEBUG_HOST: string | null;
   DEBUG_PORT: number;
   DEBUG_MINIDAPPID: string;
+  TEST_MODE: boolean;
   /**
    * Initialize the MDS object
    * @param callback The callback function to be called when an event is triggered with the event object

@@ -17,6 +17,10 @@ import type {
   TxPowReturnType,
 } from './response.js';
 
+/**
+ * Coins function types
+ */
+
 type CoinsCallback = (data: MDSResObj<Coin[]>) => void;
 
 export type CoinsFunc = <T extends CoinsParams | undefined>(
@@ -25,17 +29,35 @@ export type CoinsFunc = <T extends CoinsParams | undefined>(
     : [{ params: CoinsParams }, CoinsCallback?]
 ) => Promise<MDSResObj<Coin[]>>;
 
+/**
+ * Tokens function types
+ */
+
+export type ActionParamMapTokens = {
+  readonly import: TokenImportParams;
+  readonly export: TokenExportParams;
+};
+
+export type TokensParamType<A extends TokenParams | undefined> = A extends {
+  action: keyof ActionParamMapTokens;
+}
+  ? ActionParamMapTokens[A['action']]
+  : A;
+
+export type TokensFuncParams<A extends TokenParams | undefined> = [
+  { params: TokensParamType<A> },
+  TokensCallback<A>?,
+];
+
 type TokensCallback<T> = (data: TokensReturnType<T>) => void;
 
 export type TokensFunc = <T extends TokenParams | undefined>(
-  ...args: T extends undefined
-    ? [TokensCallback<T>?]
-    : T extends { action: 'import' }
-      ? [{ params: TokenImportParams }, TokensCallback<T>?]
-      : T extends { action: 'export' }
-        ? [{ params: TokenExportParams }, TokensCallback<T>?]
-        : [{ params: T }, TokensCallback<T>?]
+  ...args: T extends undefined ? [TokensCallback<T>?] : TokensFuncParams<T>
 ) => Promise<TokensReturnType<T>>;
+
+/**
+ * Keys function types
+ */
 
 type KeysCallback<T> = (data: KeysReturnType<T>) => void;
 

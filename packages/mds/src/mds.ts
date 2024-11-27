@@ -13,12 +13,29 @@ export const MDS: MDSObj = {
   filehost: '',
   mainhost: '',
   minidappuid: '',
+  testhost: '',
+  TEST_MODE: false,
   logging: false,
   DEBUG_HOST: null,
   DEBUG_PORT: 0,
   DEBUG_MINIDAPPID: '',
   init: (callback) => {
     MDS.log('MDS Inited');
+
+    if (isTestEnvironment()) {
+      MDS.TEST_MODE = true;
+      MDS.minidappuid = MDS.DEBUG_MINIDAPPID || '0x00';
+      MDS.filehost = `http://${MDS.DEBUG_HOST}:${MDS.DEBUG_PORT}/`;
+      MDS.mainhost = `http://${MDS.DEBUG_HOST}:${MDS.DEBUG_PORT}/`;
+      MDS.testhost = `http://${MDS.DEBUG_HOST}:${MDS.DEBUG_PORT}/`;
+
+      MDS_MAIN_CALLBACK = callback;
+
+      if (callback) {
+        callback({ event: 'inited', data: null });
+      }
+      return;
+    }
 
     if (MDS.form.getParams('MDS_LOGGING') != null) {
       MDS.logging = true;
@@ -46,6 +63,7 @@ export const MDS: MDSObj = {
 
     MDS.filehost = 'https://' + host + ':' + port + '/';
     MDS.mainhost = 'https://' + host + ':' + port + '/mdscommand_/';
+    MDS.testhost = 'https://' + host + ':' + port + '/';
     MDS.log('MDS HOST  : ' + MDS.filehost);
 
     MDS_MAIN_CALLBACK = callback;
@@ -79,9 +97,13 @@ export const MDS: MDSObj = {
       });
     },
 
-    block: (callback) => {
+    block: (...args) => {
+      const { commandString, callback } = commandHandler('block', args);
+      if (commandString !== 'block') {
+        throw new TypeError('block command does not accept parameters');
+      }
       return new Promise((resolve) => {
-        httpPostAsync('cmd', 'block', (data: any) => {
+        httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);
           if (callback) {
             callback(data);
@@ -115,7 +137,7 @@ export const MDS: MDSObj = {
 
     checkaddress: (...args) => {
       const { commandString, callback } = commandHandler('checkaddress', args);
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         httpPostAsync('cmd', commandString, (data: any) => {
           resolve(data);
           if (callback) {
@@ -1071,6 +1093,9 @@ export const MDS: MDSObj = {
 
   form: {
     getParams: (parameterName) => {
+      if (isTestEnvironment()) {
+        return null;
+      }
       var result: string | null = null;
       var tmp: string[] = [];
       var items = window.location.search.substr(1).split('&');
@@ -1216,13 +1241,36 @@ export function httpPostAsync<T, O, U>(
   callback?: (msg: U) => void,
 ) {
   //Add the MiniDAPP UID..
-  var finalurl = MDS.mainhost + theUrl + '?uid=' + MDS.minidappuid;
+  var finalurl = MDS.TEST_MODE ? MDS.testhost : MDS.mainhost;
+  finalurl += theUrl + '?uid=' + MDS.minidappuid;
+
+  var testUrl =
+    'http://' + MDS.DEBUG_HOST + ':' + MDS.DEBUG_PORT + '/' + params;
 
   //Do we log it..
   if (MDS.logging) {
     MDS.log('POST_RPC:' + finalurl + ' PARAMS:' + params);
   }
 
+  // Use fetch in test mode
+  if (MDS.TEST_MODE) {
+    fetch(testUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (MDS.logging) {
+          MDS.log('RESPONSE:' + JSON.stringify(data));
+        }
+        if (callback) {
+          callback(data);
+        }
+      })
+      .catch((error) => {
+        postMDSFail(finalurl, params, error);
+      });
+    return;
+  }
+
+  // Original XMLHttpRequest code for non-test mode
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
     var status = xmlHttp.status;
@@ -1264,6 +1312,27 @@ function httpPostAsyncPoll(theUrl: string, params: string, callback: any) {
     MDS.log('POST_POLL_RPC:' + theUrl + ' PARAMS:' + params);
   }
 
+  // Use fetch in test mode
+  if (MDS.TEST_MODE) {
+    fetch(theUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (MDS.logging) {
+          MDS.log('RESPONSE:' + JSON.stringify(data));
+        }
+        if (callback) {
+          callback(data);
+        }
+      })
+      .catch((error) => {
+        setTimeout(() => {
+          PollListener();
+        }, 10000);
+      });
+    return;
+  }
+
+  // Original XMLHttpRequest code for non-test mode
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
     var status = xmlHttp.status;
@@ -1385,4 +1454,8 @@ function _recurseUploadMDS(thefullfile: any, chunk: any, callback?: any) {
 
   //And finally send the POST request
   request.send(formdata);
+}
+
+function isTestEnvironment() {
+  return typeof window === 'undefined' || MDS.TEST_MODE;
 }

@@ -1,4 +1,4 @@
-import { MDS } from "@minima-global/mds"
+import { MDS, MinimaEvents } from "@minima-global/mds"
 import { useEffect, useState } from "react"
 import "./App.css"
 import minimalogo from "./assets/minima_logo.png"
@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     MDS.init(async ({ event }) => {
-      if (event === "inited") {
+      if (event === MinimaEvents.INITED) {
         getBalance()
       }
     })

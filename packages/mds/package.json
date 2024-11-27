@@ -42,12 +42,13 @@
     "build": "tsc",
     "format": "prettier --write \"./src/**/**.ts\" --write",
     "check-format": "prettier \"./src/**/**.ts\" --check",
-    "dev": "vitest",
-    "test": "vitest run",
+    "dev": "vitest --typecheck",
+    "test": "vitest run --pool=forks --typecheck",
     "coverage": "vitest run --coverage",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
     "ci": "turbo build check-format check-exports test",
-    "prepublishOnly": "turbo run ci"
+    "prepublishOnly": "turbo run ci",
+    "test:types": "vitest --typecheck"
   },
   "dependencies": {
     "happy-dom": "^14.12.0"

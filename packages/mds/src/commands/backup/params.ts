@@ -11,6 +11,10 @@ export type ArchiveParams = {
   action: ArchiveAction;
 };
 
+export type ArchiveIntegrityParams = {
+  action: 'integrity';
+};
+
 export type ArchiveResyncParams = {
   action: 'resync';
   host: string;
@@ -63,6 +67,10 @@ export type MegaMmrParams = {
   action: MegaMmrAction;
 };
 
+export type MegaMmrInfoParams = {
+  action: 'info';
+};
+
 export type MegaMmrFileParams = {
   action: 'export' | 'import';
   file: string;
@@ -72,6 +80,10 @@ export type MegaMmrSyncAction = 'myDetails' | 'resync';
 
 export type MegaMmrSyncParams = {
   action: MegaMmrSyncAction;
+};
+
+export type MegaMmrMyDetailsParams = {
+  action: 'myDetails';
 };
 
 export type MegaMmrResyncParams = {
@@ -106,6 +118,10 @@ export type VaultAction =
 
 export type VaultParams = {
   action: VaultAction;
+};
+
+export type VaultSeedParams = {
+  action: 'seed';
 };
 
 export type VaultWipeKeysParams = {

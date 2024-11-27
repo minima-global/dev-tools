@@ -27,6 +27,35 @@ jobs:
         with:
           version: 8.15.6
 
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create data directory
+        run: mkdir -p ~/minimadocker9001
+
+      - name: Run Minima container
+        run: |
+          docker run -d \
+            -e minima_mdspassword=test \
+            -e minima_desktop=true \
+            -e minima_rpcenable=true \
+            -e minima_rpcssl=true \
+            -v ~/minimadocker9001:/home/minima/data \
+            -p 9001-9005:9001-9005 \
+            --name minima9001 \
+            minimaglobal/minima:latest
+
+      - name: Wait for Minima and verify it's running
+        timeout-minutes: 2
+        run: |
+          echo "Waiting for Minima to start..."
+          while ! curl -s -k https://localhost:9005/status 2>&1 | grep -q "status"; do
+            sleep 5
+            echo "Still waiting for Minima..."
+            docker logs minima9001 --tail 20
+          done
+          echo "Minima is up and running!"
+
       - name: Install dependencies
         run: pnpm install
 

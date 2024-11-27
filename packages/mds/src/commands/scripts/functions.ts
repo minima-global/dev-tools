@@ -8,6 +8,10 @@ import type {
   ScriptsParams,
 } from './params.js';
 
+/**
+ * Scripts function types
+ */
+
 type ScriptsCallback<T> = (data: ScriptsReturnType<T>) => void;
 
 export type ScriptsFunc = <T extends { params: ScriptsParams } | undefined>(
@@ -18,19 +22,35 @@ export type ScriptsFunc = <T extends { params: ScriptsParams } | undefined>(
       : [T, ScriptsCallback<T>?]
 ) => Promise<ScriptsReturnType<T>>;
 
+/**
+ * Tutorial function types
+ */
+
 export type TutorialFunc = (
   callback?: (data: MDSResObj<Tutorial>) => void,
 ) => Promise<MDSResObj<Tutorial>>;
+
+/**
+ * New script function types
+ */
 
 export type NewScriptFunc = (
   args: { params: NewScriptParams },
   callback?: (data: MDSResObj<Script>) => void,
 ) => Promise<MDSResObj<Script>>;
 
+/**
+ * Run script function types
+ */
+
 export type RunScriptFunc = (
   args: { params: RunScriptParams },
   callback?: (data: MDSResObj<RunScript>) => void,
 ) => Promise<MDSResObj<RunScript>>;
+
+/**
+ * Remove script function types
+ */
 
 export type RemoveScriptFunc = (
   args: { params: RemoveScriptParams },
