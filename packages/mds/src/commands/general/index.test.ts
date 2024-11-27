@@ -7,7 +7,7 @@ describe('MDS General Commands', () => {
   beforeAll(async () => {
     MDS.TEST_MODE = true;
     MDS.DEBUG_HOST = '127.0.0.1';
-    MDS.DEBUG_PORT = 10005;
+    MDS.DEBUG_PORT = 9005;
 
     // Check if MDS is running by fetching status
     const response = await fetch('http://127.0.0.1:9005/status');
