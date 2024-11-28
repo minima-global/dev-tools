@@ -1,5 +1,16 @@
 # @minima-global/mds
 
+## 0.14.0
+
+### Minor Changes
+
+- 828d52e: - More mds commands and types
+  - Improved type definisons
+  - Improved JS Docs for mds commands
+  - Better return types and exported type definitions
+  - Better type readablity with intelisense hover
+  - Implemented tests
+
 ## 0.13.6
 
 ### Patch Changes
