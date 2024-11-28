@@ -33,24 +33,24 @@ export const MinimaEvents = {
 /**
  * Types for the MDS Object
  */
-type MinimaEvents = (typeof MinimaEvents)[keyof typeof MinimaEvents];
+export type MinimaEvents = (typeof MinimaEvents)[keyof typeof MinimaEvents];
 
-type BaseEvent<T extends MinimaEvents, D = unknown> = {
+export type BaseEvent<T extends MinimaEvents, D = unknown> = {
   event: T;
   data: D;
 };
 
-type NewBlockEvent = BaseEvent<'NEWBLOCK', NEWBLOCKRES>;
+export type NewBlockEvent = BaseEvent<'NEWBLOCK', NEWBLOCKRES>;
 
-type TimerEvent10Seconds = BaseEvent<'MDS_TIMER_10SECONDS', TIMERES>;
+export type TimerEvent10Seconds = BaseEvent<'MDS_TIMER_10SECONDS', TIMERES>;
 
-type TimerEvent1Hour = BaseEvent<'MDS_TIMER_1HOUR', TIMERES>;
+export type TimerEvent1Hour = BaseEvent<'MDS_TIMER_1HOUR', TIMERES>;
 
-type MiningEvent = BaseEvent<'MINING', MININGRES>;
+export type MiningEvent = BaseEvent<'MINING', MININGRES>;
 
-type MinimalogEvent = BaseEvent<'MINIMALOG', MINIMALOGRES>;
+export type MinimalogEvent = BaseEvent<'MINIMALOG', MINIMALOGRES>;
 
-type OtherEvent = BaseEvent<
+export type OtherEvent = BaseEvent<
   Exclude<
     MinimaEvents,
     | 'NEWBLOCK'
@@ -62,7 +62,7 @@ type OtherEvent = BaseEvent<
   any
 >;
 
-type MinimaEvent =
+export type MinimaEvent =
   | NewBlockEvent
   | TimerEvent10Seconds
   | TimerEvent1Hour
@@ -83,28 +83,24 @@ export type DefaultRes = {
   pendinguid?: string;
 };
 
-type DefaultEventRes = {
-  event: string;
+export type NEWBLOCKRES = {
+  txpow: RAW_NEWBLOCKRES;
 };
 
-type NEWBLOCKRES = DefaultResObj<{
-  txpow: RAW_NEWBLOCKRES;
-}>;
-
-type TIMERES = DefaultResObj<{
+export type TIMERES = {
   timemilli: string;
-}>;
+};
 
-type MININGRES = DefaultResObj<{
+export type MININGRES = {
   txpow: RAW_NEWBLOCKRES;
   mining: boolean;
-}>;
+};
 
-type MINIMALOGRES = DefaultResObj<{
+export type MINIMALOGRES = {
   message: string;
-}>;
+};
 
-type RAW_NEWBLOCKRES = {
+export type RAW_NEWBLOCKRES = {
   txpowid: string;
   isblock: boolean;
   istransaction: boolean;
@@ -115,8 +111,6 @@ type RAW_NEWBLOCKRES = {
   hasbody: boolean;
   body: Body;
 };
-
-type DefaultResObj<T> = DefaultEventRes & { data: T };
 
 export type MDSResObj<T> = Prettify<DefaultRes & { response: T }>;
 
