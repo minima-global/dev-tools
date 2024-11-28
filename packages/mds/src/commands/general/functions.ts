@@ -44,15 +44,15 @@ import type { Prettify } from '../../helpers.js';
 /**
  * Balance function types
  */
+
 export type BalanceCallback<T> = (data: BalanceReturnType<T>) => void;
 
-type BalanceFuncParams<T extends BalanceParams | undefined> =
-  T extends undefined
+export type BalanceFunc = <T extends { params: BalanceParams } | undefined>(
+  ...args: T extends undefined
     ? [BalanceCallback<T>?]
-    : [{ params: BalanceParams }, BalanceCallback<T>?];
-
-export type BalanceFunc = <T extends BalanceParams | undefined>(
-  ...args: BalanceFuncParams<T>
+    : T extends BalanceParams
+      ? [T, BalanceCallback<T>?]
+      : [{ params: BalanceParams }, BalanceCallback<T>?]
 ) => Promise<BalanceReturnType<T>>;
 
 /**

@@ -763,7 +763,7 @@ export interface TransactionCommands {
    * // List specific transaction by ID
    * txnlist({ params: { id: "multisig" }})
    */
-  txnlist: TransactionsCommandFunctions.TxnList;
+  txnlist: TransactionsCommandFunctions.TxnListFunc;
   /**
    * Create a transaction output.
    * @param args - Parameters for creating the output

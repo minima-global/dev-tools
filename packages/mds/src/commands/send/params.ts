@@ -145,6 +145,10 @@ export type MultiSigParams = {
   action: MultiSigAction;
 };
 
+export type MultiSigGetKeyParams = {
+  action: 'getkey';
+};
+
 export type MultiSigCreateParams = {
   action: 'create';
   id: string;

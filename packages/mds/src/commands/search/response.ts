@@ -41,8 +41,43 @@ export type TxPowReturnType<S> = S extends {
 }
   ? S['params'] extends { address: string }
     ? MDSResObj<Transaction[]>
-    : MDSResObj<Transaction>
+    : S['params'] extends { onchain: string }
+      ? MDSResObj<TxPowOnchain>
+      : S['params'] extends { action: 'info' }
+        ? MDSResObj<TxPowInfo>
+        : MDSResObj<Transaction>
   : never;
+
+export type TxPowOnchain = {
+  found: true;
+  block: string;
+  blockid: string;
+  tip: string;
+  confirmations: string;
+};
+
+export type TxPowInfo = {
+  txpowdb: {
+    size: number;
+  };
+  onchaindb: {
+    size: number;
+    first: {
+      found: boolean;
+      blockid: string;
+      block: number;
+      timemilli: string;
+      date: string;
+    };
+    last: {
+      found: boolean;
+      blockid: string;
+      block: number;
+      timemilli: string;
+      date: string;
+    };
+  };
+};
 
 export type Key = {
   size: number;

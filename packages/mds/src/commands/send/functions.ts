@@ -12,6 +12,7 @@ import type {
   MultiSigViewParams,
   MultiSigPostParams,
   MultiSigParams,
+  MultiSigGetKeyParams,
 } from './params.js';
 import type {
   ReturnTypeMultiSig,
@@ -21,52 +22,97 @@ import type {
   Transaction,
 } from './response.js';
 
+/**
+ * Send function types
+ */
+
+type SendCallback<T> = (data: MDSResObj<T>) => void;
+
 export type SendFunc = (
   args: { params: SendParams },
-  callback?: (data: MDSResObj<Transaction>) => void,
+  callback?: SendCallback<Transaction>,
 ) => Promise<MDSResObj<Transaction>>;
+
+/**
+ * SendPoll function types
+ */
+
+type SendPollCallback = (data: MDSResObj<SendPoll>) => void;
 
 export type SendPollFunc = (
   args: { params: SendPollParams },
-  callback?: (data: MDSResObj<SendPoll>) => void,
+  callback?: SendPollCallback,
 ) => Promise<MDSResObj<SendPoll>>;
+
+/**
+ * SendNoSign function types
+ */
+
+type SendNoSignCallback = (data: MDSResObj<SendNoSign>) => void;
 
 export type SendNoSignFunc = (
   args: { params: SendNoSignParams },
-  callback?: (data: MDSResObj<SendNoSign>) => void,
+  callback?: SendNoSignCallback,
 ) => Promise<MDSResObj<SendNoSign>>;
+
+/**
+ * SendView function types
+ */
+
+type SendViewCallback = (data: MDSResObj<SendTxPow>) => void;
 
 export type SendViewFunc = (
   args: { params: SendFileParams },
-  callback?: (data: MDSResObj<SendTxPow>) => void,
+  callback?: SendViewCallback,
 ) => Promise<MDSResObj<SendTxPow>>;
+
+/**
+ * SendSign function types
+ */
+
+type SendSignCallback = (data: MDSResObj<SendNoSign>) => void;
 
 export type SendSignFunc = (
   args: { params: SendSignParams },
-  callback?: (data: MDSResObj<SendNoSign>) => void,
+  callback?: SendSignCallback,
 ) => Promise<MDSResObj<SendNoSign>>;
+
+/**
+ * SendPost function types
+ */
+
+type SendPostCallback = (data: MDSResObj<SendTxPow>) => void;
 
 export type SendPostFunc = (
   args: { params: SendFileParams },
-  callback?: (data: MDSResObj<SendTxPow>) => void,
+  callback?: SendPostCallback,
 ) => Promise<MDSResObj<SendTxPow>>;
+
+/**
+ * MultiSig function types
+ */
+
+type ActionParamMapMultiSig = {
+  readonly create: MultiSigCreateParams;
+  readonly list: MultiSigListParams;
+  readonly spend: MultiSigSpendParams;
+  readonly sign: MultiSigSignParams;
+  readonly view: MultiSigViewParams;
+  readonly post: MultiSigPostParams;
+  readonly getkey: MultiSigGetKeyParams;
+};
+
+type MultiSigParamType<T> = T extends { action: keyof ActionParamMapMultiSig }
+  ? ActionParamMapMultiSig[T['action']]
+  : T;
+
+type MultiSigFuncParams<T> = [
+  { params: MultiSigParamType<T> },
+  MultiSigCallback<T>?,
+];
 
 type MultiSigCallback<T> = (data: ReturnTypeMultiSig<T>) => void;
 
 export type MultiSigFunc = <T extends MultiSigParams>(
-  ...args: T extends { action: 'create' }
-    ? [{ params: MultiSigCreateParams }, MultiSigCallback<T>?]
-    : T extends { action: 'list' }
-      ? [{ params: MultiSigListParams }, MultiSigCallback<T>?]
-      : T extends { action: 'spend' }
-        ? [{ params: MultiSigSpendParams }, MultiSigCallback<T>?]
-        : T extends { action: 'sign' }
-          ? [{ params: MultiSigSignParams }, MultiSigCallback<T>?]
-          : T extends { action: 'view' }
-            ? [{ params: MultiSigViewParams }, MultiSigCallback<T>?]
-            : T extends { action: 'post' }
-              ? [{ params: MultiSigPostParams }, MultiSigCallback<T>?]
-              : T extends { action: 'getkey' }
-                ? [{ params: T }, MultiSigCallback<T>?]
-                : [{ params: T }, MultiSigCallback<T>?]
+  ...args: MultiSigFuncParams<T>
 ) => Promise<ReturnTypeMultiSig<T>>;

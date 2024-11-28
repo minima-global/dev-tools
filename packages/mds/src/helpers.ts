@@ -1,3 +1,5 @@
+import { httpPostAsync } from './mds.js';
+
 /**
  * Helper function to handle command arguments and return the command string, callback, and payload.
  * @param command - The command to be executed.
@@ -58,6 +60,20 @@ export function commandHandler(command: string, args: any[]) {
   }
 
   return { commandString, callback };
+}
+
+export function createCommandFunction(command: string) {
+  return (...args: any[]) => {
+    const { commandString, callback } = commandHandler(command, args);
+    return new Promise((resolve) => {
+      httpPostAsync('cmd', commandString, (data: any) => {
+        resolve(data);
+        if (callback && typeof callback === 'function') {
+          callback(data);
+        }
+      });
+    });
+  };
 }
 
 export type Prettify<T> = {

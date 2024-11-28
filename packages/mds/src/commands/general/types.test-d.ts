@@ -3,6 +3,7 @@ import {
   MDS,
   type BalanceCallback,
   type BalanceParams,
+  type BalanceWithTokenDetails,
   type BlockCallback,
   type CheckAddressParams,
   type CoinCheckParams,
@@ -12,6 +13,7 @@ import {
   type HashTestParams,
   type HistoryCallback,
   type HistoryParams,
+  type MDSResObj,
   type NewAddressCallback,
   type PrintTreeCallback,
   type PrintTreeParams,
@@ -34,9 +36,23 @@ describe('MDS Commands Type Checking', () => {
     });
 
     it('should accept correct parameter types with optional callback', () => {
-      type Expected = BalanceCallback<BalanceParams> | undefined;
+      type Expected =
+        | BalanceCallback<{
+            params: BalanceParams;
+          }>
+        | undefined;
       type Actual = Parameters<typeof MDS.cmd.balance>[1];
       expectTypeOf<Actual>().toMatchTypeOf<Expected>();
+    });
+
+    it('tokendetails true should return BalanceWithTokenDetailsresponse', async () => {
+      type Response = MDSResObj<BalanceWithTokenDetails[]>;
+      const actual = await MDS.cmd.balance({
+        params: {
+          tokendetails: 'true',
+        },
+      });
+      expectTypeOf<typeof actual>().toMatchTypeOf<Response>();
     });
   });
 

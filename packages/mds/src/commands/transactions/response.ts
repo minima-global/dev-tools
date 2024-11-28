@@ -1,6 +1,6 @@
 import type { MDSResObj } from '../../types.js';
 import type { Header, Txn, Witness } from '../send/response.js';
-import type { TxnExportParams } from './params.js';
+import type { TxnExportParams, TxnSignParams } from './params.js';
 
 export type Burn = {
   '1block': BlockBurn;
@@ -53,7 +53,7 @@ export type Valid = {
 
 export type TxnDelete = string;
 
-export type ExportReturnType<S> = S extends {
+export type TxnExportReturnType<S> = S extends {
   params: TxnExportParams;
 }
   ? S['params'] extends { file: string }
@@ -109,7 +109,7 @@ export type TxnPost = {
 };
 
 export type TxnSignReturnType<S> = S extends {
-  params: any;
+  params: TxnSignParams;
 }
   ? S['params'] extends { txnpostauto: 'true' }
     ? MDSResObj<TxSignPost>

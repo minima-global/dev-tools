@@ -61,12 +61,22 @@ export type TxnInputParams = {
    * The id of the transaction to add an input to.
    */
   id: string;
-
   /**
-   * (Optional) true or false, true will add an unspecified, floating ELTOO coin as an input. If true, also specify address, amount, tokenid. If false, specify a coinid or coindata.
+   * (Optional) true or false, true will add an unspecified, floating ELTOO coin as an input.
    */
   floating?: 'true' | 'false';
-
+  /**
+   * (Optional) The address when using floating input
+   */
+  address?: string;
+  /**
+   * (Optional) The amount when using floating input
+   */
+  amount?: string;
+  /**
+   * (Optional) The tokenid when using floating input
+   */
+  tokenid?: string;
   /**
    * (Optional) true or false, true will add the scripts and MMR proof for the coin.
    */
@@ -74,9 +84,25 @@ export type TxnInputParams = {
   /**
    * (Optional) The coinid of the coin to add as an input.
    */
-
   coinid?: string;
-};
+  /**
+   * (Optional) The coindata to add as input
+   */
+  coindata?: string;
+} & (
+  | {
+      floating: 'true';
+      address: string;
+      amount: string;
+      tokenid: string;
+    }
+  | {
+      coindata: string;
+    }
+  | {
+      coinid: string;
+    }
+);
 
 export type TxnDefaultParams1 = {
   id: string;

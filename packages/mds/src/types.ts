@@ -144,6 +144,8 @@ interface MDSFileAccess {
   deletefromweb: FileAccessParams;
 }
 
+type CommandFunction = (...args: any[]) => Promise<any>;
+
 export interface MDSObj {
   filehost: string;
   mainhost: string;
@@ -184,7 +186,9 @@ export interface MDSObj {
    * @example using promise
    * const data = await MDS.cmd.balance({ params: { address: '0x00' } })
    */
-  cmd: GeneralCommands &
+  cmd: {
+    [K in string]: CommandFunction;
+  } & GeneralCommands &
     MDSCommands &
     TransactionCommands &
     ScriptsCommands &

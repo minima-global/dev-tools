@@ -8,11 +8,9 @@ describe('MDS General Commands', () => {
     MDS.TEST_MODE = true;
     MDS.DEBUG_HOST = '127.0.0.1';
     MDS.DEBUG_PORT = 9005;
-
-    // Check if all is good and RPC is
+    // Check if all is good and RPC is working
     const response = await fetch('http://127.0.0.1:9005/status');
     const data = await response.json();
-
     if (!data.status) {
       throw new Error('MDS cannot be reached via RPC');
     }
@@ -107,14 +105,14 @@ describe('MDS General Commands', () => {
       expect(result.response).toHaveProperty('date');
     });
 
-    it('should return block even when called with invalid params', async () => {
+    it('should return json error when called with invalid params', async () => {
       const INVALID_PARAMS = {
         invalid: 'invalid',
       };
       // @ts-expect-error - Invalid params
-      expect(() => MDS.cmd.block({ params: INVALID_PARAMS })).toThrow(
-        TypeError,
-      );
+      const res = await MDS.cmd.block({ params: INVALID_PARAMS });
+      expect(res.status).toBe(false);
+      expect(res.error).toBe('Invalid parameter : ' + INVALID_PARAMS.invalid);
     });
   });
 

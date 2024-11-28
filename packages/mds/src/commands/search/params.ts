@@ -85,11 +85,16 @@ type OnChainParams = BaseTxPowParams & {
   address?: never;
 };
 
+type ActionInfoParams = {
+  action: 'info';
+};
+
 export type TxPowParams =
   | TxPowIdParams
   | BlockParams
   | AddressParams
-  | OnChainParams;
+  | OnChainParams
+  | ActionInfoParams;
 
 export type ScanChainParams = {
   depth: number;

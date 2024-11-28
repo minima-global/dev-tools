@@ -4,6 +4,7 @@ import type {
   LogParams,
   TxnExportParams,
   TxnImportParams,
+  TxnInputParams,
   TxnListParams,
   TxnOutputParams,
   TxnParams,
@@ -12,100 +13,130 @@ import type {
 } from './params.js';
 import type {
   Burn,
-  ExportReturnType,
   Log,
   TxnCheck,
   TxnDelete,
+  TxnExportReturnType,
   TxnInput,
   TxnPost,
   TxnSignReturnType,
 } from './response.js';
 
-export type BurnFunc = (
-  callback?: (data: MDSResObj<Burn>) => void,
-) => Promise<MDSResObj<Burn>>;
+/**
+ * Burn function types
+ */
+
+type BurnCallback = (data: MDSResObj<Burn>) => void;
+
+export type BurnFunc = (callback?: BurnCallback) => Promise<MDSResObj<Burn>>;
+
+/**
+ * Log function types
+ */
+
+type LogCallback = (data: MDSResObj<Log>) => void;
 
 export type LogFunc = (
   args: { params: LogParams },
-  callback?: (data: MDSResObj<Log>) => void,
+  callback?: LogCallback,
 ) => Promise<MDSResObj<Log>>;
+
+/**
+ * Txn function types
+ */
+
+type TxnCallback = (data: MDSResObj<Txn>) => void;
 
 export type TxnFunc = (
   args: { params: TxnParams },
-  callback?: (data: MDSResObj<Txn>) => void,
+  callback?: TxnCallback,
 ) => Promise<MDSResObj<Txn>>;
+
+/**
+ * TxnCheck function types
+ */
+
+type TxnCheckCallback = (data: MDSResObj<TxnCheck>) => void;
 
 export type TxnCheckFunc = (
   args: { params: TxnParams },
-  callback?: (data: MDSResObj<TxnCheck>) => void,
+  callback?: TxnCheckCallback,
 ) => Promise<MDSResObj<TxnCheck>>;
+
+/**
+ * TxnDelete function types
+ */
+
+type TxnDeleteCallback = (data: MDSResObj<TxnDelete>) => void;
 
 export type TxnDeleteFunc = (
   args: { params: TxnParams },
-  callback?: (data: MDSResObj<TxnDelete>) => void,
+  callback?: TxnDeleteCallback,
 ) => Promise<MDSResObj<TxnDelete>>;
 
+/**
+ * TxnExport function types
+ */
+
+type TxnExportCallback<T> = (data: TxnExportReturnType<T>) => void;
+
 export type TxnExportFunc = <T extends { params: TxnExportParams }>(
-  ...args: T extends TxnExportParams
-    ? [T, callback?: (data: ExportReturnType<T>) => void]
-    : [
-        { params: TxnExportParams },
-        callback?: (data: ExportReturnType<T>) => void,
-      ]
-) => Promise<ExportReturnType<T>>;
+  ...args: T extends { params: TxnExportParams }
+    ? [{ params: TxnExportParams }, TxnExportCallback<T>?]
+    : [T, TxnExportCallback<T>?]
+) => Promise<TxnExportReturnType<T>>;
+
+/**
+ * TxnImport function types
+ */
+
+type TxnImportCallback = (data: MDSResObj<Txn>) => void;
 
 export type TxnImportFunc = (
   args: { params: TxnImportParams },
-  callback?: (data: MDSResObj<Txn>) => void,
+  callback?: TxnImportCallback,
 ) => Promise<MDSResObj<Txn>>;
 
-// TODO: FIX THIS
-export type TxnInputFunc = {
-  (
-    args: {
-      params: {
-        id: string;
-        floating: 'true';
-        address: string;
-        amount: string;
-        tokenid: string;
-        scriptmmr?: string; // Optional
-      };
-    },
-    callback?: (data: MDSResObj<TxnInput>) => void,
-  ): Promise<MDSResObj<TxnInput>>;
+/**
+ * TxnInput function types
+ */
 
-  (
-    args: {
-      params: {
-        id: string;
-        coindata: string;
-        scriptmmr?: 'true' | 'false';
-      };
-    },
-    callback?: (data: MDSResObj<TxnInput>) => void,
-  ): Promise<MDSResObj<TxnInput>>;
-  (
-    args: {
-      params: {
-        id: string;
-        coinid: string;
-        scriptmmr?: 'true' | 'false';
-      };
-    },
-    callback?: (data: MDSResObj<TxnInput>) => void,
-  ): Promise<MDSResObj<TxnInput>>;
-};
+type TxnInputCallback = (data: MDSResObj<TxnInput>) => void;
 
-export type TxnList = (
-  args: { params: TxnListParams },
-  callback?: (data: MDSResObj<Txn>) => void,
+export type TxnInputFunc = (
+  args: { params: TxnInputParams },
+  callback?: TxnInputCallback,
+) => Promise<MDSResObj<TxnInput>>;
+
+/**
+ * TxnList function types
+ */
+
+type TxnListCallback = (data: MDSResObj<Txn>) => void;
+
+type TxnListFuncParams<T extends TxnListParams | undefined> =
+  T extends undefined
+    ? [TxnListCallback?]
+    : [{ params: TxnListParams }, TxnListCallback?];
+
+export type TxnListFunc = <T extends TxnListParams | undefined>(
+  ...args: TxnListFuncParams<T>
 ) => Promise<MDSResObj<Txn>>;
+
+/**
+ * TxnOutput function types
+ */
+
+type TxnOutputCallback = (data: MDSResObj<Txn>) => void;
 
 export type TxnOutputFunc = (
   args: { params: TxnOutputParams },
-  callback?: (data: MDSResObj<Txn>) => void,
+  callback?: TxnOutputCallback,
 ) => Promise<MDSResObj<Txn>>;
+
+/**
+ * TxnSign function types
+ */
 
 type TxnSignCallback<T> = (data: TxnSignReturnType<T>) => void;
 
@@ -115,7 +146,13 @@ export type TxnSignFunc = <T extends { params: TxnSignParams }>(
     : [T, TxnSignCallback<T>?]
 ) => Promise<TxnSignReturnType<T>>;
 
+/**
+ * TxnPost function types
+ */
+
+type TxnPostCallback = (data: MDSResObj<TxnPost>) => void;
+
 export type TxnPostFunc = (
   args: { params: TxnPostParams },
-  callback?: (data: MDSResObj<TxnPost>) => void,
+  callback?: TxnPostCallback,
 ) => Promise<MDSResObj<TxnPost>>;
