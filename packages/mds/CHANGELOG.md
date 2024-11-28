@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.1
+
+### Patch Changes
+
+- b60534d: fixed data object on init function
+
 ## 0.14.0
 
 ### Minor Changes
