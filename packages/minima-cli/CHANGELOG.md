@@ -4,4 +4,4 @@
 
 ### Patch Changes
 
-- 62805af: minima-cli tool for insatlling, zipping and building minidaps
+- 27a9e9e: minim cli

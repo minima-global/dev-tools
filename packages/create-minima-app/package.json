@@ -1,6 +1,6 @@
 {
   "name": "create-minima-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "files": [
     "dist"
