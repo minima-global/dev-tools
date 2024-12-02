@@ -1,8 +1,10 @@
 {
   "name": "@minima-global/create-minima-app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "files": [
-    "dist"
+    "dist",
+    "templates",
+    "README.md"
   ],
   "type": "module",
   "exports": "./dist/index.js",
