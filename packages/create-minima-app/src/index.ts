@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+import { install, postBuild, zip } from "@minima-global/minima-cli"
 import chalk from "chalk"
 import { exec } from "child_process"
 import { Command } from "commander"
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
-import { install, postBuild, zip } from "minima-cli"
 import path from "path"
 import prompts from "prompts"
+import { fileURLToPath } from "url"
 import { z } from "zod"
 import packageJson from "../package.json"
 import {
@@ -18,6 +19,9 @@ import { logger } from "./utils/logger.js"
 import { spinner } from "./utils/spinner.js"
 
 const args = process.argv.splice(2)
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const initOptionsSchema = z.object({
   appName: z.string().min(1),
@@ -140,7 +144,11 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
     // Create directories and copy files
     mkdirSync(options.appName)
     projectSpinner.text = "Copying template files..."
-    cpSync("./templates/react-ts", options.appName, {
+    const templatePath = path.join(__dirname, "../templates/react-ts")
+    if (!existsSync(templatePath)) {
+      throw new Error(`Template directory not found: ${templatePath}`)
+    }
+    cpSync(templatePath, options.appName, {
       recursive: true,
     })
 

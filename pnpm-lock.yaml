@@ -47,6 +47,9 @@ importers:
 
   packages/create-minima-app:
     dependencies:
+      '@minima-global/minima-cli':
+        specifier: workspace:*
+        version: link:../minima-cli
       axios:
         specifier: ^1.7.7
         version: 1.7.8
@@ -56,9 +59,6 @@ importers:
       commander:
         specifier: ^12.1.0
         version: 12.1.0
-      minima-cli:
-        specifier: workspace:*
-        version: link:../minima-cli
       ora:
         specifier: ^8.1.1
         version: 8.1.1
