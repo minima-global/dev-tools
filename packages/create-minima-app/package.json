@@ -1,6 +1,6 @@
 {
-  "name": "create-minima-app",
-  "version": "0.0.3",
+  "name": "@minima-global/create-minima-app",
+  "version": "0.0.4",
   "private": true,
   "files": [
     "dist"
@@ -10,6 +10,27 @@
   "bin": {
     "create-minima-app": "./dist/index.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "minima",
+    "typescript",
+    "mds",
+    "minidapps",
+    "minima-blockchain",
+    "web3"
+  ],
+  "homepage": "https://github.com/minima-global/dev-tools",
+  "bugs": {
+    "url": "https://github.com/minima-global/dev-tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/minima-global/dev-tools"
+  },
+  "author": "Minima Global",
+  "license": "MIT",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
