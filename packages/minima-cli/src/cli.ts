@@ -80,6 +80,7 @@ program
   .command("install")
   .description("Install the MiniDapp")
   .option("-p, --port <port>", "port number", "9005")
+  .option("-l, --logs", "show logs", false)
   .action(async (options) => {
     try {
       const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
@@ -88,6 +89,7 @@ program
         pathToFile: process.cwd(),
         miniDappName: packageJson.name,
         miniDappVersion: packageJson.version,
+        logs: options.logs,
       })
       logger.info("MiniDapp installed successfully!")
     } catch (error) {

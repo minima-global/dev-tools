@@ -112,6 +112,13 @@ export type RAW_NEWBLOCKRES = {
   body: Body;
 };
 
+export type DappLink = {
+  status: boolean;
+  uid: string;
+  sessionid: string;
+  base: string;
+};
+
 export type MDSResObj<T> = Prettify<DefaultRes & { response: T }>;
 
 type FileAccessParams = (
@@ -200,7 +207,10 @@ export interface MDSObj {
   /**
    * Get a link to a different Dapp. READ dapps can only get  * READ DAPPS. WRITE can get all dapps.
    */
-  dapplink: (dappname: string, callback: (data: string) => void) => void;
+  dapplink: (
+    dappname: string,
+    callback?: (data: DappLink) => void,
+  ) => Promise<DappLink>;
 
   api: {
     call: (
