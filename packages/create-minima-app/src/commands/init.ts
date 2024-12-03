@@ -1,44 +1,88 @@
 import { install, postBuild, zip } from "@minima-global/minima-cli"
 import chalk from "chalk"
 import { exec } from "child_process"
+import { Command } from "commander"
+import figlet from "figlet"
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
 import path from "path"
 import prompts from "prompts"
 import { fileURLToPath } from "url"
 import { z } from "zod"
+import { getConfiguration } from "../utils/get-configuration.js"
 import {
   getInstallCommand,
   getPackageManager,
-  getRunCommand,
-} from "./get-package-manager.js"
-import { logger } from "./logger.js"
-import { setupDebugConfig } from "./setup-debug-config.js"
-import { spinner } from "./spinner.js"
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+} from "../utils/get-package-manager.js"
+import { logger } from "../utils/logger.js"
+import { setupDebugConfig } from "../utils/setup-debug-config.js"
+import { spinner } from "../utils/spinner.js"
 
 export const initOptionsSchema = z.object({
   appName: z.string().min(1),
-  isNewProject: z.boolean().optional(),
+  isNewProject: z.boolean(),
   port: z.number().optional(),
+  rpc: z.boolean().optional(),
+  configOnly: z.boolean().optional(),
 })
 
-export async function createApp(options: z.infer<typeof initOptionsSchema>) {
-  if (nameExists(options.appName)) {
-    logger.error(`${options.appName} already exists`)
-    process.exit(1)
-  }
+export const init = new Command()
+  .name("init")
+  .description("Initialize a new Minima App or configure an existing one")
+  .option("-n, --name <name>", "the name of the app", "minima-app")
+  .option("-p, --port <port>", "the port of the Minima node", "9001")
+  .option("-r, --rpc <rpc>", "the RPC URL of the Minima node", true)
+  .option("-c, --config-only", "only configure RPC and debug settings", false)
+  .action(async (opts) => {
+    try {
+      logger.log(
+        chalk.white(figlet.textSync("MINIMA", { horizontalLayout: "full" }))
+      )
 
-  if (options.appName === "minima-app") {
-    const { APP_NAME } = await prompts({
-      type: "text",
-      name: "APP_NAME",
-      message: "What is the name of your project?",
+      logger.info("Welcome to the Minima CLI\n")
+
+      const config = await getConfiguration()
+
+      const options = initOptionsSchema.parse({
+        port: Number(opts.port) || 9001,
+        appName: opts.name,
+        rpc: opts.rpc,
+        isNewProject: config ? false : true,
+        configOnly: opts.configOnly,
+      })
+
+      if (options.configOnly || config) {
+        await configureExistingProject(options)
+      } else {
+        await createApp(options)
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        logger.error("Invalid options:")
+        error.errors.forEach((err) => {
+          logger.error(`- ${err.path.join(".")}: ${err.message}`)
+        })
+      } else {
+        logger.error(error)
+      }
+      logger.break()
+      process.exit(1)
+    }
+  })
+
+async function configureExistingProject(
+  options: z.infer<typeof initOptionsSchema>
+) {
+  if (!options.isNewProject) {
+    logger.info("Looks like you already have a Minima App configured!")
+
+    const { RE_CONFIGURE } = await prompts({
+      type: "confirm",
+      name: "RE_CONFIGURE",
+      message: "Would you like to reconfigure?",
+      initial: true,
     })
-    options.appName = APP_NAME
 
-    if (!options.appName) {
+    if (!RE_CONFIGURE) {
       process.exit(0)
     }
   }
@@ -68,33 +112,55 @@ export async function createApp(options: z.infer<typeof initOptionsSchema>) {
     process.exit(0)
   }
 
-  const { template } = await prompts({
-    type: "select",
-    name: "template",
-    message: "Select a template for your project:",
-    choices: [
-      {
-        title: "React + TypeScript",
-        description: "Recommended",
-        value: "react-typescript",
-      },
-      {
-        title: "React",
-        description: "Coming soon",
-        value: "react",
-        disabled: true,
-      },
-      {
-        title: "Vanilla JS",
-        description: "Coming soon",
-        value: "vanilla",
-        disabled: true,
-      },
-    ],
+  const { DEBUG_CONFIG } = await prompts({
+    type: "confirm",
+    name: "DEBUG_CONFIG",
+    message: "Would you like to configure your debug settings?",
+    initial: true,
+    active: "no",
+    inactive: "yes",
   })
 
-  if (!template) {
-    process.exit(0)
+  if (DEBUG_CONFIG) {
+    const { MDS_PASSWORD } = await prompts({
+      type: "password",
+      name: "MDS_PASSWORD",
+      message: "Enter your MDS password:",
+    })
+
+    const packageManager = getPackageManager()
+
+    await setupDebugConfig({
+      port: MINIMA_PORT + 2,
+      password: MDS_PASSWORD,
+      packageManager,
+      appName: options.appName,
+      logs: options.isNewProject,
+    })
+  }
+
+  process.exit(0)
+}
+
+export async function createApp(options: z.infer<typeof initOptionsSchema>) {
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = path.dirname(__filename)
+  if (nameExists(options.appName)) {
+    logger.error(`${options.appName} already exists`)
+    process.exit(1)
+  }
+
+  if (options.appName === "minima-app") {
+    const { APP_NAME } = await prompts({
+      type: "text",
+      name: "APP_NAME",
+      message: "What is the name of your project?",
+    })
+    options.appName = APP_NAME
+
+    if (!options.appName) {
+      process.exit(0)
+    }
   }
 
   const projectSpinner = spinner(`Creating project directory...`).start()
@@ -173,42 +239,8 @@ export async function createApp(options: z.infer<typeof initOptionsSchema>) {
 
     projectSpinner.succeed(chalk.green(`Project created successfully!`))
 
-    const { DEBUG_CONFIG } = await prompts({
-      type: "confirm",
-      name: "DEBUG_CONFIG",
-      message: "Would you like to configure your debug settings?",
-      initial: true,
-      active: "no",
-      inactive: "yes",
-    })
-
-    if (!DEBUG_CONFIG) {
-      logger.log(
-        chalk.cyan(`You can now run your MiniDapp with:\n\n`) +
-          chalk.cyan(`cd ${options.appName}\n`) +
-          chalk.cyan(`${getRunCommand(packageManager, "dev")}\n`)
-      )
-
-      logger.info(
-        "If you need further help or guidance, visit https://docs.minima.global\n"
-      )
-      process.exit(0)
-    }
-
-    const { MDS_PASSWORD } = await prompts({
-      type: "password",
-      name: "MDS_PASSWORD",
-      message: "Enter your MDS password:",
-    })
-
-    await setupDebugConfig({
-      port: options.port ? options.port + 2 : 9003,
-      password: MDS_PASSWORD,
-      packageManager,
-      appName: options.appName,
-    })
-
-    process.exit(0)
+    // Configure the new project
+    await configureExistingProject(options)
   } catch (error) {
     projectSpinner.fail(
       chalk.red(

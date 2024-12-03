@@ -16,6 +16,7 @@ const DEBUGGING_SCHEMA = z.object({
   password: z.string(),
   packageManager: z.custom<PackageManager>(),
   appName: z.string(),
+  logs: z.boolean(),
 })
 
 export async function setupDebugConfig(
@@ -39,7 +40,7 @@ export async function setupDebugConfig(
   await page.click("[type='submit']")
   await page.waitForFunction(
     () => document.body.innerText.includes("Click anywhere to continue"),
-    { timeout: 30000 }
+    { timeout: 5000 }
   )
   await page.click("body")
 
@@ -63,14 +64,25 @@ export async function setupDebugConfig(
 
   await browser.close()
 
-  debuggingSpinner.succeed(
-    chalk.green(`Debug settings configured successfully!\n\n`) +
-      chalk.cyan(`You can now run your MiniDapp with:\n\n`) +
-      chalk.cyan(`cd ${values.appName}\n`) +
-      chalk.cyan(`${getRunCommand(values.packageManager, "dev")}\n`)
-  )
+  if (values.logs) {
+    debuggingSpinner.succeed(
+      chalk.green(`Debug settings configured successfully!\n\n`) +
+        chalk.cyan(`You can now run your MiniDapp with:\n\n`) +
+        chalk.cyan(`cd ${values.appName}\n`) +
+        chalk.cyan(`${getRunCommand(values.packageManager, "dev")}\n`)
+    )
 
-  logger.info(
-    "If you need further help or guidance, visit https://docs.minima.global\n"
-  )
+    logger.info(
+      "If you need further help or guidance, visit https://docs.minima.global\n"
+    )
+  } else {
+    debuggingSpinner.succeed(
+      chalk.green("Debug settings configured successfully!\n\n") +
+        chalk.cyan(
+          "If you need further help or guidance, visit https://docs.minima.global\n"
+        )
+    )
+  }
+
+  process.exit(0)
 }
