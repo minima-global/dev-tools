@@ -1,13 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useContext } from "react"
+import { appContext } from "../AppContext"
 
 export const Route = createFileRoute("/")({
   component: Index,
 })
 
 function Index() {
+  const { block } = useContext(appContext)
+
   return (
     <>
-      <div className="flex gap-4 items-center z-10 absolute top-10 left-10">
+      <div className="flex gap-4 items-center z-10 absolute top-10 left-10 right-10 justify-between">
         <svg
           width="60"
           height="60"
@@ -21,6 +25,24 @@ function Index() {
             fill="currentColor"
           />
         </svg>
+
+        {block && (
+          <div className="flex items-center gap-2 mt-3">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="fill-green-500"
+            >
+              <path d="M12 3C7.95 3 4.21 4.34 1.2 6.6L3 9C5.5 7.12 8.62 6 12 6C15.38 6 18.5 7.12 21 9L22.8 6.6C19.79 4.34 16.05 3 12 3M12 9C9.3 9 6.81 9.89 4.8 11.4L6.6 13.8C8.1 12.67 9.97 12 12 12C14.03 12 15.9 12.67 17.4 13.8L19.2 11.4C17.19 9.89 14.7 9 12 9M12 15C10.65 15 9.4 15.45 8.4 16.2L12 21L15.6 16.2C14.6 15.45 13.35 15 12 15Z" />
+            </svg>
+            <p className="text-gray-300 font-mono text-sm ">
+              Block: {block?.block}
+            </p>
+          </div>
+        )}
       </div>
 
       <main className="relative min-h-screen flex flex-col items-center justify-center container mx-auto">
@@ -29,15 +51,24 @@ function Index() {
             className="absolute inset-0"
             style={{
               backgroundImage: `
-        linear-gradient(to right, rgba(75, 75, 75, 0.2) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(75, 75, 75, 0.2) 1px, transparent 1px)
+        linear-gradient(to right, rgba(75, 75, 75, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(75, 75, 75, 0.4) 1px, transparent 1px)
       `,
               backgroundSize: "2rem 2rem",
               backgroundColor: "#000000",
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50" />
+          <div className="absolute inset-0">
+            <div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 30%, transparent 70%)",
+              }}
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
         </div>
 
         <div className="relative z-10 container mx-auto w-fit p-8 min-h-screen flex flex-col justify-center ">

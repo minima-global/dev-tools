@@ -128,8 +128,8 @@ export const init = new Command()
           name: "TEMPLATE",
           message: "Which template would you like to use?",
           choices: [
-            { title: "Vanilla JS", value: "vanilla-js" },
             { title: "React TS", value: "react-ts" },
+            { title: "Vanilla JS", value: "vanilla-js" },
           ],
           initial: 0,
         })
