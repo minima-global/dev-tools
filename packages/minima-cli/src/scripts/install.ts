@@ -1,6 +1,8 @@
-import axios from "axios"
+import { exec } from "child_process"
+import { promisify } from "util"
 import { z } from "zod"
-import { logger } from "../utils/logger.js"
+
+const execAsync = promisify(exec)
 
 const installParams = z.object({
   port: z.number().default(9005),
@@ -13,7 +15,7 @@ const installParams = z.object({
 type InstallParams = z.infer<typeof installParams>
 
 export async function install({
-  port,
+  port = 9005,
   pathToFile,
   miniDappName,
   miniDappVersion,
@@ -27,21 +29,22 @@ export async function install({
     logs,
   })
 
-  try {
-    const response = await axios.get(
-      `http://localhost:${params.port}/${encodeURIComponent(
-        `mds action:install file:${params.pathToFile}/${params.miniDappName}-${params.miniDappVersion}.mds.zip`
-      )}`,
-      {
-        timeout: 5000,
-      }
-    )
+  const url = `http://localhost:${params.port}/${encodeURIComponent(
+    `mds action:install file:${params.pathToFile}/${params.miniDappName}-${params.miniDappVersion}.mds.zip`
+  )}`
 
-    if (logs) {
-      logger.info(JSON.stringify(response.data, null, 2))
+  try {
+    const { stdout, stderr } = await execAsync(`curl -s "${url}"`)
+
+    if (stderr) {
+      throw new Error(stderr)
     }
 
-    return response
+    if (logs) {
+      console.log("Installation response:", stdout)
+    }
+
+    return JSON.parse(stdout)
   } catch (error) {
     throw new Error(
       "Failed to install, please ensure you specified the correct port that Minima is running on"

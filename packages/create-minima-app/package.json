@@ -50,7 +50,8 @@
     "ora": "^8.1.1",
     "prompts": "^2.4.2",
     "puppeteer": "^23.9.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "vite": "^6.0.2"
   },
   "devDependencies": {
     "@types/figlet": "^1.7.0",

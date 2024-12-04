@@ -61,10 +61,10 @@ export function getRunCommand(
     case "npm":
       return `npm run ${script}`
     case "yarn":
-      return `yarn ${script}`
+      return `yarn run ${script}`
     case "pnpm":
-      return `pnpm ${script}`
+      return `pnpm run ${script}`
     case "bun":
-      return `bun ${script}`
+      return `bun run ${script}`
   }
 }
