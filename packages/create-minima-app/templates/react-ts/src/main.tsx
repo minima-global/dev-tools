@@ -24,8 +24,8 @@ declare module "@tanstack/react-router" {
 }
 
 if (import.meta.env.DEV) {
-  MDS.DEBUG_HOST = "localhost"
-  MDS.DEBUG_PORT = 9003
+  MDS.DEBUG_HOST = import.meta.env.VITE_DEBUG_HOST
+  MDS.DEBUG_PORT = Number(import.meta.env.VITE_DEBUG_MDS_PORT)
   MDS.DEBUG_MINIDAPPID = import.meta.env.VITE_DEBUG_SESSION_ID
 }
 

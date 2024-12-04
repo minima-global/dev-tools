@@ -1,5 +1,7 @@
 import type { DappLink, MDSObj } from "@minima-global/mds"
 import chalk from "chalk"
+import fs from "fs/promises"
+import path from "path"
 import puppeteer from "puppeteer"
 import { z } from "zod"
 import { getRunCommand, type PackageManager } from "./get-package-manager.js"
@@ -16,7 +18,9 @@ const DEBUGGING_SCHEMA = z.object({
   password: z.string(),
   packageManager: z.custom<PackageManager>(),
   appName: z.string(),
+  host: z.string(),
   logs: z.boolean(),
+  template: z.string(),
 })
 
 export async function setupDebugConfig(
@@ -55,14 +59,28 @@ export async function setupDebugConfig(
   const sessionID = data.sessionid
   debuggingSpinner.text = "Writing environment variables..."
 
-  await writeEnvFile({
-    VITE_DEBUG_MDS_PORT: values.port,
-    VITE_DEBUG_SESSION_ID: sessionID,
-    VITE_DEBUG: "true",
-    VITE_DEBUG_HOST: "localhost",
-  })
-
   await browser.close()
+
+  if (values.template === "vanilla-js") {
+    // Update the mds.js file for vanilla-js template
+    const mdsPath = path.join(process.cwd(), "mds.js")
+    const mdsContent = await fs.readFile(mdsPath, "utf-8")
+
+    const updatedContent = mdsContent
+      .replace(/DEBUG_HOST: null,/, `DEBUG_HOST: "${values.host}",`)
+      .replace(/DEBUG_PORT: -1,/, `DEBUG_PORT: ${values.port},`)
+      .replace(/DEBUG_MINIDAPPID: "0x00",/, `DEBUG_MINIDAPPID: "${sessionID}",`)
+
+    await fs.writeFile(mdsPath, updatedContent, "utf-8")
+  } else {
+    // Write .env file for other templates
+    await writeEnvFile({
+      VITE_DEBUG_MDS_PORT: values.port,
+      VITE_DEBUG_SESSION_ID: sessionID,
+      VITE_DEBUG: "true",
+      VITE_DEBUG_HOST: values.host,
+    })
+  }
 
   if (values.logs) {
     debuggingSpinner.succeed(

@@ -12,9 +12,9 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       initialised.current = true
 
       MDS.init((msg) => {
-        console.log(msg)
         if (msg.event === MinimaEvents.INITED) {
           setLoaded(true)
+          console.log("MDS initialised and ready! 🚀")
         }
       })
     }

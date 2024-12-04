@@ -160,14 +160,30 @@ export const init = new Command()
           message: "Enter your MDS password:",
         })
 
+        const { MINIMA_HOST } = await prompts({
+          type: "text",
+          name: "MINIMA_HOST",
+          message: "Enter the host where Minima is running:",
+          initial: "127.0.0.1",
+          instructions:
+            "This is the host where Minima is running. Default is 127.0.0.1 (localhost)",
+        })
+
         const packageManager = getPackageManager()
+
+        if (!options.template) {
+          logger.error("Template is required")
+          process.exit(1)
+        }
 
         await setupDebugConfig({
           port: MINIMA_PORT + 2,
           password: MDS_PASSWORD,
           packageManager,
           appName: options.appName,
+          host: MINIMA_HOST,
           logs: true,
+          template: options.template,
         })
       }
     } catch (error) {
@@ -228,14 +244,28 @@ async function configureExistingProject(
       message: "Enter your MDS password:",
     })
 
+    const { MINIMA_HOST } = await prompts({
+      type: "text",
+      name: "MINIMA_HOST",
+      message: "Enter the host where Minima is running:",
+      initial: "127.0.0.1",
+    })
+
     const packageManager = getPackageManager()
+
+    if (!options.template) {
+      logger.error("Template is required")
+      process.exit(1)
+    }
 
     await setupDebugConfig({
       port: MINIMA_PORT + 2,
       password: MDS_PASSWORD,
       packageManager,
       appName: options.appName,
+      host: MINIMA_HOST,
       logs: true,
+      template: options.template,
     })
   }
 }
@@ -247,6 +277,7 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
   const projectSpinner = spinner(`Creating project directory...`).start()
 
   try {
+    // Create the project directory
     mkdirSync(options.appName)
     projectSpinner.text = "Copying template files..."
     const templatePath = path.join(
@@ -254,13 +285,16 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
       `../templates/${options.template}`
     )
 
+    // Check if the template directory exists
     if (!existsSync(templatePath)) {
       throw new Error(`Template directory not found: ${templatePath}`)
     }
 
+    // Copy the template files to the project directory
     cpSync(templatePath, options.appName, { recursive: true })
     process.chdir(options.appName)
 
+    // Setup the template
     if (options.template === "react-ts") {
       await setupReactTemplate(options, projectSpinner)
     } else {
@@ -363,6 +397,7 @@ async function setupVanillaTemplate(options: any, projectSpinner: any) {
 
   projectSpinner.text = "Installing MiniDapp..."
 
+  // Install on the Minima node
   await install({
     port: options.port ? options.port + 4 : 9005,
     pathToFile: process.cwd(),
