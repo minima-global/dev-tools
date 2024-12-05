@@ -1,5 +1,11 @@
 # @minima-global/create-minima-app
 
+## 0.1.0
+
+### Minor Changes
+
+- d16bd7a: tweaks to react and js template
+
 ## 0.0.8
 
 ### Patch Changes

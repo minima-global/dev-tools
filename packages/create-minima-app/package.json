@@ -1,6 +1,6 @@
 {
   "name": "@minima-global/create-minima-app",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "files": [
     "dist",
     "templates",
