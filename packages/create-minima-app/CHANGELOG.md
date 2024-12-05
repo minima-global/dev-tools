@@ -1,5 +1,11 @@
 # @minima-global/create-minima-app
 
+## 0.1.1
+
+### Patch Changes
+
+- 02a6512: fixed mds version
+
 ## 0.1.0
 
 ### Minor Changes
