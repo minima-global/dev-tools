@@ -47,7 +47,7 @@ export async function install({
     return JSON.parse(stdout)
   } catch (error) {
     throw new Error(
-      "Failed to install, please ensure you specified the correct port that Minima is running on"
+      "Check that you have RPC enabled and that you have specified the correct port that Minima is running on"
     )
   }
 }

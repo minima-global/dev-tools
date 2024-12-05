@@ -52,16 +52,16 @@ export const init = new Command()
         rpc: opts.rpc,
         isNewProject: config ? false : true,
         configOnly: opts.configOnly,
-        template: opts.template,
+        template: config.template ? config.template : opts.template,
       })
 
       // Check if in existing project first
-      if (config) {
+      if (config.exists) {
         const { RE_CONFIGURE } = await prompts({
           type: "confirm",
           name: "RE_CONFIGURE",
           message:
-            "Looks like you already have a Minima App configured! Would you like to reconfigure?",
+            "Looks like you already have a Minima App! Would you like to reconfigure?",
           initial: true,
         })
 
@@ -70,7 +70,6 @@ export const init = new Command()
         }
 
         await configureExistingProject(options)
-        process.exit(0)
       }
 
       // Get app name first
@@ -103,23 +102,22 @@ export const init = new Command()
         inactive: "yes",
       })
 
-      if (!RUNNING_RPC) {
-        logger.warn("Cannot automatically install MiniDapp without RPC running")
-        process.exit(0)
-      }
+      options.rpc = RUNNING_RPC
 
-      // Get RPC port
-      const { MINIMA_PORT } = await prompts({
-        type: "number",
-        name: "MINIMA_PORT",
-        message: "What port is your Minima node running on?",
-        initial: 9001,
-      })
+      // Get RPC port if rpc is running
+      if (options.rpc) {
+        const { MINIMA_PORT } = await prompts({
+          type: "number",
+          name: "MINIMA_PORT",
+          message: "What port is your Minima node running on?",
+          initial: 9001,
+        })
 
-      if (!MINIMA_PORT) {
-        process.exit(0)
+        if (!MINIMA_PORT) {
+          process.exit(0)
+        }
+        options.port = MINIMA_PORT
       }
-      options.port = MINIMA_PORT
 
       // Get template choice
       if (!options.template) {
@@ -143,48 +141,50 @@ export const init = new Command()
       // Create the project
       await createApp(options)
 
-      // Setup debug config after project creation
-      const { DEBUG_CONFIG } = await prompts({
-        type: "confirm",
-        name: "DEBUG_CONFIG",
-        message: "Would you like to configure your debug settings?",
-        initial: true,
-        active: "no",
-        inactive: "yes",
-      })
-
-      if (DEBUG_CONFIG) {
-        const { MDS_PASSWORD } = await prompts({
-          type: "password",
-          name: "MDS_PASSWORD",
-          message: "Enter your MDS password:",
+      if (options.rpc) {
+        // Setup debug config after project creation
+        const { DEBUG_CONFIG } = await prompts({
+          type: "confirm",
+          name: "DEBUG_CONFIG",
+          message: "Would you like to configure your debug settings?",
+          initial: true,
+          active: "no",
+          inactive: "yes",
         })
 
-        const { MINIMA_HOST } = await prompts({
-          type: "text",
-          name: "MINIMA_HOST",
-          message: "Enter the host where Minima is running:",
-          initial: "127.0.0.1",
-          instructions:
-            "This is the host where Minima is running. Default is 127.0.0.1 (localhost)",
-        })
+        if (DEBUG_CONFIG) {
+          const { MDS_PASSWORD } = await prompts({
+            type: "password",
+            name: "MDS_PASSWORD",
+            message: "Enter your MDS password:",
+          })
 
-        const packageManager = getPackageManager()
+          const { MINIMA_HOST } = await prompts({
+            type: "text",
+            name: "MINIMA_HOST",
+            message: "Enter the host where Minima is running:",
+            initial: "127.0.0.1",
+            instructions:
+              "This is the host where Minima is running. Default is 127.0.0.1 (localhost)",
+          })
 
-        if (!options.template) {
-          logger.error("Template is required")
-          process.exit(1)
+          const packageManager = getPackageManager()
+
+          if (!options.template) {
+            logger.error("Template is required")
+            process.exit(1)
+          }
+
+          await setupDebugConfig({
+            port: options.port ? options.port + 2 : 9003,
+            password: MDS_PASSWORD,
+            packageManager,
+            appName: options.appName,
+            host: MINIMA_HOST,
+            logs: true,
+            template: options.template,
+          })
         }
-
-        await setupDebugConfig({
-          port: MINIMA_PORT + 2,
-          password: MDS_PASSWORD,
-          packageManager,
-          appName: options.appName,
-          host: MINIMA_HOST,
-          logs: true,
-          template: options.template,
-        })
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -227,6 +227,21 @@ async function configureExistingProject(
   if (!MINIMA_PORT) {
     process.exit(0)
   }
+
+  // Get package.json
+  const packageJson = JSON.parse(readFileSync("package.json", "utf-8"))
+
+  const installSpinner = spinner("Installing MiniDapp...").start()
+
+  await install({
+    port: options.port ? options.port + 4 : 9005,
+    pathToFile: process.cwd(),
+    miniDappName: packageJson.name,
+    miniDappVersion: packageJson.version,
+    logs: false,
+  })
+
+  installSpinner.succeed("MiniDapp installed successfully!")
 
   const { DEBUG_CONFIG } = await prompts({
     type: "confirm",
@@ -303,11 +318,18 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
 
     projectSpinner.succeed("Project created successfully!")
   } catch (error) {
-    projectSpinner.fail(
-      chalk.red(
-        `Failed to create project: ${error instanceof Error ? error.message : String(error)}`
+    if (error instanceof Error) {
+      projectSpinner.fail(chalk.red(`${error.message}`))
+      logger.break()
+      logger.info("Your project has been created but the installation failed")
+      logger.info(
+        "You can install the MiniDapp manually or re-run the `init` command inside your project directory to try again"
       )
-    )
+      logger.break()
+      logger.info("For more information, visit https://docs.minima.global")
+    } else {
+      projectSpinner.fail(chalk.red(`Something went wrong:\n ${error}`))
+    }
     process.exit(1)
   }
 }
@@ -344,19 +366,23 @@ async function setupReactTemplate(options: any, projectSpinner: any) {
     })
   })
 
+  // Post build steps
   await postBuild()
 
   // Zip and install
   const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
   await zip(zipFileName, "build/")
 
-  await install({
-    port: options.port ? options.port + 4 : 9005,
-    pathToFile: process.cwd(),
-    miniDappName: packageJson.name,
-    miniDappVersion: packageJson.version,
-    logs: false,
-  })
+  // Only install if rpc is running
+  if (options.rpc) {
+    await install({
+      port: options.port ? options.port + 4 : 9005,
+      pathToFile: process.cwd(),
+      miniDappName: packageJson.name,
+      miniDappVersion: packageJson.version,
+      logs: false,
+    })
+  }
 }
 
 async function setupVanillaTemplate(options: any, projectSpinner: any) {

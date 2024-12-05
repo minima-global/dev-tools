@@ -74,6 +74,7 @@ export async function setupDebugConfig(
     await fs.writeFile(mdsPath, updatedContent, "utf-8")
   } else {
     // Write .env file for other templates
+
     await writeEnvFile({
       VITE_DEBUG_MDS_PORT: values.port,
       VITE_DEBUG_SESSION_ID: sessionID,
