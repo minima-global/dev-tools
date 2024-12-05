@@ -4,6 +4,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "template": "react-ts",
   "scripts": {
     "dev": "vite",
     "generate:routes": "tsr generate",
@@ -17,7 +18,8 @@
     "minima:refresh": "minima zip && minima uninstall && minima install"
   },
   "dependencies": {
-    "@minima-global/mds": "^0.14.1",
+    "@minima-global/mds": "0.14.2",
+    "@minima-global/minima-cli": "^0.1.0",
     "@tanstack/react-router": "^1.76.3",
     "axios": "^1.7.7",
     "decimal.js": "^10.4.3",
@@ -25,7 +27,6 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@minima-global/minima-cli": "^0.0.2",
     "@eslint/js": "^9.13.0",
     "@tanstack/router-devtools": "^1.76.3",
     "@tanstack/router-plugin": "^1.76.0",

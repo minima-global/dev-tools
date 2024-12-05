@@ -1,28 +1,34 @@
-import axios from "axios"
+import { exec } from "child_process"
 import { readFileSync } from "fs"
-import { logger } from "../utils/logger.js"
+import { promisify } from "util"
 
+const execAsync = promisify(exec)
 export async function update() {
   try {
     const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
-    const fileName = `${packageJson.name}-${packageJson.version}.mds.zip`
     const capitalize = (str: string) =>
       str.charAt(0).toUpperCase() + str.slice(1)
 
-    const response = await axios.get("http://localhost:9005/mds")
-    const foundInstallations = response.data.response.minidapps.filter(
+    // Get list of installed minidapps
+    const { stdout: mdsResponse } = await execAsync(
+      'curl -s "http://localhost:9005/mds"'
+    )
+    const mdsData = JSON.parse(mdsResponse)
+
+    const foundInstallations = mdsData.response.minidapps.filter(
       (i: any) => i.conf.name === capitalize(packageJson.name)
     )
     const foundInstallationUIDS = foundInstallations.map((i: any) => i.uid)
 
     for (const uid of foundInstallationUIDS) {
-      const filePath = encodeURIComponent(`file: ${process.cwd()}/${fileName}`)
-      await axios.get(
-        `http://localhost:9005/mds%20action:update%20uid:${uid}%20${filePath}`
-      )
-      logger.info(`Updated ${uid} - ${packageJson.name}`)
+      const updateUrl = `http://localhost:9005/${encodeURIComponent(
+        `mds action:update uid:${uid}`
+      )}`
+
+      await execAsync(`curl -s "${updateUrl}"`)
     }
   } catch (error) {
+    console.error("Error details:", error)
     throw new Error("Failed to update MiniDapp")
   }
 }

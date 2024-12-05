@@ -4,7 +4,7 @@ import figlet from "figlet"
 import { z } from "zod"
 import { logger } from "../utils/logger.js"
 
-import { install, postBuild, zip } from "@minima-global/minima-cli"
+import { configureDappConf, install, zip } from "@minima-global/minima-cli"
 import { exec } from "child_process"
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
 import path from "path"
@@ -192,10 +192,7 @@ export const init = new Command()
         error.errors.forEach((err) => {
           logger.error(`- ${err.path.join(".")}: ${err.message}`)
         })
-      } else {
-        logger.error(error)
       }
-      logger.break()
       process.exit(1)
     }
   })
@@ -367,7 +364,7 @@ async function setupReactTemplate(options: any, projectSpinner: any) {
   })
 
   // Post build steps
-  await postBuild()
+  await configureDappConf()
 
   // Zip and install
   const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
@@ -386,22 +383,14 @@ async function setupReactTemplate(options: any, projectSpinner: any) {
 }
 
 async function setupVanillaTemplate(options: any, projectSpinner: any) {
-  // Create a basic package.json for vanilla template
-  const packageJson = {
-    name: options.appName,
-    version: "0.1.0",
-    description: `${options.appName} MiniDapp`,
-    scripts: {
-      zip: "minima zip",
-      "minima:install": "minima install",
-      "minima:uninstall": "minima uninstall",
-    },
-    devDependencies: {
-      "@minima-global/minima-cli": "^0.0.2",
-    },
-  }
+  // Update package.json
 
-  writeFileSync("package.json", JSON.stringify(packageJson, null, 2))
+  projectSpinner.text = "Configuring package.json..."
+  const packageJsonPath = "./package.json"
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"))
+  packageJson.name = options.appName
+  packageJson.description = `${options.appName} MiniDapp`
+  writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
 
   // Install minima-cli for zip/install commands
   const packageManager = getPackageManager()
@@ -414,7 +403,7 @@ async function setupVanillaTemplate(options: any, projectSpinner: any) {
   })
 
   projectSpinner.text = "Building MiniDapp..."
-  await postBuild()
+  await configureDappConf()
 
   // Zip and install
   projectSpinner.text = "Zipping and installing MiniDapp..."

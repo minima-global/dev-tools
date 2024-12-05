@@ -19,6 +19,7 @@
     "prettier-plugin-organize-imports": "^3.2.4"
   },
   "devDependencies": {
+    "@minima-global/minima-cli": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@changesets/cli": "^2.27.8",
