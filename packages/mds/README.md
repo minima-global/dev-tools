@@ -13,7 +13,6 @@ npm install @minima-global/mds
 ## Features
 
 - TypeScript support for a fully typesafe experience
-- Promise-based API for asynchronous operations
 - Comprehensive set of commands for interacting with the Minima blockchain
 - File system operations
 - Network requests
@@ -25,20 +24,51 @@ View the full documentation and examples on [docs.minima.global](https://docs.mi
 
 ## Usage
 
-Using callback
-
 ```tsx
-MDS.cmd.block((data) => {
-  // do someting with the data
-});
+import { MDS } from "@minima-global/mds";
+
+MDS.init(async ({ event, data }) => {
+  // Handle events from the MDS
+})
 ```
 
-Using async/await
+You can check the `event` parameter to determine which event has been triggered and handle the event accordingly.
 
 ```tsx
-const block = await MDS.cmd.block();
-// do someting with the data
+import { MDS, MinimaEvents } from "@minima-global/mds"; // [!code highlight] 
+
+MDS.init(async ({ event, data }) => {
+  if (event === MinimaEvents.INITED) {  
+    console.log("MDS Initialized and ready 🚀")
+  } 
+})
 ```
+
+All Minima CLI commands are available as methods on the `MDS.cmd` object. To see the full list of commands available see the [Terminal Commands](/docs/development/terminal-commands) page.
+
+You can use the `MDS.cmd` object to send commands and get access to the response by either using the `await` keyword or by passing a callback function.
+
+```tsx
+import { MDS, MinimaEvents } from "@minima-global/mds";
+
+// using async/await
+MDS.init(async ({ event, data }) => {
+  if (event === MinimaEvents.INITED) {
+    const command = await MDS.cmd.block()  
+    console.log(command.response.block) 
+  } 
+})
+
+// using callback
+MDS.init(({ event, data }) => {
+  if (event === MinimaEvents.INITED) {
+    MDS.cmd.block((data) => { 
+      console.log(data.response.block) 
+    }) 
+  }
+})
+```
+
 
 ## Contributing
 
