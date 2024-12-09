@@ -3,7 +3,6 @@ import { Command } from "commander"
 import figlet from "figlet"
 import { z } from "zod"
 import { logger } from "../utils/logger.js"
-
 import { configureDappConf, install, zip } from "@minima-global/minima-cli"
 import { exec } from "child_process"
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
@@ -22,20 +21,24 @@ import { spinner } from "../utils/spinner.js"
 export const initOptionsSchema = z.object({
   appName: z.string().min(1),
   isNewProject: z.boolean(),
-  port: z.number().optional(),
-  rpc: z.boolean().optional(),
-  configOnly: z.boolean().optional(),
-  template: z.string().optional(),
+  port: z.number(),
+  rpc: z.boolean(),
+  template: z.enum(["react-ts", "vanilla-js"], {
+    required_error: "Template is required",
+    message: "Template must be either react-ts or vanilla-js",
+  }),
+  service: z.boolean(),
 })
+
+
 
 export const init = new Command()
   .name("init")
   .description("Initialize a new Minima App or configure an existing one")
   .option("-n, --name <name>", "the name of the app", "minima-app")
   .option("-p, --port <port>", "the port of the Minima node", "9001")
-  .option("-r, --rpc <rpc>", "the RPC URL of the Minima node", true)
-  .option("-c, --config-only", "only configure RPC and debug settings", false)
-  .option("-t, --template <template>", "the template to use")
+  .option("-r, --rpc", "the RPC URL of the Minima node", true)
+  .option("-t, --template <template>", "the template to use", "react-ts")
   .action(async (opts) => {
     try {
       logger.log(
@@ -56,7 +59,7 @@ export const init = new Command()
       })
 
       // Check if in existing project first
-      if (config.exists) {
+      if (config.exists ) {
         const { RE_CONFIGURE } = await prompts({
           type: "confirm",
           name: "RE_CONFIGURE",
@@ -91,13 +94,13 @@ export const init = new Command()
         process.exit(1)
       }
 
-      // Check RPC status early
+      // Check RPC status 
       const { RUNNING_RPC } = await prompts({
         type: "confirm",
         name: "RUNNING_RPC",
         message:
           "Are you running Minima RPC?\n  To learn more about RPC, visit https://docs.minima.global/rpc\n",
-        initial: true,
+        initial: options.rpc,
         active: "no",
         inactive: "yes",
       })
@@ -110,7 +113,7 @@ export const init = new Command()
           type: "number",
           name: "MINIMA_PORT",
           message: "What port is your Minima node running on?",
-          initial: 9001,
+          initial: options.port,
         })
 
         if (!MINIMA_PORT) {
@@ -120,7 +123,7 @@ export const init = new Command()
       }
 
       // Get template choice
-      if (!options.template) {
+    
         const { TEMPLATE } = await prompts({
           type: "select",
           name: "TEMPLATE",
@@ -136,7 +139,19 @@ export const init = new Command()
           process.exit(0)
         }
         options.template = TEMPLATE
-      }
+
+
+        const { SERVICE } = await prompts({
+          type: "confirm",
+          name: "SERVICE",
+          message:
+          "Would you like to create a service.js file?\n  To learn more about services, visit https://docs.minima.global/services\n",
+        
+          initial: false,
+        })
+
+        options.service = SERVICE
+
 
       // Create the project
       await createApp(options)
