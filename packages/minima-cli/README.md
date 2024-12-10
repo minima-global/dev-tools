@@ -1,11 +1,23 @@
-## Create Minima App
+## CLI
 
-A Cli for creating and building MiniDapps on the Minima Blockchain.
+A Cli for managing your minidapp while in development.
 
 ## Usage
 
-Use the `init` command to initialize a new project. You will be asked a few questions to configure your project to setup rpc and install your MiniDapp.
+The CLI provides several commands to help manage your MiniDapp during development:
 
-## Documentation 
+### Commands
 
-Visit https://docs.minima.global/docs/development/cli to view the documentation.
+> Note: These commands require RPC to be enabled on your local Minima node to function properly.
+
+- `minima zip` - Creates a zip file of your MiniDapp for installation
+- `minima install` - Installs your MiniDapp to a local Minima node
+- `minima update` - Updates an installed MiniDapp on your local Minima node
+- `minima uninstall` - Uninstalls your MiniDapp from a local Minima node
+
+
+
+
+
+
+
