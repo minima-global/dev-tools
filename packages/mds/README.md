@@ -20,7 +20,7 @@ npm install @minima-global/mds
 
 ## Documentation
 
-View the full documentation and examples on [docs.minima.global](https://docs.minima.global/docs/development).
+View the full documentation on [docs.minima.global](https://docs.minima.global/docs/development/using-typescript).
 
 ## Usage
 

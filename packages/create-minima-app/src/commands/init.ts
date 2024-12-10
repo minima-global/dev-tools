@@ -31,8 +31,6 @@ export const initOptionsSchema = z.object({
   service: z.boolean(),
 })
 
-
-
 export const init = new Command()
   .name("init")
   .description("Initialize a new Minima App or configure an existing one")
