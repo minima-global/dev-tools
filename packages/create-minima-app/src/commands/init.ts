@@ -17,6 +17,7 @@ import {
 } from "../utils/get-package-manager.js"
 import { setupDebugConfig } from "../utils/setup-debug-config.js"
 import { spinner } from "../utils/spinner.js"
+import type { Ora } from "ora"
 
 export const initOptionsSchema = z.object({
   appName: z.string().min(1),
@@ -38,6 +39,7 @@ export const init = new Command()
   .option("-n, --name <name>", "the name of the app", "minima-app")
   .option("-p, --port <port>", "the port of the Minima node", "9001")
   .option("-r, --rpc", "the RPC URL of the Minima node", true)
+  .option("-s, --service", "create a service.js file", false)
   .option("-t, --template <template>", "the template to use", "react-ts")
   .action(async (opts) => {
     try {
@@ -56,6 +58,7 @@ export const init = new Command()
         isNewProject: config ? false : true,
         configOnly: opts.configOnly,
         template: config.template ? config.template : opts.template,
+        service: opts.service,
       })
 
       // Check if in existing project first
@@ -145,8 +148,7 @@ export const init = new Command()
           type: "confirm",
           name: "SERVICE",
           message:
-          "Would you like to create a service.js file?\n  To learn more about services, visit https://docs.minima.global/services\n",
-        
+          "Would you like to create a service.js file?\n  To learn more about services, visit https://docs.minima.global/docs/development/minidapp-servicejs\n",
           initial: false,
         })
 
@@ -338,7 +340,7 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
         "You can install the MiniDapp manually or re-run the `init` command inside your project directory to try again"
       )
       logger.break()
-      logger.info("For more information, visit https://docs.minima.global")
+      logger.info("For more information, visit https://docs.minima.global/docs/development/cli")
     } else {
       projectSpinner.fail(chalk.red(`Something went wrong:\n ${error}`))
     }
@@ -350,7 +352,14 @@ function nameExists(name: string) {
   return existsSync(path.join(process.cwd(), name))
 }
 
-async function setupReactTemplate(options: any, projectSpinner: any) {
+async function setupReactTemplate(options: z.infer<typeof initOptionsSchema>, projectSpinner: Ora) {
+
+  // if service is true, create a service.js file in the public folder
+  if (options.service) {
+    const servicePath = path.join(process.cwd(), "public", "service.js")
+    writeFileSync(servicePath, "")
+  }
+
   // Update package.json
   projectSpinner.text = "Configuring package.json..."
   const packageJsonPath = "./package.json"
@@ -397,9 +406,15 @@ async function setupReactTemplate(options: any, projectSpinner: any) {
   }
 }
 
-async function setupVanillaTemplate(options: any, projectSpinner: any) {
-  // Update package.json
+async function setupVanillaTemplate(options: z.infer<typeof initOptionsSchema>, projectSpinner: Ora) {
 
+  // if service is true, create a service.js file in the root of the project
+  if (options.service) {
+    const servicePath = path.join(process.cwd(), "service.js")
+    writeFileSync(servicePath, "")
+  }
+
+  // Update package.json
   projectSpinner.text = "Configuring package.json..."
   const packageJsonPath = "./package.json"
   const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"))
