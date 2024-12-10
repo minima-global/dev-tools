@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.3
+
+### Patch Changes
+
+- 6101c95: updated readme
+
 ## 0.14.2
 
 ### Patch Changes
