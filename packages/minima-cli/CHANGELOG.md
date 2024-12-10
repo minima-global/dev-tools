@@ -1,5 +1,11 @@
 # @minima-global/minima-cli
 
+## 0.1.1
+
+### Patch Changes
+
+- b34c53a: updated readme
+
 ## 0.1.0
 
 ### Minor Changes
