@@ -156,6 +156,8 @@ export const init = new Command()
       // Create the project
       await createApp(options)
 
+      const packageManager = getPackageManager()
+
       if (options.rpc) {
         // Setup debug config after project creation
         const { DEBUG_CONFIG } = await prompts({
@@ -183,8 +185,7 @@ export const init = new Command()
               "This is the host where Minima is running. Default is 127.0.0.1 (localhost)",
           })
 
-          const packageManager = getPackageManager()
-
+          
           if (!options.template) {
             logger.error("Template is required")
             process.exit(1)
@@ -200,7 +201,17 @@ export const init = new Command()
             template: options.template,
           })
         }
-      }
+
+        logger.info(`Project created successfully!\n` ) 
+        logger.info(`To be able to run your minidapp in debug mode, you need to configure your debug settings.`)
+
+        logger.info(`You can re-run the init command inside your project directory to configure your debug settings at any time.\n`) 
+
+        logger.info(`You can navigate to your project directory with:\n`) 
+        logger.info(`cd ${options.appName}\n`) 
+       
+        
+      } 
     } catch (error) {
       if (error instanceof z.ZodError) {
         logger.error("Invalid options:")
@@ -294,7 +305,17 @@ async function configureExistingProject(
       logs: true,
       template: options.template,
     })
+
+  } else {
+    const packageManager = getPackageManager()
+
+    logger.info(`You can now run your MiniDapp with:\n`) 
+    logger.info(`cd ${options.appName}\n`) 
+    logger.info(`${getRunCommand(packageManager, "dev")}\n`)
   }
+  
+  
+  
 }
 
 async function createApp(options: z.infer<typeof initOptionsSchema>) {
@@ -328,7 +349,10 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
       await setupVanillaTemplate(options, projectSpinner)
     }
 
-    projectSpinner.succeed("Project created successfully!")
+   projectSpinner.succeed("Project created successfully!")
+
+
+   
   } catch (error) {
     if (error instanceof Error) {
       projectSpinner.fail(chalk.red(`${error.message}`))

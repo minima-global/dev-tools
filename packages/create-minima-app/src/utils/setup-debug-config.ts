@@ -85,11 +85,14 @@ export async function setupDebugConfig(
 
   if (values.logs) {
     debuggingSpinner.succeed(
-      chalk.green(`Debug settings configured successfully!\n\n`) +
-        chalk.cyan(`You can now run your MiniDapp with:\n\n`) +
-        chalk.cyan(`cd ${values.appName}\n`) +
-        chalk.cyan(`${getRunCommand(values.packageManager, "dev")}\n`)
+      chalk.green(`Debug settings configured successfully!\n\n`) 
     )
+
+    logger.info("You can navigate to your project directory with:\n") 
+    logger.info(`cd ${values.appName}\n`) 
+    if (values.template === "react-ts") {
+      logger.info(`${getRunCommand(values.packageManager, "dev")}\n`)
+    } 
 
     logger.info(
       "If you need further help or guidance, visit https://docs.minima.global\n"
