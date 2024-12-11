@@ -1,5 +1,12 @@
 # @minima-global/create-minima-app
 
+## 0.1.4
+
+### Patch Changes
+
+- e64a5b2: - added dapp.conf detection for vanilla-js template
+  - improved feedback log messages
+
 ## 0.1.3
 
 ### Patch Changes
