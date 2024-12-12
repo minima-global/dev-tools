@@ -38,7 +38,7 @@ export async function setupDebugConfig(
 
   const page = await browser.newPage()
   await page.setViewport({ width: 1280, height: 1024 })
-  await page.goto(`https://localhost:${values.port}`)
+  await page.goto(`https://${values.host}:${values.port}`)
   await page.waitForNetworkIdle()
   await page.type("#password", values.password)
   await page.click("[type='submit']")
@@ -85,14 +85,14 @@ export async function setupDebugConfig(
 
   if (values.logs) {
     debuggingSpinner.succeed(
-      chalk.green(`Debug settings configured successfully!\n\n`) 
+      chalk.green(`Debug settings configured successfully!\n\n`)
     )
 
-    logger.info("You can navigate to your project directory with:\n") 
-    logger.info(`cd ${values.appName}\n`) 
+    logger.info("You can navigate to your project directory with:\n")
+    logger.info(`cd ${values.appName}\n`)
     if (values.template === "react-ts") {
       logger.info(`${getRunCommand(values.packageManager, "dev")}\n`)
-    } 
+    }
 
     logger.info(
       "If you need further help or guidance, visit https://docs.minima.global\n"

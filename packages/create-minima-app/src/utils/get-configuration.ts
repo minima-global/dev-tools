@@ -7,7 +7,6 @@ interface Configuration {
 }
 
 export async function getConfiguration(): Promise<Configuration> {
-  
   // Get current directory
   const currentDir = process.cwd()
 
@@ -15,7 +14,6 @@ export async function getConfiguration(): Promise<Configuration> {
   const isReactTS =
     existsSync(join(currentDir, "src", "AppContext.tsx")) ||
     existsSync(join(currentDir, "src", "routes"))
-
 
   const dappConfLocation = isReactTS ? "public" : "."
   const dappConfPath = join(currentDir, dappConfLocation, "dapp.conf")

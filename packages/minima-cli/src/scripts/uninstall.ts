@@ -1,35 +1,43 @@
 import { exec } from "child_process"
 import { readFileSync } from "fs"
 import { promisify } from "util"
+import { z } from "zod"
 
 const execAsync = promisify(exec)
 
-export async function uninstall() {
-  try {
-    const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
-    const capitalize = (str: string) =>
-      str.charAt(0).toUpperCase() + str.slice(1)
+const uninstallParams = z.object({
+  port: z.number().default(9005),
+})
 
-    // Get list of installed minidapps
-    const { stdout: mdsResponse } = await execAsync(
-      'curl -s "http://localhost:9005/mds"'
-    )
-    const mdsData = JSON.parse(mdsResponse)
+type UninstallParams = z.infer<typeof uninstallParams>
 
-    const foundInstallations = mdsData.response.minidapps.filter(
-      (i: any) => i.conf.name === capitalize(packageJson.name)
-    )
-    const foundInstallationUIDS = foundInstallations.map((i: any) => i.uid)
+export async function uninstall({ port = 9005 }: UninstallParams) {
+  // Validate the port
+  const params = uninstallParams.parse({
+    port,
+  })
 
-    for (const uid of foundInstallationUIDS) {
-      const uninstallUrl = `http://localhost:9005/${encodeURIComponent(
-        `mds action:uninstall uid:${uid}`
-      )}`
+  // Get the package name from the package.json file
+  const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
-      await execAsync(`curl -s "${uninstallUrl}"`)
-    }
-  } catch (error) {
-    console.error("Error details:", error)
-    throw new Error("Failed to uninstall MiniDapp")
+  // Get list of installed minidapps
+  const { stdout: mdsResponse } = await execAsync(
+    `curl -s "http://localhost:${params.port}/mds"`
+  )
+  const mdsData = JSON.parse(mdsResponse)
+
+  const foundInstallations = mdsData.response.minidapps.filter(
+    (i: any) => i.conf.name === capitalize(packageJson.name)
+  )
+  const foundInstallationUIDS = foundInstallations.map((i: any) => i.uid)
+
+  // Uninstall the minidapps
+  for (const uid of foundInstallationUIDS) {
+    const uninstallUrl = `http://localhost:${params.port}/${encodeURIComponent(
+      `mds action:uninstall uid:${uid}`
+    )}`
+
+    await execAsync(`curl -s "${uninstallUrl}"`)
   }
 }

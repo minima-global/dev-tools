@@ -12,11 +12,12 @@ import { zip } from "./scripts/zip.js"
 import { logger } from "./utils/logger.js"
 
 const program = new Command()
+const version = JSON.parse(readFileSync("./package.json", "utf-8")).version
 
 program
   .name("minima")
   .description("CLI to manage Minima MiniDapps")
-  .version("0.1.0")
+  .version(version)
 
 program
   .command("zip")
@@ -59,8 +60,7 @@ program
 program
   .command("install")
   .description("Install the MiniDapp")
-  .option("-p, --port <port>", "port number", "9005")
-  .option("-l, --logs", "show logs", false)
+  .option("-p, --port <port>", "rpcport number", "9005")
   .action(async (options) => {
     let installSpinner: Ora | undefined
     try {
@@ -80,16 +80,22 @@ program
         pathToFile: process.cwd(),
         miniDappName: packageJson.name,
         miniDappVersion: packageJson.version,
-        logs: options.logs,
       })
 
       setTimeout(() => {
         installSpinner?.succeed("MiniDapp installed successfully!")
-      }, 5000)
+      }, 2000)
     } catch (error) {
       installSpinner?.fail("Failed to install MiniDapp")
       if (error instanceof Error) {
         logger.error(error.message)
+        logger.info(`Port: ${options.port}`)
+        logger.info(
+          "Please check that you have RPC enabled on your Minima node and that the port is correct"
+        )
+        logger.info(
+          "If you are using a custom port other than 9005, please use the -p option to specify the port"
+        )
       } else {
         logger.error(String(error))
       }
@@ -99,19 +105,29 @@ program
 
 program
   .command("uninstall")
+  .option("-p, --port <port>", "port number", "9005")
   .description("Uninstall the MiniDapp")
-  .action(async () => {
+  .action(async (options) => {
     let uninstallSpinner: Ora | undefined
     try {
       uninstallSpinner = ora("Uninstalling MiniDapp...").start()
-      await uninstall()
+      await uninstall({
+        port: parseInt(options.port),
+      })
       setTimeout(() => {
         uninstallSpinner?.succeed("MiniDapp uninstalled successfully!")
-      }, 5000)
+      }, 2000)
     } catch (error) {
       uninstallSpinner?.fail("Failed to uninstall MiniDapp")
       if (error instanceof Error) {
         logger.error(error.message)
+        logger.info(`Port: ${options.port}`)
+        logger.info(
+          "Please check that you have RPC enabled on your Minima node and that the port is correct"
+        )
+        logger.info(
+          "If you are using a custom port other than 9005, please use the -p option to specify the port"
+        )
       } else {
         logger.error(String(error))
       }
@@ -122,27 +138,43 @@ program
 program
   .command("update")
   .description("Update the MiniDapp")
-  .action(async () => {
+  .option("-p, --port <port>", "rpcport number", "9005")
+  .action(async (options) => {
     let updateSpinner: Ora | undefined
     try {
       const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
       updateSpinner = ora("Updating MiniDapp...").start()
 
+      // Configure the MiniDapp Dapp.conf
       await configureDappConf()
 
+      // Get the zip file name
       const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
       const filePath = packageJson.template === "react-ts" ? "build/" : "./"
 
+      // Zip the MiniDapp
       await zip(zipFileName, filePath)
-      await update()
+
+      // Update the MiniDapp
+      await update({
+        port: parseInt(options.port),
+      })
       setTimeout(() => {
         updateSpinner?.succeed("MiniDapp updated successfully!")
-      }, 5000)
+      }, 2000)
     } catch (error) {
+      updateSpinner?.fail("Failed to update MiniDapp")
       if (error instanceof Error) {
-        updateSpinner?.fail(error.message)
+        logger.error(error.message)
+        logger.info(`Port: ${options.port}`)
+        logger.info(
+          "Please check that you have RPC enabled on your Minima node and that the port is correct"
+        )
+        logger.info(
+          "If you are using a custom port other than 9005, please use the -p option to specify the port"
+        )
       } else {
-        updateSpinner?.fail("Failed to update MiniDapp")
+        logger.error(String(error))
       }
       process.exit(1)
     }

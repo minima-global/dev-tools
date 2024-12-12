@@ -9,7 +9,6 @@ const installParams = z.object({
   pathToFile: z.string(),
   miniDappName: z.string(),
   miniDappVersion: z.string(),
-  logs: z.boolean().default(false),
 })
 
 type InstallParams = z.infer<typeof installParams>
@@ -19,35 +18,23 @@ export async function install({
   pathToFile,
   miniDappName,
   miniDappVersion,
-  logs = false,
 }: InstallParams) {
   const params = installParams.parse({
     port,
     pathToFile,
     miniDappName,
     miniDappVersion,
-    logs,
   })
 
   const url = `http://localhost:${params.port}/${encodeURIComponent(
     `mds action:install file:${params.pathToFile}/${params.miniDappName}-${params.miniDappVersion}.mds.zip`
   )}`
 
-  try {
-    const { stdout, stderr } = await execAsync(`curl -s "${url}"`)
+  const { stdout, stderr } = await execAsync(`curl -s "${url}"`)
 
-    if (stderr) {
-      throw new Error(stderr)
-    }
-
-    if (logs) {
-      console.log("Installation response:", stdout)
-    }
-
-    return JSON.parse(stdout)
-  } catch (error) {
-    throw new Error(
-      "Check that you have RPC enabled and that you have specified the correct port that Minima is running on"
-    )
+  if (stderr) {
+    throw new Error(stderr)
   }
+
+  return JSON.parse(stdout)
 }

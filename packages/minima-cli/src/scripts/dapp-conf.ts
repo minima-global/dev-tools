@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from "fs"
 
 export async function configureDappConf() {
-  await new Promise((resolve) => setTimeout(resolve, 3000))
   const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
 
   // Try both build folder and root directory

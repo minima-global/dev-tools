@@ -1,23 +1,24 @@
+import { configureDappConf, install, zip } from "@minima-global/minima-cli"
 import chalk from "chalk"
+import { exec } from "child_process"
 import { Command } from "commander"
 import figlet from "figlet"
-import { z } from "zod"
-import { logger } from "../utils/logger.js"
-import { configureDappConf, install, zip } from "@minima-global/minima-cli"
-import { exec } from "child_process"
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
+import type { Ora } from "ora"
 import path from "path"
 import prompts from "prompts"
 import { fileURLToPath } from "url"
+import { z } from "zod"
+import { configureCli } from "../utils/configure-cli.js"
 import { getConfiguration } from "../utils/get-configuration.js"
 import {
   getInstallCommand,
   getPackageManager,
   getRunCommand,
 } from "../utils/get-package-manager.js"
+import { logger } from "../utils/logger.js"
 import { setupDebugConfig } from "../utils/setup-debug-config.js"
 import { spinner } from "../utils/spinner.js"
-import type { Ora } from "ora"
 
 export const initOptionsSchema = z.object({
   appName: z.string().min(1),
@@ -60,7 +61,7 @@ export const init = new Command()
       })
 
       // Check if in existing project first
-      if (config.exists ) {
+      if (config.exists) {
         const { RE_CONFIGURE } = await prompts({
           type: "confirm",
           name: "RE_CONFIGURE",
@@ -95,7 +96,7 @@ export const init = new Command()
         process.exit(1)
       }
 
-      // Check RPC status 
+      // Check RPC status
       const { RUNNING_RPC } = await prompts({
         type: "confirm",
         name: "RUNNING_RPC",
@@ -124,34 +125,32 @@ export const init = new Command()
       }
 
       // Get template choice
-    
-        const { TEMPLATE } = await prompts({
-          type: "select",
-          name: "TEMPLATE",
-          message: "Which template would you like to use?",
-          choices: [
-            { title: "React TS", value: "react-ts" },
-            { title: "Vanilla JS", value: "vanilla-js" },
-          ],
-          initial: 0,
-        })
 
-        if (!TEMPLATE) {
-          process.exit(0)
-        }
-        options.template = TEMPLATE
+      const { TEMPLATE } = await prompts({
+        type: "select",
+        name: "TEMPLATE",
+        message: "Which template would you like to use?",
+        choices: [
+          { title: "React TS", value: "react-ts" },
+          { title: "Vanilla JS", value: "vanilla-js" },
+        ],
+        initial: 0,
+      })
 
+      if (!TEMPLATE) {
+        process.exit(0)
+      }
+      options.template = TEMPLATE
 
-        const { SERVICE } = await prompts({
-          type: "confirm",
-          name: "SERVICE",
-          message:
+      const { SERVICE } = await prompts({
+        type: "confirm",
+        name: "SERVICE",
+        message:
           "Would you like to create a service.js file?\n  To learn more about services, visit https://docs.minima.global/docs/development/minidapp-servicejs\n",
-          initial: false,
-        })
+        initial: false,
+      })
 
-        options.service = SERVICE
-
+      options.service = SERVICE
 
       // Create the project
       await createApp(options)
@@ -185,7 +184,6 @@ export const init = new Command()
               "This is the host where Minima is running. Default is 127.0.0.1 (localhost)",
           })
 
-          
           if (!options.template) {
             logger.error("Template is required")
             process.exit(1)
@@ -202,16 +200,18 @@ export const init = new Command()
           })
         }
 
-        logger.info(`Project created successfully!\n` ) 
-        logger.info(`To be able to run your minidapp in debug mode, you need to configure your debug settings.`)
+        logger.info(`Project created successfully!\n`)
+        logger.info(
+          `To be able to run your minidapp in debug mode, you need to configure your debug settings.`
+        )
 
-        logger.info(`You can re-run the init command inside your project directory to configure your debug settings at any time.\n`) 
+        logger.info(
+          `You can re-run the init command inside your project directory to configure your debug settings at any time.\n`
+        )
 
-        logger.info(`You can navigate to your project directory with:\n`) 
-        logger.info(`cd ${options.appName}\n`) 
-       
-        
-      } 
+        logger.info(`You can navigate to your project directory with:\n`)
+        logger.info(`cd ${options.appName}\n`)
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         logger.error("Invalid options:")
@@ -244,7 +244,7 @@ async function configureExistingProject(
     type: "number",
     name: "MINIMA_PORT",
     message: "What port is your Minima node running on?",
-    initial: 9001,
+    initial: options.port,
   })
 
   if (!MINIMA_PORT) {
@@ -261,7 +261,6 @@ async function configureExistingProject(
     pathToFile: process.cwd(),
     miniDappName: packageJson.name,
     miniDappVersion: packageJson.version,
-    logs: false,
   })
 
   installSpinner.succeed("MiniDapp installed successfully!")
@@ -269,7 +268,8 @@ async function configureExistingProject(
   const { DEBUG_CONFIG } = await prompts({
     type: "confirm",
     name: "DEBUG_CONFIG",
-    message: "Would you like to configure your debug settings?",
+    message:
+      "Would you like to configure your debug settings and install the Minima CLI?",
     initial: true,
     active: "no",
     inactive: "yes",
@@ -296,26 +296,24 @@ async function configureExistingProject(
       process.exit(1)
     }
 
+    await configureCli(process.cwd())
+
     await setupDebugConfig({
       port: MINIMA_PORT + 2,
       password: MDS_PASSWORD,
       packageManager,
-      appName: options.appName,
+      appName: packageJson.name,
       host: MINIMA_HOST,
       logs: true,
       template: options.template,
     })
-
   } else {
     const packageManager = getPackageManager()
 
-    logger.info(`You can now run your MiniDapp with:\n`) 
-    logger.info(`cd ${options.appName}\n`) 
+    logger.info(`You can now run your MiniDapp with:\n`)
+    logger.info(`cd ${packageJson.name}\n`)
     logger.info(`${getRunCommand(packageManager, "dev")}\n`)
   }
-  
-  
-  
 }
 
 async function createApp(options: z.infer<typeof initOptionsSchema>) {
@@ -349,10 +347,7 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
       await setupVanillaTemplate(options, projectSpinner)
     }
 
-   projectSpinner.succeed("Project created successfully!")
-
-
-   
+    projectSpinner.succeed("Project created successfully!")
   } catch (error) {
     if (error instanceof Error) {
       projectSpinner.fail(chalk.red(`${error.message}`))
@@ -362,7 +357,9 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
         "You can install the MiniDapp manually or re-run the `init` command inside your project directory to try again"
       )
       logger.break()
-      logger.info("For more information, visit https://docs.minima.global/docs/development/cli")
+      logger.info(
+        "For more information, visit https://docs.minima.global/docs/development/cli"
+      )
     } else {
       projectSpinner.fail(chalk.red(`Something went wrong:\n ${error}`))
     }
@@ -374,8 +371,10 @@ function nameExists(name: string) {
   return existsSync(path.join(process.cwd(), name))
 }
 
-async function setupReactTemplate(options: z.infer<typeof initOptionsSchema>, projectSpinner: Ora) {
-
+async function setupReactTemplate(
+  options: z.infer<typeof initOptionsSchema>,
+  projectSpinner: Ora
+) {
   // if service is true, create a service.js file in the public folder
   if (options.service) {
     const servicePath = path.join(process.cwd(), "public", "service.js")
@@ -423,13 +422,14 @@ async function setupReactTemplate(options: z.infer<typeof initOptionsSchema>, pr
       pathToFile: process.cwd(),
       miniDappName: packageJson.name,
       miniDappVersion: packageJson.version,
-      logs: false,
     })
   }
 }
 
-async function setupVanillaTemplate(options: z.infer<typeof initOptionsSchema>, projectSpinner: Ora) {
-
+async function setupVanillaTemplate(
+  options: z.infer<typeof initOptionsSchema>,
+  projectSpinner: Ora
+) {
   // if service is true, create a service.js file in the root of the project
   if (options.service) {
     const servicePath = path.join(process.cwd(), "service.js")
@@ -470,6 +470,5 @@ async function setupVanillaTemplate(options: z.infer<typeof initOptionsSchema>, 
     pathToFile: process.cwd(),
     miniDappName: packageJson.name,
     miniDappVersion: packageJson.version,
-    logs: false,
   })
 }
