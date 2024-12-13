@@ -46,7 +46,7 @@
     "test": "vitest run --pool=threads --typecheck",
     "coverage": "vitest run --coverage",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
-    "ci": "turbo build check-format check-exports test",
+    "ci": "turbo build check-format check-exports",
     "prepublishOnly": "turbo run ci",
     "test:types": "vitest --typecheck"
   },

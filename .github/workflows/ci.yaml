@@ -57,3 +57,6 @@ jobs:
 
       - name: Run CI
         run: pnpm run ci
+
+      - name: Run tests
+        run: pnpm run test
