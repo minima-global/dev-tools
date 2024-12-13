@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.4
+
+### Patch Changes
+
+- 28eb382: renamed mds response object
+
 ## 0.14.3
 
 ### Patch Changes
