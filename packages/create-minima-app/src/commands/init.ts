@@ -140,6 +140,7 @@ export const init = new Command()
       if (!TEMPLATE) {
         process.exit(0)
       }
+
       options.template = TEMPLATE
 
       const { SERVICE } = await prompts({
@@ -251,6 +252,8 @@ async function configureExistingProject(
     process.exit(0)
   }
 
+  options.port = MINIMA_PORT
+
   // Get package.json
   const packageJson = JSON.parse(readFileSync("package.json", "utf-8"))
 
@@ -258,6 +261,16 @@ async function configureExistingProject(
   await configureCli(process.cwd(), options.template)
 
   const installSpinner = spinner("Installing MiniDapp...").start()
+
+  // Post build steps
+  await configureDappConf()
+
+  // Zip and install
+  const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
+
+  const zipPath = options.template === "react-ts" ? "build/" : "./"
+
+  await zip(zipFileName, zipPath)
 
   await install({
     port: options.port ? options.port + 4 : 9005,
