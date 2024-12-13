@@ -112,25 +112,13 @@ export const MDS: MDSObj = {
   },
 
   dapplink: (dappname, callback) => {
-    httpPostAsync('dapplink', dappname, function (result: any) {
-      var linkdata: any = {};
-      linkdata.status = result.status;
-
-      //Create the link..
-      if (result.status) {
-        linkdata.uid = result.response.uid;
-        linkdata.sessionid = result.response.sessionid;
-        linkdata.base =
-          MDS.filehost +
-          linkdata.uid +
-          '/index.html?uid=' +
-          result.response.sessionid;
-      } else {
-        //Not found..
-        linkdata.error = result.error;
-      }
-
-      callback(linkdata);
+    return new Promise((resolve) => {
+      httpPostAsync('dapplink', dappname, (result: any) => {
+        resolve(result);
+        if (callback) {
+          callback(result);
+        }
+      });
     });
   },
 

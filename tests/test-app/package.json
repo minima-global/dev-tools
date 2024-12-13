@@ -12,7 +12,8 @@
     "postbuild": "node ./create-minima-app/postbuild.js",
     "copysrc": "bash ./create-minima-app/copySrcToBuild.sh",
     "zip": " pnpm run postbuild && pnpm run copysrc && pnpm run package",
-    "src:zip": "bash create-minima-app/zip.sh"
+    "src:zip": "bash create-minima-app/zip.sh",
+    "minima:install": "minima install"
   },
   "browserslist": {
     "production": [
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@minima-global/mds": "workspace:*",
+    "@minima-global/minima-cli": "workspace:*",
     "@vitejs/plugin-legacy": "^5.4.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",

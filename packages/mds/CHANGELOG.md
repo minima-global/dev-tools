@@ -1,5 +1,17 @@
 # @minima-global/mds
 
+## 0.14.3
+
+### Patch Changes
+
+- 6101c95: updated readme
+
+## 0.14.2
+
+### Patch Changes
+
+- 1da0481: updated dapplink types
+
 ## 0.14.1
 
 ### Patch Changes
