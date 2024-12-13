@@ -5,15 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "package": "bash ./create-minima-app/package.sh",
-    "postbuild": "node ./create-minima-app/postbuild.js",
-    "copysrc": "bash ./create-minima-app/copySrcToBuild.sh",
-    "zip": " pnpm run postbuild && pnpm run copysrc && pnpm run package",
-    "src:zip": "bash create-minima-app/zip.sh",
-    "minima:install": "minima install"
+    "test:build": "tsc && vite build",
+    "test:lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test:preview": "vite preview",
+    "test:package": "bash ./create-minima-app/package.sh",
+    "test:postbuild": "node ./create-minima-app/postbuild.js",
+    "test:copysrc": "bash ./create-minima-app/copySrcToBuild.sh",
+    "test:zip": " pnpm run test:postbuild && pnpm run test:copysrc && pnpm run test:package",
+    "test:src:zip": "bash create-minima-app/zip.sh",
+    "test:minima:install": "minima install"
   },
   "browserslist": {
     "production": [
