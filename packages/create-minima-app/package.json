@@ -1,6 +1,6 @@
 {
   "name": "@minima-global/create-minima-app",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "files": [
     "dist",
     "templates",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@minima-global/mds": "0.14.3",
-    "@minima-global/minima-cli": "0.1.1",
+    "@minima-global/minima-cli": "0.1.2",
     "axios": "^1.7.7",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",

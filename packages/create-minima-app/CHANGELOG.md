@@ -1,5 +1,13 @@
 # @minima-global/create-minima-app
 
+## 0.1.5
+
+### Patch Changes
+
+- 2df078e: added minima cli installation upon running init in existing project and added script to package.json
+- Updated dependencies [a52f2fd]
+  - @minima-global/minima-cli@0.1.2
+
 ## 0.1.4
 
 ### Patch Changes
