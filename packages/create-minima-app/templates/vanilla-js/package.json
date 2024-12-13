@@ -2,15 +2,5 @@
   "name": "name-placeholder",
   "version": "0.1.0",
   "description": "name-placeholder MiniDapp",
-  "template": "vanilla-js",
-  "scripts": {
-    "zip": "minima zip",
-    "minima:install": "minima install",
-    "minima:update": "minima update",
-    "minima:uninstall": "minima uninstall",
-    "minima:refresh": "minima zip && minima uninstall && minima install"
-  },
-  "devDependencies": {
-    "@minima-global/minima-cli": "^0.1.0"
-  }
+  "template": "vanilla-js"
 }

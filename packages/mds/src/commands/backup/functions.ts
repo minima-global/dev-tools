@@ -1,5 +1,5 @@
 import type { Prettify } from '../../helpers.js';
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   ArchiveAddressCheckParams,
   ArchiveExportParams,
@@ -138,17 +138,17 @@ export type MegaMmrSyncFunc = <A extends MegaMmrSyncParams>(
  * Restore function types
  */
 
-type RestoreCallback = (data: MDSResObj<Restore>) => void;
+type RestoreCallback = (data: MDSResponse<Restore>) => void;
 
 export type RestoreFunc = (
   args: { params: RestoreParams },
   callback?: RestoreCallback,
-) => Promise<MDSResObj<Restore>>;
+) => Promise<MDSResponse<Restore>>;
 
 export type RestoreSyncFunc = (
   args: { params: RestoreSyncParams },
   callback?: RestoreCallback,
-) => Promise<MDSResObj<Restore>>;
+) => Promise<MDSResponse<Restore>>;
 
 /**
  * Vault function types

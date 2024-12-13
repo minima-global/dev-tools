@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type { Coin } from '../general/response.js';
 import type {
   TxnArray,
@@ -22,19 +22,19 @@ export type SendTxPow = {
 
 export type ReturnTypeMultiSig<S> = S extends MultiSigParams
   ? S['action'] extends 'create'
-    ? MDSResObj<CreateMultiSig>
+    ? MDSResponse<CreateMultiSig>
     : S['action'] extends 'getkey'
-      ? MDSResObj<GetKeyMultiSig>
+      ? MDSResponse<GetKeyMultiSig>
       : S['action'] extends 'spend'
-        ? MDSResObj<TxnArray>
+        ? MDSResponse<TxnArray>
         : S['action'] extends 'sign'
-          ? MDSResObj<SignMultiSig>
+          ? MDSResponse<SignMultiSig>
           : S['action'] extends 'view'
-            ? MDSResObj<MultiSigView>
+            ? MDSResponse<MultiSigView>
             : S['action'] extends 'post'
-              ? MDSResObj<Transaction>
+              ? MDSResponse<Transaction>
               : S['action'] extends 'list'
-                ? MDSResObj<ListMultiSig>
+                ? MDSResponse<ListMultiSig>
                 : never
   : never;
 
@@ -48,12 +48,12 @@ export type GetKeyMultiSig = {
 };
 
 export type SignMultiSig = [
-  MDSResObj<TxnSign>,
-  MDSResObj<TxnExport>,
-  MDSResObj<TxnDelete>,
+  MDSResponse<TxnSign>,
+  MDSResponse<TxnExport>,
+  MDSResponse<TxnDelete>,
 ];
 
-export type MultiSigView = [MDSResObj<Txn>, MDSResObj<TxnDelete>];
+export type MultiSigView = [MDSResponse<Txn>, MDSResponse<TxnDelete>];
 
 export type ListMultiSig = Coin[];
 

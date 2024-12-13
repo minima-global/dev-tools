@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   MaxContactsParams,
   MaxExtraParams,
@@ -7,19 +7,19 @@ import type {
 
 export type MaximaReturnType<A> = A extends MaximaParams
   ? A['action'] extends 'info'
-    ? MDSResObj<MaximaInfo>
+    ? MDSResponse<MaximaInfo>
     : A['action'] extends 'setname'
-      ? MDSResObj<MaximaSetname>
+      ? MDSResponse<MaximaSetname>
       : A['action'] extends 'refresh'
-        ? MDSResObj<MaximaRefresh>
+        ? MDSResponse<MaximaRefresh>
         : A['action'] extends 'send'
-          ? MDSResObj<MaximaSend>
+          ? MDSResponse<MaximaSend>
           : A['action'] extends 'sendall'
-            ? MDSResObj<MaximaSendall>
+            ? MDSResponse<MaximaSendall>
             : A['action'] extends 'hosts'
-              ? MDSResObj<MaximaHosts[]>
+              ? MDSResponse<MaximaHosts[]>
               : never
-  : MDSResObj<MaximaInfo>;
+  : MDSResponse<MaximaInfo>;
 
 export type MaximaSetname = {
   name: string;
@@ -112,19 +112,19 @@ type MaxContactImport = {
 
 export type MaxContactsReturnType<A> = A extends MaxContactsParams
   ? A['action'] extends 'add'
-    ? MDSResObj<MaxContactsAdd>
+    ? MDSResponse<MaxContactsAdd>
     : A['action'] extends 'remove'
       ? string
       : A['action'] extends 'search'
-        ? MDSResObj<MaxContactsSearch>
+        ? MDSResponse<MaxContactsSearch>
         : A['action'] extends 'import'
-          ? MDSResObj<MaxContactImport>
+          ? MDSResponse<MaxContactImport>
           : A['action'] extends 'export'
-            ? MDSResObj<MaxContactsExport>
+            ? MDSResponse<MaxContactsExport>
             : A['action'] extends 'list'
-              ? MDSResObj<MaxContacts>
+              ? MDSResponse<MaxContacts>
               : never
-  : MDSResObj<MaxContacts>;
+  : MDSResponse<MaxContacts>;
 
 export type MaxContactsAdd = {
   maxima: Add;
@@ -158,25 +158,25 @@ export type MaxExtraMLSInfo = {
 
 export type MaxExtraReturnType<A> = A extends MaxExtraParams
   ? A['action'] extends 'staticmls'
-    ? MDSResObj<MaxExtraStaticMLS>
+    ? MDSResponse<MaxExtraStaticMLS>
     : A['action'] extends 'addpermanent'
-      ? MDSResObj<string>
+      ? MDSResponse<string>
       : A['action'] extends 'removepermanent'
-        ? MDSResObj<string>
+        ? MDSResponse<string>
         : A['action'] extends 'listpermanent'
-          ? MDSResObj<string[]>
+          ? MDSResponse<string[]>
           : A['action'] extends 'clearpermanent'
-            ? MDSResObj<string>
+            ? MDSResponse<string>
             : A['action'] extends 'allowallcontacts'
-              ? MDSResObj<string>
+              ? MDSResponse<string>
               : A['action'] extends 'clearallowed'
-                ? MDSResObj<MaxClearAllowed>
+                ? MDSResponse<MaxClearAllowed>
                 : A['action'] extends 'mlsinfo'
-                  ? MDSResObj<MaxExtraMLSInfo>
+                  ? MDSResponse<MaxExtraMLSInfo>
                   : A['action'] extends 'getaddress'
-                    ? MDSResObj<MaxGetAddress>
+                    ? MDSResponse<MaxGetAddress>
                     : A['action'] extends 'addallowed'
-                      ? MDSResObj<MaxAddAllowed>
+                      ? MDSResponse<MaxAddAllowed>
                       : never
   : never;
 

@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   SendNoSignParams,
   SendParams,
@@ -26,67 +26,67 @@ import type {
  * Send function types
  */
 
-type SendCallback<T> = (data: MDSResObj<T>) => void;
+type SendCallback<T> = (data: MDSResponse<T>) => void;
 
 export type SendFunc = (
   args: { params: SendParams },
   callback?: SendCallback<Transaction>,
-) => Promise<MDSResObj<Transaction>>;
+) => Promise<MDSResponse<Transaction>>;
 
 /**
  * SendPoll function types
  */
 
-type SendPollCallback = (data: MDSResObj<SendPoll>) => void;
+type SendPollCallback = (data: MDSResponse<SendPoll>) => void;
 
 export type SendPollFunc = (
   args: { params: SendPollParams },
   callback?: SendPollCallback,
-) => Promise<MDSResObj<SendPoll>>;
+) => Promise<MDSResponse<SendPoll>>;
 
 /**
  * SendNoSign function types
  */
 
-type SendNoSignCallback = (data: MDSResObj<SendNoSign>) => void;
+type SendNoSignCallback = (data: MDSResponse<SendNoSign>) => void;
 
 export type SendNoSignFunc = (
   args: { params: SendNoSignParams },
   callback?: SendNoSignCallback,
-) => Promise<MDSResObj<SendNoSign>>;
+) => Promise<MDSResponse<SendNoSign>>;
 
 /**
  * SendView function types
  */
 
-type SendViewCallback = (data: MDSResObj<SendTxPow>) => void;
+type SendViewCallback = (data: MDSResponse<SendTxPow>) => void;
 
 export type SendViewFunc = (
   args: { params: SendFileParams },
   callback?: SendViewCallback,
-) => Promise<MDSResObj<SendTxPow>>;
+) => Promise<MDSResponse<SendTxPow>>;
 
 /**
  * SendSign function types
  */
 
-type SendSignCallback = (data: MDSResObj<SendNoSign>) => void;
+type SendSignCallback = (data: MDSResponse<SendNoSign>) => void;
 
 export type SendSignFunc = (
   args: { params: SendSignParams },
   callback?: SendSignCallback,
-) => Promise<MDSResObj<SendNoSign>>;
+) => Promise<MDSResponse<SendNoSign>>;
 
 /**
  * SendPost function types
  */
 
-type SendPostCallback = (data: MDSResObj<SendTxPow>) => void;
+type SendPostCallback = (data: MDSResponse<SendTxPow>) => void;
 
 export type SendPostFunc = (
   args: { params: SendFileParams },
   callback?: SendPostCallback,
-) => Promise<MDSResObj<SendTxPow>>;
+) => Promise<MDSResponse<SendTxPow>>;
 
 /**
  * MultiSig function types

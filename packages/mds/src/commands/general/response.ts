@@ -1,12 +1,12 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 
 export type BalanceReturnType<S> = S extends {
   params: any;
 }
   ? S['params'] extends { tokendetails: string }
-    ? MDSResObj<BalanceWithTokenDetails[]>
-    : MDSResObj<Balance[]>
-  : MDSResObj<Balance[]>;
+    ? MDSResponse<BalanceWithTokenDetails[]>
+    : MDSResponse<Balance[]>
+  : MDSResponse<Balance[]>;
 
 export type Balance = {
   token:
@@ -101,7 +101,7 @@ export type Coin = {
   tokenamount: string;
 };
 
-export type SimpleCoinResponse = MDSResObj<string>;
+export type SimpleCoinResponse = MDSResponse<string>;
 
 export type TokenCreate = {
   inputs: Coin[];
@@ -177,7 +177,7 @@ export type Quit = {
   message: string;
 };
 
-export type Colnsolidate = MDSResObj<{
+export type Colnsolidate = MDSResponse<{
   txpowid: string;
   isblock: boolean;
   istransaction: boolean;

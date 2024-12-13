@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type { Coin } from '../general/response.js';
 import type {
   CoinsParams,
@@ -21,13 +21,13 @@ import type {
  * Coins function types
  */
 
-type CoinsCallback = (data: MDSResObj<Coin[]>) => void;
+type CoinsCallback = (data: MDSResponse<Coin[]>) => void;
 
 export type CoinsFunc = <T extends CoinsParams | undefined>(
   ...args: T extends undefined
     ? [CoinsCallback?]
     : [{ params: CoinsParams }, CoinsCallback?]
-) => Promise<MDSResObj<Coin[]>>;
+) => Promise<MDSResponse<Coin[]>>;
 
 /**
  * Tokens function types
@@ -79,5 +79,5 @@ export type TxPowFunc = <T extends { params: TxPowParams }>(
 
 export type ScanChainFunc = (
   args: { params: ScanChainParams },
-  callback?: (data: MDSResObj<ScanChain>) => void,
-) => Promise<MDSResObj<ScanChain>>;
+  callback?: (data: MDSResponse<ScanChain>) => void,
+) => Promise<MDSResponse<ScanChain>>;

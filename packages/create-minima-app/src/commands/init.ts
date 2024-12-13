@@ -254,6 +254,9 @@ async function configureExistingProject(
   // Get package.json
   const packageJson = JSON.parse(readFileSync("package.json", "utf-8"))
 
+  // Configure Minima CLI
+  await configureCli(process.cwd(), options.template)
+
   const installSpinner = spinner("Installing MiniDapp...").start()
 
   await install({
@@ -296,8 +299,6 @@ async function configureExistingProject(
       process.exit(1)
     }
 
-    await configureCli(process.cwd())
-
     await setupDebugConfig({
       port: MINIMA_PORT + 2,
       password: MDS_PASSWORD,
@@ -313,6 +314,8 @@ async function configureExistingProject(
     logger.info(`You can now run your MiniDapp with:\n`)
     logger.info(`cd ${packageJson.name}\n`)
     logger.info(`${getRunCommand(packageManager, "dev")}\n`)
+
+    process.exit(0)
   }
 }
 
@@ -399,6 +402,10 @@ async function setupReactTemplate(
     })
   })
 
+  // Configure Minima CLI
+  projectSpinner.text = "Configuring Minima CLI..."
+  await configureCli(process.cwd(), options.template)
+
   // Build steps for React template
   projectSpinner.text = "Building MiniDapp..."
   await new Promise((resolve, reject) => {
@@ -444,7 +451,7 @@ async function setupVanillaTemplate(
   packageJson.description = `${options.appName} MiniDapp`
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
 
-  // Install minima-cli for zip/install commands
+  // Install dependencies
   const packageManager = getPackageManager()
   projectSpinner.text = "Installing dependencies..."
   await new Promise((resolve, reject) => {
@@ -453,6 +460,10 @@ async function setupVanillaTemplate(
       resolve(stdout)
     })
   })
+
+  // Configure Minima CLI
+  projectSpinner.text = "Configuring Minima CLI..."
+  await configureCli(process.cwd(), options.template)
 
   projectSpinner.text = "Building MiniDapp..."
   await configureDappConf()

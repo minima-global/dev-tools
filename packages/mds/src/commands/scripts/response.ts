@@ -1,12 +1,12 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 
 export type ScriptsReturnType<S> = S extends {
   params: any;
 }
   ? S['params'] extends { address: string }
-    ? MDSResObj<Script>
-    : MDSResObj<Script[]>
-  : MDSResObj<Script[]>;
+    ? MDSResponse<Script>
+    : MDSResponse<Script[]>
+  : MDSResponse<Script[]>;
 
 export type Script = {
   script: string;

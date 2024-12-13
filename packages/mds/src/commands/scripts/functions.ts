@@ -1,6 +1,6 @@
 import type { RemoveScript, RunScript, Script, Tutorial } from './response.js';
 import type { ScriptsReturnType } from './response.js';
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   NewScriptParams,
   RemoveScriptParams,
@@ -27,8 +27,8 @@ export type ScriptsFunc = <T extends { params: ScriptsParams } | undefined>(
  */
 
 export type TutorialFunc = (
-  callback?: (data: MDSResObj<Tutorial>) => void,
-) => Promise<MDSResObj<Tutorial>>;
+  callback?: (data: MDSResponse<Tutorial>) => void,
+) => Promise<MDSResponse<Tutorial>>;
 
 /**
  * New script function types
@@ -36,8 +36,8 @@ export type TutorialFunc = (
 
 export type NewScriptFunc = (
   args: { params: NewScriptParams },
-  callback?: (data: MDSResObj<Script>) => void,
-) => Promise<MDSResObj<Script>>;
+  callback?: (data: MDSResponse<Script>) => void,
+) => Promise<MDSResponse<Script>>;
 
 /**
  * Run script function types
@@ -45,8 +45,8 @@ export type NewScriptFunc = (
 
 export type RunScriptFunc = (
   args: { params: RunScriptParams },
-  callback?: (data: MDSResObj<RunScript>) => void,
-) => Promise<MDSResObj<RunScript>>;
+  callback?: (data: MDSResponse<RunScript>) => void,
+) => Promise<MDSResponse<RunScript>>;
 
 /**
  * Remove script function types
@@ -54,5 +54,5 @@ export type RunScriptFunc = (
 
 export type RemoveScriptFunc = (
   args: { params: RemoveScriptParams },
-  callback?: (data: MDSResObj<RemoveScript>) => void,
-) => Promise<MDSResObj<RemoveScript>>;
+  callback?: (data: MDSResponse<RemoveScript>) => void,
+) => Promise<MDSResponse<RemoveScript>>;

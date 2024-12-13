@@ -1,25 +1,25 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type { Transaction } from '../send/response.js';
 import type { MDSParams } from './params.js';
 
 export type MDSReturnType<A> = A extends MDSParams
   ? A['action'] extends 'list'
-    ? MDSResObj<MDSList>
+    ? MDSResponse<MDSList>
     : A['action'] extends 'install'
-      ? MDSResObj<MDSInstall>
+      ? MDSResponse<MDSInstall>
       : A['action'] extends 'uninstall'
-        ? MDSResObj<MDSUninstall>
+        ? MDSResponse<MDSUninstall>
         : A['action'] extends 'permission'
-          ? MDSResObj<MDSPermission>
+          ? MDSResponse<MDSPermission>
           : A['action'] extends 'pending'
-            ? MDSResObj<MDSPending>
+            ? MDSResponse<MDSPending>
             : A['action'] extends 'deny'
-              ? MDSResObj<string>
+              ? MDSResponse<string>
               : A['action'] extends 'accept'
-                ? MDSResObj<Transaction>
+                ? MDSResponse<Transaction>
                 : A['action'] extends 'publicmds'
-                  ? MDSResObj<PublicMDS>
-                  : MDSResObj<MDSList>
+                  ? MDSResponse<PublicMDS>
+                  : MDSResponse<MDSList>
   : never;
 
 export type PublicMDS = {

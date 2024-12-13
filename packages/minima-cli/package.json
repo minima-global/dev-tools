@@ -46,7 +46,8 @@
     "dev": "tsup src/index.ts src/cli.ts --format esm --dts --watch",
     "lint": "eslint .",
     "clean": "rm -rf dist",
-    "local-release": "changeset version && changeset publish"
+    "format": "prettier --write \"./src/**/**.ts\" --write",
+    "check-format": "prettier \"./src/**/**.ts\" --check"
   },
   "dependencies": {
     "archiver": "^7.0.1",
