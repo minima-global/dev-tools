@@ -1,6 +1,6 @@
 {
   "name": "@minima-global/create-minima-app",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "files": [
     "dist",
     "templates",
@@ -41,7 +41,7 @@
     "check-format": "prettier \"./src/**/**.ts\" --check"
   },
   "dependencies": {
-    "@minima-global/mds": "0.14.3",
+    "@minima-global/mds": "0.14.4",
     "@minima-global/minima-cli": "0.1.2",
     "axios": "^1.7.7",
     "chalk": "^5.3.0",
