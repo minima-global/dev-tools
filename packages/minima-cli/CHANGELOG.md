@@ -1,5 +1,11 @@
 # @minima-global/minima-cli
 
+## 0.1.2
+
+### Patch Changes
+
+- a52f2fd: Added port flag to commands and improved log messages
+
 ## 0.1.1
 
 ### Patch Changes
