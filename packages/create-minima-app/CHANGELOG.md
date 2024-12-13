@@ -1,5 +1,11 @@
 # @minima-global/create-minima-app
 
+## 0.1.7
+
+### Patch Changes
+
+- 54cd448: fixed init in existing project
+
 ## 0.1.6
 
 ### Patch Changes
