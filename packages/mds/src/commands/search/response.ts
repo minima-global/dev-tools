@@ -1,17 +1,17 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type { Token } from '../general/response.js';
 import type { Transaction, Txn } from '../send/response.js';
 import type { TokenParams } from './params.js';
 
 export type TokensReturnType<S> = S extends TokenParams
   ? S['action'] extends 'export'
-    ? MDSResObj<TokenExport>
+    ? MDSResponse<TokenExport>
     : S['action'] extends 'import'
-      ? MDSResObj<Token>
+      ? MDSResponse<Token>
       : S extends { tokenid: string }
-        ? MDSResObj<Token>
-        : MDSResObj<Token[]>
-  : MDSResObj<Token[]>;
+        ? MDSResponse<Token>
+        : MDSResponse<Token[]>
+  : MDSResponse<Token[]>;
 
 export type TokenExport = {
   tokenid: string;
@@ -19,14 +19,14 @@ export type TokenExport = {
 };
 
 export type KeysReturnType<S> = S extends 'list'
-  ? MDSResObj<Key[]>
+  ? MDSResponse<Key[]>
   : S extends 'checkkeys'
-    ? MDSResObj<CheckKeys>
+    ? MDSResponse<CheckKeys>
     : S extends 'new'
-      ? MDSResObj<Key>
-      : MDSResObj<Key[]>;
+      ? MDSResponse<Key>
+      : MDSResponse<Key[]>;
 
-export type KeysResponse = MDSResObj<Key[]>;
+export type KeysResponse = MDSResponse<Key[]>;
 
 export type CheckKeys = {
   allkeys: number;
@@ -34,18 +34,18 @@ export type CheckKeys = {
   wrong: number;
 };
 
-export type NewKeysResponse = MDSResObj<Key>;
+export type NewKeysResponse = MDSResponse<Key>;
 
 export type TxPowReturnType<S> = S extends {
   params: any;
 }
   ? S['params'] extends { address: string }
-    ? MDSResObj<Transaction[]>
+    ? MDSResponse<Transaction[]>
     : S['params'] extends { onchain: string }
-      ? MDSResObj<TxPowOnchain>
+      ? MDSResponse<TxPowOnchain>
       : S['params'] extends { action: 'info' }
-        ? MDSResObj<TxPowInfo>
-        : MDSResObj<Transaction>
+        ? MDSResponse<TxPowInfo>
+        : MDSResponse<Transaction>
   : never;
 
 export type TxPowOnchain = {

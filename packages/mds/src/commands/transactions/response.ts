@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type { Header, Txn, Witness } from '../send/response.js';
 import type { TxnExportParams, TxnSignParams } from './params.js';
 
@@ -57,8 +57,8 @@ export type TxnExportReturnType<S> = S extends {
   params: TxnExportParams;
 }
   ? S['params'] extends { file: string }
-    ? MDSResObj<TxnExport>
-    : MDSResObj<TxnExportData>
+    ? MDSResponse<TxnExport>
+    : MDSResponse<TxnExportData>
   : never;
 
 export type TxnExportData = {
@@ -112,9 +112,9 @@ export type TxnSignReturnType<S> = S extends {
   params: TxnSignParams;
 }
   ? S['params'] extends { txnpostauto: 'true' }
-    ? MDSResObj<TxSignPost>
-    : MDSResObj<TxnSign>
-  : MDSResObj<TxnSign>;
+    ? MDSResponse<TxSignPost>
+    : MDSResponse<TxnSign>
+  : MDSResponse<TxnSign>;
 
 export type TxPow = {
   txpowid: string;
@@ -130,10 +130,10 @@ export type TxPow = {
 
 //TODO: Add txnstate response
 export type TxnArray = [
-  MDSResObj<Txn>,
-  MDSResObj<TxnInput>,
-  MDSResObj<Txn>,
-  MDSResObj<Txn>,
-  MDSResObj<TxnExportData>,
-  MDSResObj<TxnDelete>,
+  MDSResponse<Txn>,
+  MDSResponse<TxnInput>,
+  MDSResponse<Txn>,
+  MDSResponse<Txn>,
+  MDSResponse<TxnExportData>,
+  MDSResponse<TxnDelete>,
 ];

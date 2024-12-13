@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   AddPeersParams,
   ConnectParams,
@@ -23,8 +23,8 @@ import type {
 
 export type ConnectFunc = (
   args: { params: ConnectParams },
-  callback?: (data: MDSResObj<Message>) => void,
-) => Promise<MDSResObj<Message>>;
+  callback?: (data: MDSResponse<Message>) => void,
+) => Promise<MDSResponse<Message>>;
 
 /**
  * Disconnect function types
@@ -32,8 +32,8 @@ export type ConnectFunc = (
 
 export type DisconnectFunc = (
   args: { params: DisconnectParams },
-  callback?: (data: MDSResObj<Message>) => void,
-) => Promise<MDSResObj<Message>>;
+  callback?: (data: MDSResponse<Message>) => void,
+) => Promise<MDSResponse<Message>>;
 
 /**
  * Network list function types
@@ -76,14 +76,14 @@ export type PeersFunc = <T extends PeersParams | undefined>(
  */
 
 export type PingFunc = (
-  callback?: (data: MDSResObj<Ping>) => void,
-) => Promise<MDSResObj<Ping>>;
+  callback?: (data: MDSResponse<Ping>) => void,
+) => Promise<MDSResponse<Ping>>;
 
 /**
  * RPC function types
  */
 
-type RPCCallback = (data: MDSResObj<RPC>) => void;
+type RPCCallback = (data: MDSResponse<RPC>) => void;
 
 export type ActionParamMapRPC = {
   readonly enable: RPCEnableParams;
@@ -102,4 +102,4 @@ export type RPCFuncParams<A extends RPCParams | undefined> = [
 
 export type RPCFunc = <T extends RPCParams | undefined>(
   ...args: T extends undefined ? [RPCCallback?] : RPCFuncParams<T>
-) => Promise<MDSResObj<RPC>>;
+) => Promise<MDSResponse<RPC>>;

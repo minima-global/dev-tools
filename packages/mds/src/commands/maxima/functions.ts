@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   MaxContactsAddParams,
   MaxContactsImportParams,
@@ -103,22 +103,22 @@ export type MaxContactsFunc = <A extends MaxContactsParams | undefined>(
  * MaxCreate function types
  */
 
-type MaxCreateCallback = (data: MDSResObj<MaxCreate>) => void;
+type MaxCreateCallback = (data: MDSResponse<MaxCreate>) => void;
 
 export type MaxCreateFunc = (
   callback?: MaxCreateCallback,
-) => Promise<MDSResObj<MaxCreate>>;
+) => Promise<MDSResponse<MaxCreate>>;
 
 /**
  * MaxSign function types
  */
 
-type MaxSignCallback = (data: MDSResObj<MaxSign>) => void;
+type MaxSignCallback = (data: MDSResponse<MaxSign>) => void;
 
 export type MaxSignFunc = (
   args: { params: MaxSignParams },
   callback?: MaxSignCallback,
-) => Promise<MDSResObj<MaxSign>>;
+) => Promise<MDSResponse<MaxSign>>;
 
 /**
  * MaxExtra function types
@@ -158,9 +158,9 @@ export type MaxExtraFunc = <A extends MaxExtraParams>(
  * MaxVerify function types
  */
 
-type MaxVerifyCallback = (data: MDSResObj<MaxVerify>) => void;
+type MaxVerifyCallback = (data: MDSResponse<MaxVerify>) => void;
 
 export type MaxVerifyFunc = (
   args: { params: MaxVerifyParams },
   callback?: MaxVerifyCallback,
-) => Promise<MDSResObj<MaxVerify>>;
+) => Promise<MDSResponse<MaxVerify>>;

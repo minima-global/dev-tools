@@ -40,12 +40,24 @@ export async function setupDebugConfig(
   await page.setViewport({ width: 1280, height: 1024 })
   await page.goto(`https://${values.host}:${values.port}`)
   await page.waitForNetworkIdle()
-  await page.type("#password", values.password)
+  await page.type("#password", values.password).catch(() => {
+    logger.error("Invalid password")
+    process.exit(1)
+  })
   await page.click("[type='submit']")
-  await page.waitForFunction(
-    () => document.body.innerText.includes("Click anywhere to continue"),
-    { timeout: 5000 }
-  )
+  await page
+    .waitForFunction(
+      () => document.body.innerText.includes("Click anywhere to continue"),
+      { timeout: 5000 }
+    )
+    .catch(() => {
+      debuggingSpinner.fail("Something went wrong!")
+      logger.info("Please check your password, host, port and try again.")
+      logger.info(
+        "If you need further help or guidance, visit https://docs.minima.global\n"
+      )
+      process.exit(1)
+    })
   await page.click("body")
 
   const data = await page.evaluate(() => {

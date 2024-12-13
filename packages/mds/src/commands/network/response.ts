@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type { PeersParams } from './params.js';
 
 export type Message = {
@@ -6,11 +6,11 @@ export type Message = {
 };
 
 export type NetworkReturnType<T> = T extends 'list'
-  ? MDSResObj<NetworkList>
+  ? MDSResponse<NetworkList>
   : T extends 'reset'
-    ? MDSResObj<NetworkReset>
+    ? MDSResponse<NetworkReset>
     : T extends 'recalculateip'
-      ? MDSResObj<NetworkRecalculateIP>
+      ? MDSResponse<NetworkRecalculateIP>
       : never;
 
 export type NetworkList = {
@@ -33,11 +33,11 @@ export type NetworkRecalculateIP = {
 
 export type PeersReturnType<A> = A extends PeersParams
   ? A['action'] extends 'list'
-    ? MDSResObj<PeersList>
+    ? MDSResponse<PeersList>
     : A['action'] extends 'addpeers'
-      ? MDSResObj<PeersAdd>
+      ? MDSResponse<PeersAdd>
       : never
-  : MDSResObj<PeersList>;
+  : MDSResponse<PeersList>;
 
 export type PeersList = {
   peerslist: string;

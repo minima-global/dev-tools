@@ -119,7 +119,7 @@ export type DappLink = {
   base: string;
 };
 
-export type MDSResObj<T> = Prettify<DefaultRes & { response: T }>;
+export type MDSResponse<T> = Prettify<DefaultRes & { response: T }>;
 
 type FileAccessParams = (
   opt: string,

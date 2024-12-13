@@ -1,4 +1,4 @@
-import type { DefaultRes, MDSResObj } from '../../types.js';
+import type { DefaultRes, MDSResponse } from '../../types.js';
 import type { Coin } from '../general/response.js';
 import type {
   ArchiveParams,
@@ -35,19 +35,19 @@ type AddressCheck = {
 
 export type ArchiveReturnType<A> = A extends ArchiveParams
   ? A['action'] extends 'integrity'
-    ? MDSResObj<ArchiveIntegrity>
+    ? MDSResponse<ArchiveIntegrity>
     : A['action'] extends 'export'
-      ? MDSResObj<ArchiveExport>
+      ? MDSResponse<ArchiveExport>
       : A['action'] extends 'import'
-        ? MDSResObj<Archive>
+        ? MDSResponse<Archive>
         : A['action'] extends 'inspect'
-          ? MDSResObj<ArchiveInspect>
+          ? MDSResponse<ArchiveInspect>
           : A['action'] extends 'addresscheck'
-            ? MDSResObj<ArchiveAddressCheck>
+            ? MDSResponse<ArchiveAddressCheck>
             : A['action'] extends 'exportraw'
-              ? MDSResObj<ArchiveExport>
+              ? MDSResponse<ArchiveExport>
               : A['action'] extends 'resync'
-                ? MDSResObj<Archive>
+                ? MDSResponse<Archive>
                 : never
   : never;
 
@@ -104,11 +104,11 @@ export type Backup = {
 
 export type MegaMmmrReturnType<A> = A extends MegaMmrParams
   ? A['action'] extends 'info'
-    ? MDSResObj<MegaMmrInfo>
+    ? MDSResponse<MegaMmrInfo>
     : A['action'] extends 'export'
-      ? MDSResObj<MegaMmrExport>
+      ? MDSResponse<MegaMmrExport>
       : A['action'] extends 'import'
-        ? MDSResObj<MegaMmrImport>
+        ? MDSResponse<MegaMmrImport>
         : never
   : never;
 
@@ -153,9 +153,9 @@ export type MegaMmrSyncDetails = {
 
 export type MegaMmrSyncReturnType<A> = A extends MegaMmrSyncParams
   ? A['action'] extends 'myDetails'
-    ? MDSResObj<{ details: MegaMmrSyncDetails[] }>
+    ? MDSResponse<{ details: MegaMmrSyncDetails[] }>
     : A['action'] extends 'resync'
-      ? MDSResObj<MegaMmrResync>
+      ? MDSResponse<MegaMmrResync>
       : never
   : never;
 
@@ -173,17 +173,17 @@ export type Restore = {
 
 export type VaultReturnType<A> = A extends VaultParams
   ? A['action'] extends 'seed'
-    ? MDSResObj<Vault>
+    ? MDSResponse<Vault>
     : A['action'] extends 'wipekeys'
-      ? MDSResObj<string>
+      ? MDSResponse<string>
       : A['action'] extends 'restorekeys'
-        ? MDSResObj<RestoreKeys>
+        ? MDSResponse<RestoreKeys>
         : A['action'] extends 'passwordlock'
-          ? MDSResObj<string>
+          ? MDSResponse<string>
           : A['action'] extends 'passwordunlock'
-            ? MDSResObj<string>
+            ? MDSResponse<string>
             : never
-  : MDSResObj<Vault>;
+  : MDSResponse<Vault>;
 
 export type Vault = {
   phrase: string;
@@ -200,11 +200,11 @@ export type RestoreKeys = {
 
 export type ResetReturnType<A> = A extends ResetParams
   ? A['action'] extends 'chainsync'
-    ? MDSResObj<ResetChainSync>
+    ? MDSResponse<ResetChainSync>
     : A['action'] extends 'seedsync'
-      ? MDSResObj<Archive>
+      ? MDSResponse<Archive>
       : A['action'] extends 'restore'
-        ? MDSResObj<ResetRestore>
+        ? MDSResponse<ResetRestore>
         : never
   : never;
 
@@ -215,7 +215,7 @@ export type ResetChainSync = {
 };
 
 export type ResetRestore = {
-  restore: MDSResObj<Restore>;
+  restore: MDSResponse<Restore>;
   chainsync: {
     command: string;
     params: {
@@ -225,7 +225,7 @@ export type ResetRestore = {
     status: string;
     pending: boolean;
     response: {
-      archiveresync: MDSResObj<Archive>;
+      archiveresync: MDSResponse<Archive>;
     };
   };
 };

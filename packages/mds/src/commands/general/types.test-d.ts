@@ -13,7 +13,7 @@ import {
   type HashTestParams,
   type HistoryCallback,
   type HistoryParams,
-  type MDSResObj,
+  type MDSResponse,
   type NewAddressCallback,
   type PrintTreeCallback,
   type PrintTreeParams,
@@ -46,7 +46,7 @@ describe('MDS Commands Type Checking', () => {
     });
 
     it('tokendetails true should return BalanceWithTokenDetailsresponse', async () => {
-      type Response = MDSResObj<BalanceWithTokenDetails[]>;
+      type Response = MDSResponse<BalanceWithTokenDetails[]>;
       const actual = await MDS.cmd.balance({
         params: {
           tokendetails: 'true',

@@ -9,7 +9,7 @@ const updateParams = z.object({
   port: z.number().default(9005),
 })
 
-type UpdateParams = z.infer<typeof updateParams>  
+type UpdateParams = z.infer<typeof updateParams>
 
 export async function update({ port = 9005 }: UpdateParams) {
   const params = updateParams.parse({
@@ -17,8 +17,7 @@ export async function update({ port = 9005 }: UpdateParams) {
   })
 
   const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
-  const capitalize = (str: string) =>
-    str.charAt(0).toUpperCase() + str.slice(1)
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
   // Get list of installed minidapps
   const { stdout: mdsResponse } = await execAsync(

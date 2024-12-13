@@ -1,4 +1,4 @@
-import type { MDSResObj } from '../../types.js';
+import type { MDSResponse } from '../../types.js';
 import type {
   CheckPendingParams,
   MDSAcceptOrDenyParams,
@@ -56,8 +56,8 @@ export type MDSFunc = <T extends MDSParams | undefined>(
  */
 
 export type CheckModeFunc = (
-  callback?: (data: MDSResObj<CheckMode>) => void,
-) => Promise<MDSResObj<CheckMode>>;
+  callback?: (data: MDSResponse<CheckMode>) => void,
+) => Promise<MDSResponse<CheckMode>>;
 
 /**
  * Check pending function types
@@ -65,13 +65,13 @@ export type CheckModeFunc = (
 
 export type CheckPendingFunc = (
   args: { params: CheckPendingParams },
-  callback?: (data: MDSResObj<CheckPending>) => void,
-) => Promise<MDSResObj<CheckPending>>;
+  callback?: (data: MDSResponse<CheckPending>) => void,
+) => Promise<MDSResponse<CheckPending>>;
 
 /**
  * Check restore function types
  */
 
 export type CheckRestoreFunc = (
-  callback?: (data: MDSResObj<CheckRestore>) => void,
-) => Promise<MDSResObj<CheckRestore>>;
+  callback?: (data: MDSResponse<CheckRestore>) => void,
+) => Promise<MDSResponse<CheckRestore>>;
