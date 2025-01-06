@@ -97,24 +97,25 @@ export async function setupDebugConfig(
 
   if (values.logs) {
     debuggingSpinner.succeed(
-      chalk.green(`Debug settings configured successfully!\n\n`)
+      chalk.green(`Debug settings configured successfully!\n`)
     )
 
-    logger.info("You can navigate to your project directory with:\n")
-    logger.info(`cd ${values.appName}\n`)
+    logger.secondary("You can navigate to your project directory with:\n")
+    logger.secondary(`cd ${values.appName}`)
+
     if (values.template === "react-ts") {
-      logger.info(`${getRunCommand(values.packageManager, "dev")}\n`)
+      logger.secondary(`${getRunCommand(values.packageManager, "dev")}`)
     }
 
-    logger.info(
+    logger.secondary(
       "If you need further help or guidance, visit https://docs.minima.global\n"
     )
   } else {
     debuggingSpinner.succeed(
-      chalk.green("Debug settings configured successfully!\n\n") +
-        chalk.cyan(
-          "If you need further help or guidance, visit https://docs.minima.global\n"
-        )
+      chalk.green("Debug settings configured successfully!\n")
+    )
+    logger.secondary(
+      "If you need further help or guidance, visit https://docs.minima.global\n"
     )
   }
 

@@ -32,7 +32,7 @@ export async function configureCli(projectPath: string, template: string) {
         execSync(
           `${getInstallCommand(packageManager)} -D @minima-global/minima-cli`,
           {
-            stdio: "inherit",
+            stdio: "ignore",
             cwd: projectPath,
           }
         )
@@ -41,7 +41,7 @@ export async function configureCli(projectPath: string, template: string) {
       // Install MDS as regular dependency if needed for React template
       if (isReactTemplate && !hasMds) {
         execSync(`${getInstallCommand(packageManager)} @minima-global/mds`, {
-          stdio: "inherit",
+          stdio: "ignore",
           cwd: projectPath,
         })
       }
