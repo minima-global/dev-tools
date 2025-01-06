@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://turbo.build">
+  <a href="">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://avatars.githubusercontent.com/u/71636227?s=200&v=4">
       <img src="https://avatars.githubusercontent.com/u/71636227?s=200&v=4" height="128">
