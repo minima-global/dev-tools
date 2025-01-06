@@ -16,6 +16,10 @@ export const logger = {
   log(...args: unknown[]) {
     console.log(args.join(" "))
   },
+
+  secondary(...args: unknown[]) {
+    console.log(chalk.gray(args.join(" ")))
+  },
   break() {
     console.log("")
   },

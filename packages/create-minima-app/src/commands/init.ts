@@ -42,12 +42,18 @@ export const init = new Command()
   .option("-t, --template <template>", "the template to use", "react-ts")
   .action(async (opts) => {
     try {
+      logger.break()
       logger.log(
-        chalk.white(figlet.textSync("MINIMA", { horizontalLayout: "full" }))
+        figlet.textSync("Create Minidapp", {
+          font: "ANSI Shadow",
+        })
       )
 
-      logger.info("Welcome to the Minima CLI\n")
+      logger.secondary(
+        "Welcome to the Minima CLI. This tool will help you create a new Minima MiniDapp.\nDocumentation: https://docs.minima.global/docs/development/cli"
+      )
 
+      logger.break()
       const config = await getConfiguration()
 
       const options = initOptionsSchema.parse({
@@ -101,7 +107,7 @@ export const init = new Command()
         type: "confirm",
         name: "RUNNING_RPC",
         message:
-          "Are you running Minima RPC?\n  To learn more about RPC, visit https://docs.minima.global/rpc\n",
+          "Are you running Minima RPC?\nTo learn more about RPC, visit https://docs.minima.global/rpc\n",
         initial: options.rpc,
         active: "no",
         inactive: "yes",
@@ -363,7 +369,7 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
       await setupVanillaTemplate(options, projectSpinner)
     }
 
-    projectSpinner.succeed("Project created successfully!")
+    projectSpinner.succeed(chalk.green("Project created successfully!"))
   } catch (error) {
     if (error instanceof Error) {
       projectSpinner.fail(chalk.red(`${error.message}`))
