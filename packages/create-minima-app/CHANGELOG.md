@@ -1,5 +1,13 @@
 # @minima-global/create-minima-app
 
+## 0.1.8
+
+### Patch Changes
+
+- 751ca88: - changed ascii art
+  - updated info text
+  - removed unnecessary dependancies from react template
+
 ## 0.1.7
 
 ### Patch Changes
