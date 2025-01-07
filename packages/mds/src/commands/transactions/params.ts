@@ -132,7 +132,7 @@ export type TxnSignParams = {
   id: string;
   publickey: string | 'auto';
   txnpostauto?: 'true' | 'false';
-  txnpostburn?: 'true' | 'false';
+  txnpostburn?: string;
   txnpostmine?: 'true' | 'false';
   txndelete?: 'true' | 'false';
 };

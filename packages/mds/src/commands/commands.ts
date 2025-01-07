@@ -361,7 +361,7 @@ export interface SendCommands {
   /**
    * Send function that adds 'send' commands to a list and polls every 30 seconds until the return status is 'true'.
    * @param args - Parameters for sending and polling tokens
-   * @param args.params.action - (Optional) 'list' to show all commands in polling list, 'remove' to remove a command
+   * @param args.params.action - (Optional) 'add' to add a send transaction to the polling queue, 'list' to show all commands in polling list, 'remove' to remove a command
    * @param args.params.uid - (Optional) The uid of a "send" command to remove from polling list. Use with action:remove
    * @param args.params.address - (Optional) A Minima 0x or Mx wallet address or custom script address
    * @param args.params.amount - (Optional) The amount of Minima or custom tokens to send

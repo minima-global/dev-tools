@@ -68,11 +68,11 @@ export type SendPollParams = SendParams & {
   /**
    * The action to perform.
    */
-  action: 'list' | 'remove';
+  action: 'add' | 'list' | 'remove';
   /**
    * The uid of the transaction to remove.
    */
-  uid: string;
+  uid?: string;
 };
 
 export type SendNoSignParams = {
