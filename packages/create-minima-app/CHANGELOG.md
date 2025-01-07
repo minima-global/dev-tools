@@ -1,5 +1,12 @@
 # @minima-global/create-minima-app
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [f27165f]
+  - @minima-global/mds@0.14.5
+
 ## 0.1.8
 
 ### Patch Changes
