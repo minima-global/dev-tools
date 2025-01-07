@@ -9,7 +9,8 @@
     "format": "turbo format",
     "check-format": "turbo check-format",
     "local-release": "changeset version && changeset publish",
-    "ci": "turbo ci && turbo format && turbo check-format"
+    "ci": "turbo ci && turbo format && turbo check-format",
+    "test": "turbo test"
   },
   "workspaces": [
     "tests/*",
