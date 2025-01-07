@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.5
+
+### Patch Changes
+
+- f27165f: fixes types for sendpoll and txnsign
+
 ## 0.14.4
 
 ### Patch Changes
