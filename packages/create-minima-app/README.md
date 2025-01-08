@@ -1,6 +1,16 @@
-## Create Minima App
+<p align="center">
+ <img alt="create-minidapp.png" src="https://github.com/minima-global/dev-tools/blob/feature/tests/tests/test-app/public/create-minidapp.png?raw=true">
+</p>
 
+<p align="center">
 A Cli for creating and building MiniDapps on the Minima Blockchain.
+</p>
+
+---
+
+```bash
+$ npx @minima-global/create-minima-app init
+```
 
 ## Usage
 
