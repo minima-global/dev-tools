@@ -1,5 +1,11 @@
 # @minima-global/minima-cli
 
+## 0.1.3
+
+### Patch Changes
+
+- 2863d25: added debugg logs to zip command
+
 ## 0.1.2
 
 ### Patch Changes

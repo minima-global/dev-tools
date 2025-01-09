@@ -1,5 +1,12 @@
 # @minima-global/create-minima-app
 
+## 0.1.10
+
+### Patch Changes
+
+- Updated dependencies [2863d25]
+  - @minima-global/minima-cli@0.1.3
+
 ## 0.1.9
 
 ### Patch Changes
