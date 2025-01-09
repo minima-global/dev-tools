@@ -43,7 +43,7 @@ export async function zip(file: string, build: string, logs: boolean = false) {
       if (logs) {
         console.log("Setting up file patterns to archive...")
       }
-      // Add files to the archive while excluding unwanted files
+
       archive.glob("**/*", {
         cwd: build,
         ignore: [

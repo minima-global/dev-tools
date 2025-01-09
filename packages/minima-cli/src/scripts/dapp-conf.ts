@@ -1,15 +1,16 @@
 import { readFileSync, writeFileSync } from "fs"
+import { isReactProject } from "../utils/is-react-project.js"
 
 export async function configureDappConf(logs: boolean = false) {
   const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
 
   // Try both build folder and root directory
-  let dAppConfPath = "./build/dapp.conf"
-  try {
-    readFileSync(dAppConfPath, "utf-8")
-  } catch {
-    dAppConfPath = "./dapp.conf"
-  }
+
+  const isReact = isReactProject()
+
+  let dAppConfPath = isReact ? "./build/dapp.conf" : "./dapp.conf"
+
+  readFileSync(dAppConfPath, "utf-8")
 
   if (logs) {
     console.log("dAppConfPath", dAppConfPath)
