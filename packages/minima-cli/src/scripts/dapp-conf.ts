@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs"
 
-export async function configureDappConf() {
+export async function configureDappConf(logs: boolean = false) {
   const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
 
   // Try both build folder and root directory
@@ -11,7 +11,15 @@ export async function configureDappConf() {
     dAppConfPath = "./dapp.conf"
   }
 
+  if (logs) {
+    console.log("dAppConfPath", dAppConfPath)
+  }
+
   let dAppConf = readFileSync(dAppConfPath, "utf-8")
+
+  if (logs) {
+    console.log("dAppConf", dAppConf)
+  }
 
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 

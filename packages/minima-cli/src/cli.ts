@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import chalk from "chalk"
-import { exec } from "child_process"
 import { Command } from "commander"
 import { readFileSync } from "fs"
 import ora, { type Ora } from "ora"
@@ -22,29 +21,24 @@ program
 program
   .command("zip")
   .description("Build and zip the MiniDapp")
-  .action(async () => {
+  .option("-l, --logs", "Debug logs", false)
+  .action(async (options) => {
     const spinner = ora("Building MiniDapp...").start()
     try {
       const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"))
 
-      await configureDappConf()
-
-      // Run build command asynchronously
-      await new Promise((resolve, reject) => {
-        exec(
-          "./node_modules/.bin/tsc && ./node_modules/.bin/vite build",
-          (error, stdout) => {
-            if (error) reject(error)
-            resolve(stdout)
-          }
-        )
-      })
+      await configureDappConf(options.logs)
 
       spinner.text = "Zipping MiniDapp..."
       const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
       const filePath = packageJson.template === "react-ts" ? "build/" : "./"
 
-      await zip(zipFileName, filePath)
+      if (options.logs) {
+        console.log("filePath", filePath)
+        console.log("zipFileName", zipFileName)
+      }
+
+      await zip(zipFileName, filePath, options.logs)
 
       setTimeout(() => {
         spinner.succeed(
@@ -52,6 +46,10 @@ program
         )
       }, 5000)
     } catch (error) {
+      if (options.logs) {
+        console.log("error", error)
+      }
+
       spinner.fail(chalk.red("Failed to build and zip MiniDapp"))
       process.exit(1)
     }
