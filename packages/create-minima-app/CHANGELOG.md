@@ -1,5 +1,15 @@
 # @minima-global/create-minima-app
 
+## 0.1.11
+
+### Patch Changes
+
+- de5991e: - added function to detect if project is react
+  - fixed spinner getting stuck on project init
+  - added title to js template
+- Updated dependencies [de5991e]
+  - @minima-global/minima-cli@0.1.4
+
 ## 0.1.10
 
 ### Patch Changes
