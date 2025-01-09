@@ -6,6 +6,8 @@ import { logger } from "./logger.js"
 import { spinner } from "./spinner.js"
 
 export async function configureCli(projectPath: string, template: string) {
+  const installSpinner = spinner("Configuring Minima CLI...").start()
+
   try {
     const packageJsonPath = path.join(projectPath, "package.json")
     let packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"))
@@ -22,18 +24,19 @@ export async function configureCli(projectPath: string, template: string) {
     const isReactTemplate = template.toLowerCase().includes("react")
 
     const packageManager = getPackageManager()
-    const installSpinner = spinner("Configuring Minima CLI...").start()
 
     if (!hasMinimaCli || (isReactTemplate && !hasMds)) {
-      installSpinner.text = "Installing Minima packages..."
+      installSpinner.stop()
+
+      logger.secondary("Installing required packages...")
 
       // Install minima-cli as dev dependency if needed
       if (!hasMinimaCli) {
         execSync(
           `${getInstallCommand(packageManager)} -D @minima-global/minima-cli`,
           {
-            stdio: "ignore",
             cwd: projectPath,
+            stdio: "inherit", // Show installation output
           }
         )
       }
@@ -41,13 +44,15 @@ export async function configureCli(projectPath: string, template: string) {
       // Install MDS as regular dependency if needed for React template
       if (isReactTemplate && !hasMds) {
         execSync(`${getInstallCommand(packageManager)} @minima-global/mds`, {
-          stdio: "ignore",
           cwd: projectPath,
+          stdio: "inherit", // Show installation output
         })
       }
 
       // Re-read package.json after installations
       packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"))
+
+      installSpinner.start()
     }
 
     installSpinner.text = "Configuring Minima CLI scripts..."
@@ -80,7 +85,8 @@ export async function configureCli(projectPath: string, template: string) {
         : "Successfully configured Minima CLI scripts"
     )
   } catch (error) {
-    logger.error("Failed to configure Minima CLI:", error)
+    installSpinner.fail("Failed to configure Minima CLI")
+    logger.error(error instanceof Error ? error.message : String(error))
     throw error
   }
 }

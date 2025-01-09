@@ -8,6 +8,7 @@ import { install } from "./scripts/install.js"
 import { uninstall } from "./scripts/uninstall.js"
 import { update } from "./scripts/update.js"
 import { zip } from "./scripts/zip.js"
+import { isReactProject } from "./utils/is-react-project.js"
 import { logger } from "./utils/logger.js"
 
 const program = new Command()
@@ -31,7 +32,7 @@ program
 
       spinner.text = "Zipping MiniDapp..."
       const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
-      const filePath = packageJson.template === "react-ts" ? "build/" : "./"
+      const filePath = isReactProject() ? "build/" : "./"
 
       if (options.logs) {
         console.log("filePath", filePath)
