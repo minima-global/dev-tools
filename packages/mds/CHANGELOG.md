@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.6
+
+### Patch Changes
+
+- 937e336: added executeRaw function
+
 ## 0.14.5
 
 ### Patch Changes
