@@ -266,6 +266,17 @@ export const MDS: MDSObj = {
     },
   },
 
+  executeRaw: (command: string, callback?: (data: any) => any) => {
+    return new Promise((resolve) => {
+      httpPostAsync('cmd', command, (data: any) => {
+        resolve(data);
+        if (callback) {
+          callback(data);
+        }
+      });
+    });
+  },
+
   form: {
     getParams: (parameterName) => {
       if (isTestEnvironment()) {
