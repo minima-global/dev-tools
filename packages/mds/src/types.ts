@@ -198,6 +198,14 @@ export interface MDSObj {
     NetworkCommands &
     MaximaCommands &
     BackupCommands;
+
+  /**
+   * Run a raw command
+   * @param command The command to run
+   * @param callback The callback function to be called with the data
+   */
+  executeRaw: (command: string, callback?: (data: any) => any) => Promise<any>;
+
   /**
    * Run a SQL command
    * @param command The SQL command to run
