@@ -8,11 +8,8 @@ function App() {
   const [balance, setBalance] = useState<BalanceWithTokenDetails[]>([])
 
   async function getBalance() {
-    const res = await MDS.cmd.balance({
-      params: {
-        tokendetails: "true",
-      },
-    })
+    const res = await MDS.executeRaw("balance")
+    console.log(res)
     setBalance(res.response)
   }
 

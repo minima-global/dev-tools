@@ -187,9 +187,7 @@ export interface MDSObj {
    * @example using promise
    * const data = await MDS.cmd.balance({ params: { address: '0x00' } })
    */
-  cmd: {
-    [K in string]: CommandFunction;
-  } & GeneralCommands &
+  cmd: GeneralCommands &
     MDSCommands &
     TransactionCommands &
     ScriptsCommands &
