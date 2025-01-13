@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.7
+
+### Patch Changes
+
+- c707a0a: fixed issue with there being no type error upon calling invalid command on cmd object
+
 ## 0.14.6
 
 ### Patch Changes
