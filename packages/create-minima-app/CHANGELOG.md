@@ -1,5 +1,11 @@
 # @minima-global/create-minima-app
 
+## 0.1.14
+
+### Patch Changes
+
+- 73c5647: updated template to react-19
+
 ## 0.1.13
 
 ### Patch Changes
