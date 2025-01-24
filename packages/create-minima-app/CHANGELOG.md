@@ -1,5 +1,11 @@
 # @minima-global/create-minima-app
 
+## 0.1.15
+
+### Patch Changes
+
+- 1ab6a66: fixed spinner getting stuck on synchronous operations
+
 ## 0.1.14
 
 ### Patch Changes
