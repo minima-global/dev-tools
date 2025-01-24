@@ -3,7 +3,8 @@ import chalk from "chalk"
 import { exec } from "child_process"
 import { Command } from "commander"
 import figlet from "figlet"
-import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
+import * as fs from "fs"
+import { readFileSync } from "fs"
 import type { Ora } from "ora"
 import path from "path"
 import prompts from "prompts"
@@ -97,7 +98,7 @@ export const init = new Command()
         options.appName = APP_NAME
       }
 
-      if (nameExists(options.appName)) {
+      if (await nameExists(options.appName)) {
         logger.error(`${options.appName} already exists`)
         process.exit(1)
       }
@@ -345,21 +346,26 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
   const projectSpinner = spinner(`Creating project directory...`).start()
 
   try {
-    // Create the project directory
-    mkdirSync(options.appName)
-    projectSpinner.text = "Copying template files..."
+    // Create the project directory asynchronously using promises
+    await fs.promises.mkdir(options.appName)
+    projectSpinner.text = "Setting up template..."
     const templatePath = path.join(
       __dirname,
       `../templates/${options.template}`
     )
 
-    // Check if the template directory exists
-    if (!existsSync(templatePath)) {
+    // Check if the template directory exists asynchronously
+    if (
+      !(await fs.promises
+        .access(templatePath)
+        .then(() => true)
+        .catch(() => false))
+    ) {
       throw new Error(`Template directory not found: ${templatePath}`)
     }
 
-    // Copy the template files to the project directory
-    cpSync(templatePath, options.appName, { recursive: true })
+    // Copy the template files to the project directory asynchronously
+    await fs.promises.cp(templatePath, options.appName, { recursive: true })
     process.chdir(options.appName)
 
     // Setup the template
@@ -389,8 +395,11 @@ async function createApp(options: z.infer<typeof initOptionsSchema>) {
   }
 }
 
-function nameExists(name: string) {
-  return existsSync(path.join(process.cwd(), name))
+async function nameExists(name: string) {
+  return fs.promises
+    .access(path.join(process.cwd(), name))
+    .then(() => true)
+    .catch(() => false)
 }
 
 async function setupReactTemplate(
@@ -400,16 +409,21 @@ async function setupReactTemplate(
   // if service is true, create a service.js file in the public folder
   if (options.service) {
     const servicePath = path.join(process.cwd(), "public", "service.js")
-    writeFileSync(servicePath, "")
+    await fs.promises.writeFile(servicePath, "")
   }
 
   // Update package.json
   projectSpinner.text = "Configuring package.json..."
   const packageJsonPath = "./package.json"
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"))
+  const packageJson = JSON.parse(
+    await fs.promises.readFile(packageJsonPath, "utf-8")
+  )
   packageJson.name = options.appName
   packageJson.description = `${options.appName} MiniDapp`
-  writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
+  await fs.promises.writeFile(
+    packageJsonPath,
+    JSON.stringify(packageJson, null, 2)
+  )
 
   // Install dependencies and build
   const packageManager = getPackageManager()
@@ -459,16 +473,21 @@ async function setupVanillaTemplate(
   // if service is true, create a service.js file in the root of the project
   if (options.service) {
     const servicePath = path.join(process.cwd(), "service.js")
-    writeFileSync(servicePath, "")
+    await fs.promises.writeFile(servicePath, "")
   }
 
   // Update package.json
   projectSpinner.text = "Configuring package.json..."
   const packageJsonPath = "./package.json"
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"))
+  const packageJson = JSON.parse(
+    await fs.promises.readFile(packageJsonPath, "utf-8")
+  )
   packageJson.name = options.appName
   packageJson.description = `${options.appName} MiniDapp`
-  writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
+  await fs.promises.writeFile(
+    packageJsonPath,
+    JSON.stringify(packageJson, null, 2)
+  )
 
   // Install dependencies
   const packageManager = getPackageManager()
