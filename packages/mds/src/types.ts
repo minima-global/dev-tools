@@ -9,6 +9,7 @@ import type {
   SendCommands,
   TransactionCommands,
 } from './commands/commands.js';
+import type { Coin } from './commands/general/response.js';
 import type { Header } from './commands/send/response.js';
 import type { Prettify } from './helpers.js';
 
@@ -50,6 +51,8 @@ export type MiningEvent = BaseEvent<'MINING', MININGRES>;
 
 export type MinimalogEvent = BaseEvent<'MINIMALOG', MINIMALOGRES>;
 
+export type NewCoinEvent = BaseEvent<'NEWCOIN', NEWCOINRES>;
+
 export type OtherEvent = BaseEvent<
   Exclude<
     MinimaEvents,
@@ -58,6 +61,7 @@ export type OtherEvent = BaseEvent<
     | 'MDS_TIMER_1HOUR'
     | 'MINING'
     | 'MINIMALOG'
+    | 'NEWCOIN'
   >,
   any
 >;
@@ -68,6 +72,7 @@ export type MinimaEvent =
   | TimerEvent1Hour
   | MiningEvent
   | MinimalogEvent
+  | NewCoinEvent
   | OtherEvent;
 
 export type EventCallback = (msg: MinimaEvent) => void;
@@ -89,6 +94,14 @@ export type NEWBLOCKRES = {
 
 export type TIMERES = {
   timemilli: string;
+};
+
+export type NEWCOINRES = {
+  relevant: boolean;
+  txblockid: string;
+  txblock: string;
+  spent: boolean;
+  coin: Coin;
 };
 
 export type MININGRES = {

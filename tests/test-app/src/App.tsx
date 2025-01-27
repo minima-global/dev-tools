@@ -14,9 +14,12 @@ function App() {
   }
 
   useEffect(() => {
-    MDS.init(async ({ event }) => {
+    MDS.init(async ({ event, data }) => {
       if (event === MinimaEvents.INITED) {
         getBalance()
+      }
+      if (event === MinimaEvents.NEWCOIN) {
+        console.log(data.coin)
       }
     })
   }, [])
