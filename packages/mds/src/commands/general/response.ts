@@ -399,3 +399,7 @@ type Details = {
   outputs: Record<string, any>; // adjust based on actual content
   difference: Record<string, any>; // adjust based on actual content
 };
+
+export type Convert = {
+  conversion: string;
+};

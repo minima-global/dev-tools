@@ -7,6 +7,7 @@ import type {
   CoinImportParams,
   CoinTrackParams,
   ConsolidateParams,
+  ConvertParams,
   HashTestParams,
   HistoryParams,
   PrintTreeParams,
@@ -24,6 +25,7 @@ import type {
   CoinCheck,
   CoinExportResponse,
   CoinImport,
+  Convert,
   GetAddress,
   HashTest,
   HistoryResponse,
@@ -277,3 +279,14 @@ export type CoinImportFunc = (
   args: { params: CoinImportParams },
   callback?: CoinImportCallback,
 ) => Promise<MDSResponse<CoinImport>>;
+
+/**
+ * Convert function types
+ */
+
+export type ConvertCallback = (data: MDSResponse<Convert>) => void;
+
+export type ConvertFunc = (
+  args: { params: ConvertParams },
+  callback?: ConvertCallback,
+) => Promise<MDSResponse<Convert>>;
