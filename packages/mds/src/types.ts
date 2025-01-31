@@ -9,6 +9,7 @@ import type {
   SendCommands,
   TransactionCommands,
 } from './commands/commands.js';
+import type { Coin } from './commands/general/response.js';
 import type { Header } from './commands/send/response.js';
 import type { Prettify } from './helpers.js';
 
@@ -50,6 +51,8 @@ export type MiningEvent = BaseEvent<'MINING', MININGRES>;
 
 export type MinimalogEvent = BaseEvent<'MINIMALOG', MINIMALOGRES>;
 
+export type NewCoinEvent = BaseEvent<'NEWCOIN', NEWCOINRES>;
+
 export type OtherEvent = BaseEvent<
   Exclude<
     MinimaEvents,
@@ -58,6 +61,7 @@ export type OtherEvent = BaseEvent<
     | 'MDS_TIMER_1HOUR'
     | 'MINING'
     | 'MINIMALOG'
+    | 'NEWCOIN'
   >,
   any
 >;
@@ -68,6 +72,7 @@ export type MinimaEvent =
   | TimerEvent1Hour
   | MiningEvent
   | MinimalogEvent
+  | NewCoinEvent
   | OtherEvent;
 
 export type EventCallback = (msg: MinimaEvent) => void;
@@ -89,6 +94,14 @@ export type NEWBLOCKRES = {
 
 export type TIMERES = {
   timemilli: string;
+};
+
+export type NEWCOINRES = {
+  relevant: boolean;
+  txblockid: string;
+  txblock: string;
+  spent: boolean;
+  coin: Coin;
 };
 
 export type MININGRES = {
@@ -127,6 +140,14 @@ type FileAccessParams = (
   callback: (msg: string) => void,
 ) => void;
 
+type KeyPair = {
+  command: string;
+  key: string;
+  pending: boolean;
+  status: boolean;
+  value: string;
+};
+
 interface MDSFileAccess {
   list: FileAccessParams;
   save: FileAccessParams;
@@ -144,8 +165,6 @@ interface MDSFileAccess {
   copytoweb: FileAccessParams;
   deletefromweb: FileAccessParams;
 }
-
-type CommandFunction = (...args: any[]) => Promise<any>;
 
 export interface MDSObj {
   filehost: string;
@@ -244,8 +263,12 @@ export interface MDSObj {
     POST: (url: string, data: string, callback: (data: string) => void) => void;
   };
   keypair: {
-    get: (key: string, callback: (data: string) => void) => void;
-    set: (key: string, value: string, callback: (data: string) => void) => void;
+    get: (key: string, callback?: (data: KeyPair) => void) => Promise<KeyPair>;
+    set: (
+      key: string,
+      value: string,
+      callback?: (data: KeyPair) => void,
+    ) => Promise<KeyPair>;
   };
 
   /**

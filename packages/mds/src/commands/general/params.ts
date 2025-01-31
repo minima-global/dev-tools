@@ -253,3 +253,9 @@ export type SeedRandomParams = {
 export type QuitParams = {
   compact?: 'true' | 'false';
 };
+
+export type ConvertParams = {
+  from: 'Mx' | 'Hex' | string;
+  to: 'Mx' | 'Hex' | string;
+  data: string;
+};

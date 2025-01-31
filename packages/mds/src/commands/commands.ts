@@ -315,6 +315,17 @@ export interface GeneralCommands {
    * @returns A promise that resolves to the data returned from the history command.
    */
   history: GeneralCommandFunctions.HistoryFunc;
+
+  /**
+   * Convert a value from one unit to another.
+   * @param args - Parameters for converting a value
+   * @param args.params.from - The unit to convert from
+   * @param args.params.to - The unit to convert to
+   * @param args.params.data - The value to convert
+   * @param callback - Optional callback function that receives the conversion data
+   * @returns A promise resolving to the conversion data
+   */
+  convert: GeneralCommandFunctions.ConvertFunc;
 }
 /**
  * ------- Send Commands -------

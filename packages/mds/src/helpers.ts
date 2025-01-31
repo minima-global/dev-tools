@@ -34,6 +34,7 @@ export function commandHandler(command: string, args: any[]) {
       // Handle object parameters
       if (payload.params) {
         const payloadString = Object.entries(payload.params)
+          .filter(([_, value]) => value !== undefined)
           .map(([key, value]) => {
             // Stringify all objects (including arrays)
             if (typeof value === 'object' && value !== null) {
@@ -42,10 +43,11 @@ export function commandHandler(command: string, args: any[]) {
             return `${key}:${value}`;
           })
           .join(' ');
-        commandString += ` ${payloadString}`;
+        commandString += payloadString ? ` ${payloadString}` : '';
       } else {
         // Handle direct object parameters
         const payloadString = Object.entries(payload)
+          .filter(([_, value]) => value !== undefined)
           .map(([key, value]) => {
             // Stringify all objects (including arrays)
             if (typeof value === 'object' && value !== null) {
@@ -54,7 +56,7 @@ export function commandHandler(command: string, args: any[]) {
             return `${key}:${value}`;
           })
           .join(' ');
-        commandString += ` ${payloadString}`;
+        commandString += payloadString ? ` ${payloadString}` : '';
       }
     }
   }
