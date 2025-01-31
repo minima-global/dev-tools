@@ -1,5 +1,16 @@
 # @minima-global/create-minima-app
 
+## 0.1.16
+
+### Patch Changes
+
+- 7a41c18: - fixed mds.keypair return type + made async
+  - improved mds.cmd to omit undefined values when sending a command
+  - updated test-app
+  - added tanstack cli as dependancy to genenerate routes
+- Updated dependencies [7a41c18]
+  - @minima-global/mds@0.14.8
+
 ## 0.1.15
 
 ### Patch Changes
