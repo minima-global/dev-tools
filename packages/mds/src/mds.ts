@@ -157,12 +157,26 @@ export const MDS: MDSObj = {
   },
   keypair: {
     get: (key, callback) => {
-      var commsline = 'get&' + key;
-      httpPostAsync('keypair', commsline, callback);
+      return new Promise((resolve) => {
+        var commsline = 'get&' + key;
+        httpPostAsync('keypair', commsline, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
     },
     set: (key, value, callback) => {
-      var commsline = 'set&' + key + '&' + value;
-      httpPostAsync('keypair', commsline, callback);
+      return new Promise((resolve) => {
+        var commsline = 'set&' + key + '&' + value;
+        httpPostAsync('keypair', commsline, (data: any) => {
+          resolve(data);
+          if (callback) {
+            callback(data);
+          }
+        });
+      });
     },
   },
   comms: {

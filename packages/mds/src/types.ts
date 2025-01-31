@@ -140,6 +140,14 @@ type FileAccessParams = (
   callback: (msg: string) => void,
 ) => void;
 
+type KeyPair = {
+  command: string;
+  key: string;
+  pending: boolean;
+  status: boolean;
+  value: string;
+};
+
 interface MDSFileAccess {
   list: FileAccessParams;
   save: FileAccessParams;
@@ -157,8 +165,6 @@ interface MDSFileAccess {
   copytoweb: FileAccessParams;
   deletefromweb: FileAccessParams;
 }
-
-type CommandFunction = (...args: any[]) => Promise<any>;
 
 export interface MDSObj {
   filehost: string;
@@ -257,8 +263,12 @@ export interface MDSObj {
     POST: (url: string, data: string, callback: (data: string) => void) => void;
   };
   keypair: {
-    get: (key: string, callback: (data: string) => void) => void;
-    set: (key: string, value: string, callback: (data: string) => void) => void;
+    get: (key: string, callback?: (data: KeyPair) => void) => Promise<KeyPair>;
+    set: (
+      key: string,
+      value: string,
+      callback?: (data: KeyPair) => void,
+    ) => Promise<KeyPair>;
   };
 
   /**

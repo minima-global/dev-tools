@@ -171,7 +171,7 @@ describe('MDS General Commands', () => {
       expect(result.response[0]).toHaveProperty('mmrentry');
       expect(result.response[0]).toHaveProperty('created');
 
-      COINID = result.response[0].coinid;
+      COINID = result.response[0]?.coinid ?? '';
     });
 
     let COINDATA: string;
