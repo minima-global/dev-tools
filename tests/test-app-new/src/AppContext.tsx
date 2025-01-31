@@ -22,7 +22,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           const command = await MDS.cmd.block()
           setBlock(command.response)
 
-          const get = await MDS.keypair.get("test")
+          const get = await MDS.keypair.set("test", "test")
           console.log(get)
         }
       })

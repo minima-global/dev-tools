@@ -90,6 +90,16 @@ describe('MDS General Commands', () => {
         'Invalid parameter : ' + INVALID_PARAMS.invalid,
       );
     });
+
+    it('param should be omitted when called with an undefined value', async () => {
+      const result = await MDS.cmd.balance({
+        params: {
+          address: undefined,
+        },
+      });
+
+      expect(result).not.toHaveProperty('params');
+    });
   });
 
   describe('Block Command', () => {
