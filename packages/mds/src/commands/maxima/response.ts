@@ -65,7 +65,7 @@ export type MaximaSend = {
   sending: number;
 };
 
-type MaxContactsExtraData = {
+export type MaxContactsExtraData = {
   name: string;
   icon: string;
   minimaaddress: string;
@@ -75,7 +75,7 @@ type MaxContactsExtraData = {
   mls: string;
 };
 
-type MaxContacts = {
+export type MaxContacts = {
   id: number;
   publickey: string;
   currentaddress: string;
@@ -99,13 +99,13 @@ export type Add = {
   delivered: boolean;
 };
 
-type MaxContactsExport = {
+export type MaxContactsExport = {
   contacts: number;
   contactlist: string;
   message: string;
 };
 
-type MaxContactImport = {
+export type MaxContactImport = {
   size: number;
   contacts: MaxContactsAdd[];
 };
