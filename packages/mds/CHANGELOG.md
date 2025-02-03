@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.9
+
+### Patch Changes
+
+- 4db8ecf: exported maxcontacts type
+
 ## 0.14.8
 
 ### Patch Changes

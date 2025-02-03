@@ -1,5 +1,13 @@
 # @minima-global/create-minima-app
 
+## 0.1.17
+
+### Patch Changes
+
+- 4db8ecf: exported maxcontacts type
+- Updated dependencies [4db8ecf]
+  - @minima-global/mds@0.14.9
+
 ## 0.1.16
 
 ### Patch Changes
