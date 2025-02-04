@@ -3,6 +3,12 @@
  */
 
 /**
+ * Default base64 encoded image (a simple 1x1 pixel transparent PNG)
+ */
+export const DEFAULT_BASE64_IMAGE =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+
+/**
  * Add an image file, it should give you back a base64 data type representation
  * @param file
  */
@@ -92,3 +98,132 @@ export const compressImage = async (base64Image: string, quality = 0.7): Promise
         };
     });
 };
+
+/**
+ *
+ * @param url - custom token url
+ */
+export const isBase64Image = (url: string): string | false => {
+    // Remove <artimage> tags if present
+    const cleanedUrl = url.replace(/<artimage>(.*?)<\/artimage>/, "$1").trim()
+
+    // Check if the cleaned string is base64 encoded
+    try {
+        if (btoa(atob(cleanedUrl)) === cleanedUrl) {
+            return cleanedUrl;
+        }
+    } catch (err) {
+        return false
+    }
+
+    return false
+}
+
+/**
+ *
+ * @param imageData the data URL
+ * @param defaultImage add this if you want to use your own custom default image
+ */
+export const getBase64Image = (imageData: string,  defaultImage: string = DEFAULT_BASE64_IMAGE): string => {
+    try {
+        // Decode the first few bytes of the base64 data
+        const decodedData = atob(imageData).slice(0, 4)
+        const uint8Array = new Uint8Array(decodedData.length)
+        for (let i = 0; i < decodedData.length; i++) {
+            uint8Array[i] = decodedData.charCodeAt(i)
+        }
+
+        // Determine the image type based on the magic numbers
+        let mimeType = "application/octet-stream" // Default type
+        if (uint8Array[0] === 0xff && uint8Array[1] === 0xd8 && uint8Array[2] === 0xff) {
+            mimeType = "image/jpeg"
+        } else if (uint8Array[0] === 0x89 && uint8Array[1] === 0x50 && uint8Array[2] === 0x4e && uint8Array[3] === 0x47) {
+            mimeType = "image/png"
+        } else if (uint8Array[0] === 0x47 && uint8Array[1] === 0x49 && uint8Array[2] === 0x46) {
+            mimeType = "image/gif"
+        } else if (uint8Array[0] === 0x42 && uint8Array[1] === 0x4d) {
+            mimeType = "image/bmp"
+        }
+
+        return `data:${mimeType};base64,${imageData}`
+    } catch (err) {
+        console.error(`Failed to create image data`, err)
+        return defaultImage
+    }
+}
+
+/**
+ * Checks if the given string is an IPFS URI or IPFS gateway URL
+ * @param uri The string to check
+ * @returns boolean indicating if the string is an IPFS URI or gateway URL
+ */
+export const isIPFS = (uri: string): boolean => {
+    // Check if it's an IPFS URI (ipfs:// or ipfs:/ipfs/)
+    if (uri.startsWith("ipfs://") || uri.startsWith("ipfs:/ipfs/")) {
+        return true
+    }
+
+    // Check if it's an IPFS gateway URL
+    for (const gateway of IPFS_GATEWAYS) {
+        if (uri.startsWith(gateway)) {
+            return true
+        }
+    }
+
+    // Check for IPFS hash pattern (Qm... or bafy...)
+    const ipfsHashRegex = /^(Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,})/
+    if (ipfsHashRegex.test(uri)) {
+        return true
+    }
+
+    return false
+}
+
+
+const IPFS_GATEWAYS = [
+    "https://ipfs.io/ipfs/",
+    "https://gateway.pinata.cloud/ipfs/",
+    "https://cloudflare-ipfs.com/ipfs/",
+    "https://gateway.ipfs.io/ipfs/",
+]
+/**
+ *
+ * @param ipfsUri the data URL
+ * @param defaultImage add this if you want to use your own custom default image
+ */
+export const fetchIPFSImage = async (ipfsUri: string, defaultImage = DEFAULT_BASE64_IMAGE): Promise<string> => {
+    // Remove the 'ipfs://' prefix if present
+    const cid = ipfsUri.replace("ipfs://", "")
+
+    // Try each gateway in order
+    for (const gateway of IPFS_GATEWAYS) {
+        try {
+            const response = await fetch(`${gateway}${cid}`)
+            if (response.ok) {
+                const blob = await response.blob()
+                return URL.createObjectURL(blob)
+            }
+        } catch (error) {
+            console.warn(`Failed to fetch from ${gateway}`, error)
+
+            return defaultImage;
+        }
+    }
+
+    return defaultImage;
+}
+
+/**
+ * Checks if the given string is a valid URL
+ * @param url The string to check
+ * @returns boolean indicating if the string is a valid URL
+ */
+export const isValidUrl = (url: string): boolean => {
+    try {
+        new URL(url)
+        return true
+    } catch (error) {
+        return false
+    }
+}
+

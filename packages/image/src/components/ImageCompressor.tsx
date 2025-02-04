@@ -1,52 +1,65 @@
-import React from "react"
-import { useCallback, useState } from "react"
-import { compressImage, fileToBase64 } from "../utils"
+/**
+ *
+ * This component should identify the
+ * type of uri the token image holds and
+ * return the best scenario <img /> for it
+ * @elias
+ * */
 
-interface ImageCompressorProps {
-    onCompress?: (compressedImage: string) => void
-    quality?: number
+import React, { useEffect } from "react"
+import { useState } from "react"
+import { DEFAULT_BASE64_IMAGE, fetchIPFSImage, getBase64Image, isBase64Image, isIPFS, isValidUrl } from "../utils"
+interface ImageProps {
+    src: string;
     className?: string
-    buttonClassName?: string
 }
 
-export const ImageCompressor: React.FC<ImageCompressorProps> = ({
-        onCompress,
-        quality = 0.7,
+/**
+ *
+ * @param src pass in the URL property of the custom token
+ * @param className
+ * @constructor
+ */
+export const Image: React.FC<ImageProps> = ({
+        src,
         className = "",
-        buttonClassName = "",
     }) => {
-    const [isCompressing, setIsCompressing] = useState(false)
+    const [imageData, setImageData] = useState(DEFAULT_BASE64_IMAGE);
+    const [imageType, setImageType] = useState<'on-chain' | 'external_url' | 'ipfs' | 'default'>('default');
 
-    const handleFileChange = useCallback(
-        async (event: React.ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files?.[0]
-            if (!file) return
+    useEffect(() => {
+      const validUrl = isValidUrl(src);
 
-            try {
-                setIsCompressing(true)
-                const base64 = await fileToBase64(file)
-                const compressed = await compressImage(base64, quality)
-                onCompress?.(compressed)
-            } catch (error) {
-                console.error("Error compressing image:", error)
-            } finally {
-                setIsCompressing(false)
-            }
-        },
-        [quality, onCompress],
-    )
+      if (validUrl) {
+        setImageType("external_url")
+        setImageData(src);
+        return;
+      }
+
+      const isBase64 = isBase64Image(src);
+
+      if (isBase64) {
+        const completeBase64Image = getBase64Image(isBase64);
+        setImageType("on-chain");
+        setImageData(completeBase64Image);
+        return;
+      }
+
+      if (isIPFS(src)) {
+        (async () => {
+          const ipfsUrl = await fetchIPFSImage(src);
+          setImageType("ipfs");
+          setImageData(ipfsUrl);
+        })();
+
+        return;
+      }
+
+    }, [src])
 
     return (
-        <div className={className}>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                disabled={isCompressing}
-                className={buttonClassName}
-            />
-            {isCompressing && <span>Compressing...</span>}
+        <div>
+            <img alt="custom-token-image" src={imageData} className={className} />
         </div>
     )
 }
-
