@@ -6,7 +6,7 @@
  * Default base64 encoded image (a simple 1x1 pixel transparent PNG)
  */
 export const DEFAULT_BASE64_IMAGE =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="
+  "data:image/svg+xml;base64,Cjxzdmcgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjBmMGYwIi8+CiAgPHBhdGggZD0iTTQwIDYwaDEyMHY4MEg0MFY2MHoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2NjYyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTTYwIDEwMGwyMC0yMGwyMCAyMGwyMC0yMGwyMCAyMCIgc3Ryb2tlPSIjY2NjIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KICA8Y2lyY2xlIGN4PSIxNDAiIGN5PSI4MCIgcj0iMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2NjYyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHRleHQgeD0iMTAwIiB5PSIxNTAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5Ij5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+Cjwvc3ZnPg=="
 
 /**
  * Add an image file, it should give you back a base64 data type representation
@@ -120,52 +120,95 @@ export const isBase64Image = (url: string): string | false => {
 }
 
 /**
- *
- * @param imageData the data URL
- * @param defaultImage add this if you want to use your own custom default image
+ * Determines the MIME type of a base64 encoded image.
+ * @param base64String The base64 encoded image data.
+ * @returns The MIME type of the image.
  */
-export const getBase64Image = (imageData: string,  defaultImage: string = DEFAULT_BASE64_IMAGE): string => {
+function getMimeType(base64String: string): string {
     try {
         // Decode the first few bytes of the base64 data
-        const decodedData = atob(imageData).slice(0, 4)
-        const uint8Array = new Uint8Array(decodedData.length)
+        const decodedData = atob(base64String.substring(0, 8));
+        const uint8Array = new Uint8Array(decodedData.length);
         for (let i = 0; i < decodedData.length; i++) {
-            uint8Array[i] = decodedData.charCodeAt(i)
+            uint8Array[i] = decodedData.charCodeAt(i);
         }
 
         // Determine the image type based on the magic numbers
-        let mimeType = "application/octet-stream" // Default type
         if (uint8Array[0] === 0xff && uint8Array[1] === 0xd8 && uint8Array[2] === 0xff) {
-            mimeType = "image/jpeg"
+            return "image/jpeg";
         } else if (uint8Array[0] === 0x89 && uint8Array[1] === 0x50 && uint8Array[2] === 0x4e && uint8Array[3] === 0x47) {
-            mimeType = "image/png"
+            return "image/png";
         } else if (uint8Array[0] === 0x47 && uint8Array[1] === 0x49 && uint8Array[2] === 0x46) {
-            mimeType = "image/gif"
+            return "image/gif";
         } else if (uint8Array[0] === 0x42 && uint8Array[1] === 0x4d) {
-            mimeType = "image/bmp"
+            return "image/bmp";
         }
 
-        return `data:${mimeType};base64,${imageData}`
+        // Check for SVG (look for XML declaration or SVG tag)
+        const svgCheck = atob(base64String.substring(0, 32));
+        if (svgCheck.includes('<svg') || svgCheck.includes('<?xml')) {
+            return "image/svg+xml";
+        }
+
+        return "application/octet-stream"; // Default type
     } catch (err) {
-        console.error(`Failed to create image data`, err)
-        return defaultImage
+        console.error(`Failed to determine MIME type`, err);
+        return "application/octet-stream";
     }
 }
 
 /**
- * Checks if the given string is an IPFS URI or IPFS gateway URL
- * @param uri The string to check
- * @returns boolean indicating if the string is an IPFS URI or gateway URL
+ * Processes base64 image data and returns a complete data URL.
+ * @param imageData The base64 encoded image data, potentially wrapped in <artimage> tags.
+ * @param defaultImage The default image to return if processing fails.
+ * @returns A complete data URL for the image.
  */
-export const isIPFS = (uri: string): boolean => {
-    // Check if it's an IPFS URI (ipfs:// or ipfs:/ipfs/)
-    if (uri.startsWith("ipfs://") || uri.startsWith("ipfs:/ipfs/")) {
+export const getBase64Image = (imageData: string, defaultImage: string = DEFAULT_BASE64_IMAGE): string => {
+    try {
+        // Remove <artimage> tags if present
+        const cleanedUrl = imageData.replace(/<artimage>(.*?)<\/artimage>/, "$1").trim();
+
+        // Determine MIME type and construct data URL
+        const mimeType = getMimeType(cleanedUrl);
+        return `data:${mimeType};base64,${cleanedUrl}`;
+    } catch (err) {
+        console.error(`Failed to create image data`, err);
+        return defaultImage;
+    }
+}
+
+const IPFS_GATEWAYS = [
+    "https://ipfs.io/ipfs/",
+    "https://gateway.pinata.cloud/ipfs/",
+    "https://cloudflare-ipfs.com/ipfs/",
+    "https://gateway.ipfs.io/ipfs/",
+    "https://dweb.link/ipfs/", // Added more reliable gateway
+    "https://ipfs.fleek.co/ipfs/", // Added another reliable gateway
+];
+
+const IPNS_GATEWAYS = [
+    "https://ipfs.io/ipns/",
+    "https://gateway.pinata.cloud/ipns/",
+    "https://cloudflare-ipfs.com/ipns/",
+    "https://gateway.ipfs.io/ipns/",
+    "https://dweb.link/ipns/",
+    "https://ipfs.fleek.co/ipns/",
+];
+
+/**
+ * Checks if the given string is an IPFS/IPNS URI or gateway URL
+ * @param uri The string to check
+ * @returns boolean indicating if the string is an IPFS/IPNS URI or gateway URL
+ */
+export const isIPFSOrIPNS = (uri: string): boolean => {
+    // Check if it's an IPFS/IPNS URI
+    if (uri.startsWith("ipfs://") || uri.startsWith("ipfs:/ipfs/") || uri.startsWith("ipns://")) {
         return true
     }
 
-    // Check if it's an IPFS gateway URL
-    for (const gateway of IPFS_GATEWAYS) {
-        if (uri.startsWith(gateway)) {
+    // Check if it's an IPFS/IPNS gateway URL
+    for (const gateway of [...IPFS_GATEWAYS, ...IPNS_GATEWAYS]) {
+        if (uri.includes(gateway)) {
             return true
         }
     }
@@ -176,41 +219,66 @@ export const isIPFS = (uri: string): boolean => {
         return true
     }
 
-    return false
+    // Check for IPNS hash pattern
+    const ipnsHashRegex = /^(k[1-9A-HJ-NP-Za-km-z]{58,})/
+    return ipnsHashRegex.test(uri)
 }
 
-
-const IPFS_GATEWAYS = [
-    "https://ipfs.io/ipfs/",
-    "https://gateway.pinata.cloud/ipfs/",
-    "https://cloudflare-ipfs.com/ipfs/",
-    "https://gateway.ipfs.io/ipfs/",
-]
 /**
  *
- * @param ipfsUri the data URL
+ * @param uri the data URL
  * @param defaultImage add this if you want to use your own custom default image
  */
-export const fetchIPFSImage = async (ipfsUri: string, defaultImage = DEFAULT_BASE64_IMAGE): Promise<string> => {
-    // Remove the 'ipfs://' prefix if present
-    const cid = ipfsUri.replace("ipfs://", "")
 
-    // Try each gateway in order
-    for (const gateway of IPFS_GATEWAYS) {
-        try {
-            const response = await fetch(`${gateway}${cid}`)
-            if (response.ok) {
-                const blob = await response.blob()
-                return URL.createObjectURL(blob)
-            }
-        } catch (error) {
-            console.warn(`Failed to fetch from ${gateway}`, error)
+export const fetchIPFSImage = async (uri: string, defaultImage = DEFAULT_BASE64_IMAGE): Promise<string> => {
+    try {
+        // Determine if this is an IPNS or IPFS resource
+        const isIPNS = uri.includes("ipns/") || uri.includes("/ipns/")
+        const gateways = isIPNS ? IPNS_GATEWAYS : IPFS_GATEWAYS
 
-            return defaultImage;
+        // Clean the URI - handle both direct URIs and full gateway URLs
+        let cid = uri
+
+        // Handle full gateway URLs
+        if (cid.includes("/ipfs/") || cid.includes("/ipns/")) {
+            // Extract the CID from a full gateway URL
+            const parts = cid.split(/\/ip[fn]s\//)
+            cid = parts[parts.length - 1]
+        } else {
+            // Handle direct ipfs:// or ipns:// protocol URIs
+            cid = cid.replace("ipfs://", "").replace("ipns://", "")
         }
-    }
 
-    return defaultImage;
+        // Remove any trailing parameters (like :1)
+        cid = cid.split(":")[0]
+
+        // Try each gateway in order
+        for (const gateway of gateways) {
+            try {
+                const response = await fetch(`${gateway}${cid}`, {
+                    // Add fetch options to handle SSL issues
+                    mode: "cors",
+                    credentials: "omit",
+                })
+
+                if (response.ok) {
+                    const blob = await response.blob()
+                    return URL.createObjectURL(blob)
+                }
+            } catch (error) {
+                console.warn(`Failed to fetch from ${gateway}`, error)
+                // Continue to next gateway instead of returning defaultImage immediately
+                continue
+            }
+        }
+
+        // If we've tried all gateways and none worked, return default image
+        console.error(`Failed to fetch from all ${isIPNS ? "IPNS" : "IPFS"} gateways`)
+        return defaultImage
+    } catch (error) {
+        console.error("Error in fetchIPFSImage:", error)
+        return defaultImage
+    }
 }
 
 /**

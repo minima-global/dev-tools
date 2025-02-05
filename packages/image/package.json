@@ -1,6 +1,6 @@
 {
   "name": "test-image-pkg",
-  "version": "1.2.2",
+  "version": "1.4.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

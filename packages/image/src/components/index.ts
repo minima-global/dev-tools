@@ -1,1 +1,1 @@
-export * from "./ImageCompressor";
+export * from "./Image";
