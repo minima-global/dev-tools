@@ -15,7 +15,7 @@ Converts a File object to a base64 string.
 - **Output**: A Promise that resolves to a base64 encoded string
 
 ### compressImage(base64Image: string, quality = 0.7): Promise<string>
-Compresses a base64 image, resizing if necessary.
+Compresses a base64 image, resizing if necessary to 50k.
 - **Input**:
     - base64Image: A base64 encoded image string
     - quality: Compression quality (default: 0.7)
