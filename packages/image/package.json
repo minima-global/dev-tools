@@ -1,6 +1,6 @@
 {
   "name": "test-image-pkg",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "access": "restricted",
   "scripts": {
@@ -20,6 +20,9 @@
   },
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",

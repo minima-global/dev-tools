@@ -1,4 +1,4 @@
-import React from "react"
+import * as React from "react"
 import { useEffect, useState } from "react"
 import { DEFAULT_BASE64_IMAGE, fetchIPFSImage, getBase64Image, isBase64Image, isIPFSOrIPNS, isValidUrl } from "../utils"
 
