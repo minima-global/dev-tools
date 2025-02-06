@@ -1,5 +1,11 @@
 # @minima-global/create-minima-app
 
+## 0.2.0
+
+### Minor Changes
+
+- a132e8c: the changelog.md file is now copied to the build folder when building the minidapp
+
 ## 0.1.17
 
 ### Patch Changes
