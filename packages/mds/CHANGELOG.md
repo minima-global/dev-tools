@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.10
+
+### Patch Changes
+
+- 9c9fb6a: fixed state type for coins
+
 ## 0.14.9
 
 ### Patch Changes
