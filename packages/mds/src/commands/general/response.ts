@@ -93,12 +93,22 @@ export type Coin = {
   tokenid: string;
   token: Token | null;
   storestate: boolean;
-  state: string[];
+  state: StateArray[] | StateObject;
   spent: boolean;
   mmrentry: string;
   created: string;
   age: string;
   tokenamount: string;
+};
+
+export type StateArray = {
+  port: number;
+  type: number;
+  data: string;
+};
+
+export type StateObject = {
+  [key: `${number}`]: string;
 };
 
 export type SimpleCoinResponse = MDSResponse<string>;

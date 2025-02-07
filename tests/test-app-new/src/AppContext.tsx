@@ -22,8 +22,19 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           const command = await MDS.cmd.block()
           setBlock(command.response)
 
-          const get = await MDS.keypair.set("test", "test")
-          console.log(get)
+          const coins = await MDS.cmd.coins()
+
+          coins.response.forEach((coin) => {
+            if (coin.state) {
+              if (Array.isArray(coin.state)) {
+                coin.state.forEach((state) => {
+                  console.log(state.data)
+                })
+              } else {
+                console.log(coin.state["0"])
+              }
+            }
+          })
         }
       })
     }
