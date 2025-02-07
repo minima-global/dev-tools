@@ -3,6 +3,7 @@ node_modules
 .turbo
 *.log
 dist
+build
 dist-ssr
 *.local
 .cache
