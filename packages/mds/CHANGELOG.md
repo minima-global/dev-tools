@@ -1,5 +1,11 @@
 # @minima-global/mds
 
+## 0.14.11
+
+### Patch Changes
+
+- cc42544: added getStateVariable util function
+
 ## 0.14.10
 
 ### Patch Changes
