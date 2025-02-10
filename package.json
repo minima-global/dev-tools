@@ -10,7 +10,9 @@
     "check-format": "turbo check-format",
     "local-release": "changeset version && changeset publish",
     "ci": "turbo ci && turbo format && turbo check-format",
-    "test": "turbo test"
+    "test": "turbo test",
+    "private-version": "changeset version",
+    "private-publish": "changeset publish --access restricted"
   },
   "workspaces": [
     "tests/*",

@@ -16,6 +16,13 @@
     "ci": {},
     "check-format": {},
     "check-exports": {},
-    "format": {}
+    "format": {},
+    "private-version": {
+      "cache": false
+    },
+    "private-publish": {
+      "cache": false,
+      "dependsOn": ["build"]
+    }
   }
 }
