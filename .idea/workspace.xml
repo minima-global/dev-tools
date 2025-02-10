@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee972cf5-fb78-4acc-b7e4-f6c431064e9f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,16 +28,23 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature-image-pkg",
+    "git-widget-placeholder": "feature-events-api",
+    "last_opened_file_path": "/Users/eliasnemr/Documents/Github/dev-tools",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
-    "ts.external.directory.path": "/Users/eliasnemr/Documents/Github/dev-tools/packages/image/node_modules/typescript/lib",
+    "prettierjs.PrettierConfiguration.Package": "/Users/eliasnemr/Documents/Github/dev-tools/node_modules/prettier",
+    "ts.external.directory.path": "/Users/eliasnemr/Documents/Github/dev-tools/packages/events/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/packages" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -54,6 +62,8 @@
       <updated>1738599498285</updated>
       <workItem from="1738599499376" duration="380000" />
       <workItem from="1738599895308" duration="2515000" />
+      <workItem from="1739193954859" duration="881000" />
+      <workItem from="1739198070190" duration="4987000" />
     </task>
     <servers />
   </component>
