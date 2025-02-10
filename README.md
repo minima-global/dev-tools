@@ -17,7 +17,6 @@ This monorepo contains the following packages:
 - [`mds`](./packages/mds) - Core TypeScript library for building type-safe MiniDapps
 - [`create-minima-app`](./packages/create-minima-app) - CLI tool for scaffolding new MiniDapp projects
 - [`minima-cli`](./packages/minima-cli) - Development CLI for managing MiniDapps
-- [`image`](./packages/image) - Tool to manage custom token images
 
 ## Getting Started
 
