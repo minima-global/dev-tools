@@ -4,7 +4,7 @@
  */
 
 import { createCommandFunction } from './helpers.js';
-import type { MDSObj } from './index.js';
+import type { Coin, MDSObj } from './index.js';
 
 var MDS_MAIN_CALLBACK: any;
 var API_CALLS: any[] = [];
@@ -340,6 +340,21 @@ export const MDS: MDSObj = {
         bytes[i] = binary_string.charCodeAt(i);
       }
       return bytes.buffer;
+    },
+
+    getStateVariable: (coin, port) => {
+      //Get the state vars
+      var statvars = coin.state;
+      if (Array.isArray(statvars)) {
+        var len = statvars.length;
+        for (var i = 0; i < len; i++) {
+          var state = statvars[i];
+          if (state?.port == port) {
+            return state.data;
+          }
+        }
+      }
+      return undefined;
     },
   },
 };
