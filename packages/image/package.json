@@ -1,6 +1,6 @@
 {
   "name": "@minima-global/image",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
