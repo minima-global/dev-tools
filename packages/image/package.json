@@ -1,5 +1,5 @@
 {
-  "name": "test-image-pkg",
+  "name": "@minima-global/image",
   "version": "1.5.2",
   "type": "module",
   "main": "dist/index.js",
@@ -11,7 +11,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "access": "restricted",
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
