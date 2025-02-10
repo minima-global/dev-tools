@@ -1,5 +1,11 @@
 # @minima-global/image
 
+## 2.0.0
+
+### Major Changes
+
+- 135d3eb: Add readme and tweak Image component
+
 ## 1.5.3
 
 ### Patch Changes
