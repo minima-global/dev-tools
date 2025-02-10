@@ -1,13 +1,65 @@
-# Minima Image Handbook
+# Minima Custom Token Image Processor
 
-This package is made to facilitate image composability across the Minima dApp eco-system.  
-
-It has both a re-usable React component labelled `Image` and utility methods that can be used independently especially useful for processing, compressing, and fetching images from various sources, including base64 encodings and IPFS/IPNS.
-
-The `Image` tag that can be imported by `import { Image } from "@minima-global/image"` and then using it like:
+This package is made to facilitate image compatibility across the Minima dApp ecosystem.  It holds both a custom React component, `Image`, and a utility methods that allow you to compress, process and parse custom token images seamlessly.
 
 
-` <Image src={(minimaToken.url} /> `
+## Installation
 
-Otherwise you can have a look at how the Image component was built using the utility functions in the `/utils` folder part of the package.
+Install `image` using your preferred package manager:
 
+```bash
+npm install @minima-global/image
+```
+
+## Features
+
+- Re-usable React Componenet, Image
+- Utility methods that allow you to compress, parse and process custom token images depending on their format
+- It currently handles base64 encoding, IPFS, IPNS and external URLS.
+
+## Documentation
+
+View the full documentation on [docs.minima.global](https://docs.minima.global/docs/development/using-typescript).
+
+## Usage
+
+```tsx
+import { Image } from "@minima-global/image";
+
+... rest of your component
+
+<Image src={customToken.url} />
+```
+
+You can also independently write your own component and use the utility methods to help you do so like,
+
+```tsx
+import { DEFAULT_BASE64_IMAGE, fetchIPFSImage, getBase64Image, isBase64Image, isIPFSOrIPNS, isValidUrl } from "@minima-global/image" // [!code highlight] 
+
+... rest of your component
+
+if (isIPFSOrIPNS(src)) {
+    const ipfsUrl = await fetchIPFSImage(src)
+    return ipfsUrl;
+} else if (isValidUrl(src)) {
+    return src;
+} else if (isBase64Image(src)) {
+    const completeBase64Image = getBase64Image(src)
+    return completeBase64Image
+}
+
+... rest of your component
+```
+
+You can also compress an image to ensure it fits on-chain and doesn't cause issues for you when making transactions
+
+```tsx
+import { compressImage } from "@minima-global/image";
+
+const compressedImage = await compressImage(tokensBase64ImageData);
+```
+
+
+## Contributing
+
+This project is made better by contributors like you, and we welcome contributions of all sizes - from fixing typos, adding new features and fixing types, please open an issue or submit a pull request, but be sure to read the [contributing guidelines](https://github.com/minima-global/dev-tools/blob/main/CONTRIBUTING.md).
