@@ -1,5 +1,11 @@
 # @minima-global/image
 
+## 2.0.1
+
+### Patch Changes
+
+- 3e3abbb: Tweak copy
+
 ## 2.0.0
 
 ### Major Changes
