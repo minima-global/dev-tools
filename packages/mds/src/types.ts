@@ -378,5 +378,12 @@ export interface MDSObj {
      * @param hex The HEX string to convert
      */
     base64ToArrayBuffer: (base64: string) => ArrayBuffer;
+
+    /**
+     * Get a state variable from a coin
+     * @param coin The coin to get the state variable from
+     * @param port The port to get the state variable from
+     */
+    getStateVariable: (coin: Coin, port: number) => string | undefined;
   };
 }
