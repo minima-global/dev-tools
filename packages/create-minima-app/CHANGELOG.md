@@ -1,5 +1,18 @@
 # @minima-global/create-minima-app
 
+## 0.2.3
+
+### Patch Changes
+
+- bd9881b: improvements
+
+  - fixed issue where configuring debugg setting would error due to
+    pupeter not finding "Click anywhere to continue"
+  - added env support for port in minima-cli
+
+- Updated dependencies [bd9881b]
+  - @minima-global/minima-cli@0.1.5
+
 ## 0.2.2
 
 ### Patch Changes
