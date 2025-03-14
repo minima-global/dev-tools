@@ -10,6 +10,7 @@ import { update } from "./scripts/update.js"
 import { zip } from "./scripts/zip.js"
 import { isReactProject } from "./utils/is-react-project.js"
 import { logger } from "./utils/logger.js"
+import { readEnvVars } from "./utils/read-env.js"
 
 const program = new Command()
 const version = JSON.parse(readFileSync("./package.json", "utf-8")).version
@@ -59,7 +60,7 @@ program
 program
   .command("install")
   .description("Install the MiniDapp")
-  .option("-p, --port <port>", "rpcport number", "9005")
+  .option("-p, --port <port>", "rpcport number")
   .action(async (options) => {
     let installSpinner: Ora | undefined
     try {
@@ -69,7 +70,18 @@ program
 
       await configureDappConf()
 
+      const env = readEnvVars()
+
+      if (!options.port) {
+        if (env.mdsPort) {
+          options.port = env.mdsPort + 2
+        } else {
+          options.port = "9005"
+        }
+      }
+
       const zipFileName = `${packageJson.name}-${packageJson.version}.mds.zip`
+
       const filePath = packageJson.template === "react-ts" ? "build/" : "./"
 
       await zip(zipFileName, filePath)
@@ -87,8 +99,6 @@ program
     } catch (error) {
       installSpinner?.fail("Failed to install MiniDapp")
       if (error instanceof Error) {
-        logger.error(error.message)
-        logger.info(`Port: ${options.port}`)
         logger.info(
           "Please check that you have RPC enabled on your Minima node and that the port is correct"
         )
@@ -104,11 +114,21 @@ program
 
 program
   .command("uninstall")
-  .option("-p, --port <port>", "port number", "9005")
+  .option("-p, --port <port>", "port number")
   .description("Uninstall the MiniDapp")
   .action(async (options) => {
     let uninstallSpinner: Ora | undefined
     try {
+      const env = readEnvVars()
+
+      if (!options.port) {
+        if (env.mdsPort) {
+          options.port = env.mdsPort + 2
+        } else {
+          options.port = "9005"
+        }
+      }
+
       uninstallSpinner = ora("Uninstalling MiniDapp...").start()
       await uninstall({
         port: parseInt(options.port),
@@ -137,7 +157,7 @@ program
 program
   .command("update")
   .description("Update the MiniDapp")
-  .option("-p, --port <port>", "rpcport number", "9005")
+  .option("-p, --port <port>", "rpcport number")
   .action(async (options) => {
     let updateSpinner: Ora | undefined
     try {
@@ -153,6 +173,16 @@ program
 
       // Zip the MiniDapp
       await zip(zipFileName, filePath)
+
+      const env = readEnvVars()
+
+      if (!options.port) {
+        if (env.mdsPort) {
+          options.port = env.mdsPort + 2
+        } else {
+          options.port = "9005"
+        }
+      }
 
       // Update the MiniDapp
       await update({
