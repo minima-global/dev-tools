@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander"
-import packageJson from "../package.json"
+import packageJson from "../package.json" with { type: "json" }
 import { init } from "./commands/init.js"
 
 process.on("SIGINT", () => process.exit(0))
